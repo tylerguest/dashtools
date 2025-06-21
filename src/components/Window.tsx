@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 
 interface WindowProps {
   id: number;
@@ -15,6 +15,8 @@ interface WindowProps {
 }
 
 export default function Window({ id, x, y, width, height, title, onMouseDown, onResize, onClose }: WindowProps) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
     e.stopPropagation();
     e.preventDefault();
@@ -73,8 +75,44 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
       style={{ left: x, top: y, width, height }}
       onMouseDown={(e) => onMouseDown(e, id)}
     >
-      <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center">
-        <span></span>
+      <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative">
+        <div className="relative">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsDropdownOpen(!isDropdownOpen);
+            }}
+            className="w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 rounded text-xs font-bold"
+          >
+            ☰
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded shadow-lg z-50 min-w-32">
+              <div className="py-1">
+                <button 
+                  className="w-full px-3 py-1 text-left text-zinc-300 hover:bg-zinc-700 text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsDropdownOpen(false);
+                    // Add timeline functionality
+                  }}
+                >
+                  Timeline
+                </button>
+                <button 
+                  className="w-full px-3 py-1 text-left text-zinc-300 hover:bg-zinc-700 text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsDropdownOpen(false);
+                    // Add mixer functionality
+                  }}
+                >
+                  Mixer
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         <button
           onClick={(e) => {
             e.stopPropagation();
