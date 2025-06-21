@@ -85,9 +85,6 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
           ×
         </button>
       </div>
-      <div className="p-3 text-zinc-300 bg-zinc-800">
-        Window content
-      </div>
       
       {/* Resize handles */}
       {/* Corners */}
