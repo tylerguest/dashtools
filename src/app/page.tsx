@@ -6,7 +6,7 @@ import Workspace from '../components/Workspace';
 
 export default function Home() {
   const [windows, setWindows] = useState([
-    { id: 1, x: 50, y: 50, width: 200, height: 150, title: 'Window 1' }
+    { id: 1, x: 50, y: 50, width: 200, height: 150, title: 'Untitled' }
   ]);
   const [nextId, setNextId] = useState(2);
 
@@ -17,7 +17,7 @@ export default function Home() {
       y: 50 + (nextId - 1) * 30,
       width: 200,
       height: 150,
-      title: `Window ${nextId}`
+      title: 'Untitled'
     };
     setWindows(prev => [...prev, newWindow]);
     setNextId(prev => prev + 1);

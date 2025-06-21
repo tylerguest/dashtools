@@ -74,7 +74,7 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
       onMouseDown={(e) => onMouseDown(e, id)}
     >
       <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center">
-        <span>{title}</span>
+        <span></span>
         <button
           onClick={(e) => {
             e.stopPropagation();

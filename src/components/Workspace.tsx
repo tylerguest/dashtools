@@ -77,6 +77,12 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
     setWindows(prev => prev.filter(w => w.id !== windowId));
   };
 
+  const handleTitleChange = (windowId: number, newTitle: string) => {
+    setWindows(prev => prev.map(w => 
+      w.id === windowId ? { ...w, title: newTitle } : w
+    ));
+  };
+
   return (
     <div 
       ref={setWorkspaceRef}
@@ -94,6 +100,7 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
           onMouseDown={handleMouseDown}
           onResize={handleResize}
           onClose={handleClose}
+          onTitleChange={handleTitleChange}
         />
       ))}
     </div>
