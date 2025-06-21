@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 
 export default function Home() {
@@ -24,15 +25,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
-      <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-2 flex justify-between items-center">
-        <h1 className="text-zinc-200 text-lg font-black">WebTools</h1>
-        <button
-          onClick={addNewWindow}
-          className="px-3 py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-200 text-sm rounded border border-zinc-600 hover:border-zinc-500 transition-colors"
-        >
-          + New Window
-        </button>
-      </header>
+      <Header onNewWindow={addNewWindow} />
       <main className="flex-1 flex">
         <Workspace windows={windows} setWindows={setWindows} />
       </main>
