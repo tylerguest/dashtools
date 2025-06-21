@@ -3,10 +3,21 @@
 import React, { useState } from 'react';
 import Window from './Window';
 
-export default function Workspace() {
-  const [windows, setWindows] = useState([
-    { id: 1, x: 50, y: 50, width: 200, height: 150, title: 'Window 1' }
-  ]);
+interface WindowData {
+  id: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  title: string;
+}
+
+interface WorkspaceProps {
+  windows: WindowData[];
+  setWindows: React.Dispatch<React.SetStateAction<WindowData[]>>;
+}
+
+export default function Workspace({ windows, setWindows }: WorkspaceProps) {
   const [workspaceRef, setWorkspaceRef] = useState<HTMLDivElement | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent, windowId: number) => {
