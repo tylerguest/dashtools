@@ -129,7 +129,7 @@ export default function Window({ id, x, y, width, height, title, content, onMous
       </div>
       
       {/* Window Content */}
-      <div className="flex-1 p-4 overflow-auto">
+      <div className="flex-1 p-1 overflow-auto">
         {content === 'timeline' && <Timeline />}
         {content === 'mixer' && <Mixer />}
         {!content && (
