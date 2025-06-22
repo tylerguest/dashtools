@@ -1,9 +1,13 @@
 import React from 'react';
 
 interface Track {id:number;name:string;color:string;type:'video'|'audio';muted:boolean;solo:boolean;volume:number;}
-interface TrackListProps {tracks:Track[];onTrackUpdate?:(trackId:number,updates:Partial<Track>)=>void;}
+interface TrackListProps {
+  tracks:Track[];
+  onTrackUpdate?:(trackId:number,updates:Partial<Track>)=>void;
+  onAddTrack?:()=>void;
+}
 
-export default function TrackList({tracks,onTrackUpdate}:TrackListProps) {
+export default function TrackList({tracks,onTrackUpdate,onAddTrack}:TrackListProps) {
   return (
     <div className="w-64 bg-zinc-800 border-r border-zinc-600 flex flex-col">
       <div className="h-12 bg-zinc-900 border-zinc-600 flex items-center px-3 justify-between">
@@ -11,18 +15,16 @@ export default function TrackList({tracks,onTrackUpdate}:TrackListProps) {
         <button
           className="w-7 h-7 flex items-center justify-center hover:bg-zinc-600 text-zinc-200 text-lg font-bold hover:border-zinc-500 transition"
           title="Add Track"
+          onClick={onAddTrack}
         >
           +
         </button>
       </div>
-      
       {tracks.map((track) => (
         <div 
           key={track.id}
           className="h-16 border-b border-zinc-700 flex items-center px-3 hover:bg-zinc-750"
         >
-          <div className={`w-3 h-3 rounded-full ${track.color} mr-3 flex-shrink-0`}></div>
-          
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
               <span className="text-zinc-300 text-sm truncate">{track.name}</span>

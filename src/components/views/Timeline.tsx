@@ -13,7 +13,25 @@ export default function Timeline({transportState,onPlayheadMove}:TimelineProps) 
   const [tracks,setTracks]=useState<Track[]>([]);
   const [clips,setClips]=useState<Clip[]>([]);
   const [zoom,setZoom]=useState(1);
+  const getNextTrackId = () => tracks.length > 0 ? Math.max(...tracks.map(t=>t.id))+1 : 1;
+  const handleAddTrack = () => {
+    const id = getNextTrackId();
+    setTracks(tracks => [
+      ...tracks,
+      {
+        id,
+        name: `Audio ${id}`,
+        color: 'bg-blue-700',
+        type: 'audio',
+        muted: false,
+        solo: false,
+        volume: 1
+      }
+    ]);
+  };
+
   const handleTrackUpdate=(id:number,updates:Partial<Track>)=>setTracks(tracks=>tracks.map(t=>t.id===id?{ ...t,...updates}:t));
+
   return (
     <div className="h-full w-full bg-zinc-800 border border-zinc-600 flex flex-col">
       <div className="h-10 bg-zinc-900 border-b border-zinc-600 flex items-center justify-end px-4 gap-3">
@@ -35,7 +53,11 @@ export default function Timeline({transportState,onPlayheadMove}:TimelineProps) 
         </div>
       </div>
       <div className="flex-1 flex">
-        <TrackList tracks={tracks} onTrackUpdate={handleTrackUpdate} />
+        <TrackList 
+          tracks={tracks} 
+          onTrackUpdate={handleTrackUpdate} 
+          onAddTrack={handleAddTrack}
+        />
         <TimelineGrid 
           tracks={tracks} 
           clips={clips} 

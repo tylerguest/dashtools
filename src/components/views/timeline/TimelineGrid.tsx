@@ -10,6 +10,7 @@ export default function TimelineGrid({tracks,clips,zoom=1,playheadPosition=0,onP
   const pixelsPerSecond = Math.max(5,basePixelsPerSecond*zoom); 
   const totalDuration = 500; 
   const totalWidth = Math.max(1000,totalDuration*pixelsPerSecond); 
+  const totalHeight = tracks.length * 64;
   const generateTimeMarkers = () => {
     const markers = [];
     let interval;
@@ -95,20 +96,14 @@ export default function TimelineGrid({tracks,clips,zoom=1,playheadPosition=0,onP
       <div 
         ref={gridRef}
         className="relative bg-zinc-800 cursor-crosshair"
-        style={{ width: `${totalWidth}px`, minHeight: `${tracks.length * 64}px` }}
+        style={{ width: `${totalWidth}px`, minHeight: `${totalHeight}px` }}
         onClick={handleGridClick}
       >
-        {subMarkers.map((marker, index) => (
-          <div 
-            key={`grid-${index}`}
-            className={`absolute top-0 bottom-0 w-px ${marker.isMajor ? 'bg-zinc-600' : 'bg-zinc-700'}`}
-            style={{ left: `${marker.position}px` }}
-          />
-        ))}
+        
         {tracks.map((track, trackIndex) => (
           <div 
             key={track.id}
-            className="h-16 border-b border-zinc-700 relative hover:bg-zinc-750"
+            className="h-16 relative hover:bg-zinc-750"
             style={{ top: `${trackIndex * 64}px` }}
           >
             <div className="absolute inset-0 bg-zinc-800" />
@@ -158,22 +153,7 @@ export default function TimelineGrid({tracks,clips,zoom=1,playheadPosition=0,onP
                           </svg>
                         </div>
                       )}
-                      
-                      {clip.type === 'video' && (
-                        <div className="h-full flex items-center justify-center text-white text-opacity-60">
-                          <div className="text-lg">🎬</div>
-                        </div>
-                      )}
-                      
-                      {clip.type === 'midi' && (
-                        <div className="h-full flex items-center">
-                          {/* Simple MIDI visualization */}
-                          <div className="w-full h-2 bg-white bg-opacity-30 rounded"></div>
-                        </div>
-                      )}
                     </div>
-                    
-                    {/* Resize handles */}
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-white bg-opacity-0 hover:bg-opacity-50 cursor-w-resize"></div>
                     <div className="absolute right-0 top-0 bottom-0 w-1 bg-white bg-opacity-0 hover:bg-opacity-50 cursor-e-resize"></div>
                   </div>
