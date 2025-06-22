@@ -45,35 +45,7 @@ export default function Timeline({ transportState, onPlayheadMove }: TimelinePro
     <div className="h-full w-full bg-zinc-800 border border-zinc-600 flex flex-col">
       {/* Zoom Controls Header */}
       <div className="h-10 bg-zinc-900 border-b border-zinc-600 flex items-center justify-end px-4 gap-3">
-        <span className="text-zinc-300 text-sm font-medium">Zoom:</span>
-        
-        {/* Zoom Preset Buttons */}
-        <div className="flex items-center gap-1 bg-zinc-800 border border-zinc-600 rounded-lg p-1">
-          {[
-            { value: 0.25, label: '25%' },
-            { value: 0.5, label: '50%' },
-            { value: 1, label: '100%' },
-            { value: 2, label: '200%' }
-          ].map(({ value, label }) => (
-            <button
-              key={value}
-              onClick={(e) => {
-                e.stopPropagation();
-                setZoom(value);
-              }}
-              onMouseDown={(e) => e.stopPropagation()}
-              className={`px-3 py-1 text-xs rounded-md font-medium transition-all duration-200 ${
-                zoom === value 
-                  ? 'bg-blue-600 text-white shadow-sm' 
-                  : 'text-zinc-300 hover:bg-zinc-700 hover:text-white'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        
-        {/* Zoom Slider */}
+        {/* Zoom Slider Only */}
         <div className="flex items-center gap-2">
           <input 
             type="range" 
