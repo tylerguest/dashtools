@@ -29,16 +29,23 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
     const startWindowX = window.x;
     const startWindowY = window.y;
 
+    // Get the window element for direct manipulation
+    const windowElement = document.querySelector(`[data-window-id="${windowId}"]`) as HTMLElement;
+    if (!windowElement) return;
+
     // Prevent text selection during drag
     document.body.style.userSelect = 'none';
+
+    let newX = startWindowX;
+    let newY = startWindowY;
 
     const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
       const deltaX = e.clientX - startX;
       const deltaY = e.clientY - startY;
       
-      let newX = startWindowX + deltaX;
-      let newY = startWindowY + deltaY;
+      newX = startWindowX + deltaX;
+      newY = startWindowY + deltaY;
 
       // Apply workspace boundaries
       if (workspaceRef) {
@@ -50,16 +57,22 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
         newY = Math.max(0, Math.min(newY, maxY));
       }
       
-      setWindows(prev => prev.map(w => 
-        w.id === windowId 
-          ? { ...w, x: newX, y: newY }
-          : w
-      ));
+      // Use CSS transform for immediate visual feedback
+      windowElement.style.transform = `translate(${newX - startWindowX}px, ${newY - startWindowY}px)`;
     };
 
     const handleMouseUp = () => {
       // Restore text selection
       document.body.style.userSelect = '';
+      
+      // Reset transform and update React state
+      windowElement.style.transform = '';
+      setWindows(prev => prev.map(w => 
+        w.id === windowId 
+          ? { ...w, x: newX, y: newY }
+          : w
+      ));
+      
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
