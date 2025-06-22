@@ -10,6 +10,7 @@ interface WindowData {
   width: number;
   height: number;
   title: string;
+  content?: 'timeline' | 'mixer' | null;
 }
 
 interface WorkspaceProps {
@@ -77,6 +78,12 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
     setWindows(prev => prev.filter(w => w.id !== windowId));
   };
 
+  const handleContentChange = (windowId: number, content: 'timeline' | 'mixer') => {
+    setWindows(prev => prev.map(w => 
+      w.id === windowId ? { ...w, content } : w
+    ));
+  };
+
   return (
     <div 
       ref={setWorkspaceRef}
@@ -91,9 +98,11 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
           width={window.width}
           height={window.height}
           title={window.title}
+          content={window.content}
           onMouseDown={handleMouseDown}
           onResize={handleResize}
           onClose={handleClose}
+          onContentChange={handleContentChange}
         />
       ))}
     </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import Timeline from './views/Timeline';
+import Mixer from './views/Mixer';
 
 interface WindowProps {
   id: number;
@@ -9,12 +11,14 @@ interface WindowProps {
   width: number;
   height: number;
   title: string;
+  content?: 'timeline' | 'mixer' | null;
   onMouseDown: (e: React.MouseEvent, id: number) => void;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
   onClose: (id: number) => void;
+  onContentChange?: (id: number, content: 'timeline' | 'mixer') => void;
 }
 
-export default function Window({ id, x, y, width, height, title, onMouseDown, onResize, onClose }: WindowProps) {
+export default function Window({ id, x, y, width, height, title, content, onMouseDown, onResize, onClose, onContentChange }: WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
@@ -71,7 +75,7 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
 
   return (
     <div
-      className="absolute bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move"
+      className="absolute bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move flex flex-col"
       style={{ left: x, top: y, width, height }}
       onMouseDown={(e) => onMouseDown(e, id)}
     >
@@ -94,7 +98,7 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsDropdownOpen(false);
-                    // Add timeline functionality
+                    onContentChange?.(id, 'timeline');
                   }}
                 >
                   Timeline
@@ -104,7 +108,7 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsDropdownOpen(false);
-                    // Add mixer functionality
+                    onContentChange?.(id, 'mixer');
                   }}
                 >
                   Mixer
@@ -122,6 +126,17 @@ export default function Window({ id, x, y, width, height, title, onMouseDown, on
         >
           ×
         </button>
+      </div>
+      
+      {/* Window Content */}
+      <div className="flex-1 p-4 overflow-auto">
+        {content === 'timeline' && <Timeline />}
+        {content === 'mixer' && <Mixer />}
+        {!content && (
+          <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
+            Select a view from the dropdown menu
+          </div>
+        )}
       </div>
       
       {/* Resize handles */}
