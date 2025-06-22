@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
+import { useTransportControls } from '../hooks/useTransportControls';
 
 interface WindowData {
   id: number;
@@ -20,6 +21,9 @@ export default function Home() {
   ]);
   const [nextId, setNextId] = useState(2);
 
+  // Global transport controls
+  const transport = useTransportControls();
+
   const addNewWindow = () => {
     const newWindow: WindowData = {
       id: nextId,
@@ -36,9 +40,27 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
-      <Header onNewWindow={addNewWindow} />
+      <Header 
+        onNewWindow={addNewWindow}
+        isPlaying={transport.isPlaying}
+        playheadPosition={transport.playheadPosition}
+        zoom={transport.zoom}
+        onTogglePlayPause={transport.togglePlayPause}
+        onStop={transport.stop}
+        onRewind={transport.rewind}
+        onFastForward={transport.fastForward}
+        onZoomChange={transport.setZoom}
+      />
       <main className="flex-1 flex">
-        <Workspace windows={windows} setWindows={setWindows} />
+        <Workspace 
+          windows={windows} 
+          setWindows={setWindows}
+          transportState={{
+            isPlaying: transport.isPlaying,
+            playheadPosition: transport.playheadPosition,
+          }}
+          onPlayheadMove={transport.setPlayheadPosition}
+        />
       </main>
     </div>
   );

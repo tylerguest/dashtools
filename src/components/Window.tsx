@@ -18,9 +18,17 @@ interface WindowProps {
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
   onClose: (id: number) => void;
   onContentChange?: (id: number, content: 'timeline' | 'mixer') => void;
+  transportState?: {
+    isPlaying: boolean;
+    playheadPosition: number;
+  };
+  onPlayheadMove?: (position: number) => void;
 }
 
-export default function Window({ id, x, y, width, height, title, content, workspaceBounds, otherWindows, onMouseDown, onResize, onClose, onContentChange }: WindowProps) {
+export default function Window({ 
+  id, x, y, width, height, title, content, workspaceBounds, otherWindows, 
+  onMouseDown, onResize, onClose, onContentChange, transportState, onPlayheadMove 
+}: WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
@@ -170,7 +178,12 @@ export default function Window({ id, x, y, width, height, title, content, worksp
       
       {/* Window Content */}
       <div className="flex-1 p-1 overflow-auto">
-        {content === 'timeline' && <Timeline />}
+        {content === 'timeline' && (
+          <Timeline 
+            transportState={transportState}
+            onPlayheadMove={onPlayheadMove}
+          />
+        )}
         {content === 'mixer' && <Mixer />}
         {!content && (
           <div className="h-full flex items-center justify-center text-zinc-500 text-sm">

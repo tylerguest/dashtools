@@ -16,9 +16,14 @@ interface WindowData {
 interface WorkspaceProps {
   windows: WindowData[];
   setWindows: React.Dispatch<React.SetStateAction<WindowData[]>>;
+  transportState: {
+    isPlaying: boolean;
+    playheadPosition: number;
+  };
+  onPlayheadMove: (position: number) => void;
 }
 
-export default function Workspace({ windows, setWindows }: WorkspaceProps) {
+export default function Workspace({ windows, setWindows, transportState, onPlayheadMove }: WorkspaceProps) {
   const [workspaceRef, setWorkspaceRef] = useState<HTMLDivElement | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent, windowId: number) => {
@@ -121,6 +126,8 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
           onResize={handleResize}
           onClose={handleClose}
           onContentChange={handleContentChange}
+          transportState={transportState}
+          onPlayheadMove={onPlayheadMove}
         />
       ))}
     </div>

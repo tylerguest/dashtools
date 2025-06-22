@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import TrackList from './timeline/TrackList';
 import TimelineGrid from './timeline/TimelineGrid';
 
@@ -22,33 +22,18 @@ interface Clip {
   type: 'audio' | 'video' | 'midi';
 }
 
-export default function Timeline() {
+interface TimelineProps {
+  transportState?: {
+    isPlaying: boolean;
+    playheadPosition: number;
+  };
+  onPlayheadMove?: (position: number) => void;
+}
+
+export default function Timeline({ transportState, onPlayheadMove }: TimelineProps) {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [clips, setClips] = useState<Clip[]>([]);
   const [zoom, setZoom] = useState(1);
-  const [playheadPosition, setPlayheadPosition] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Playback simulation
-  useEffect(() => {
-    if (isPlaying) {
-      intervalRef.current = setInterval(() => {
-        setPlayheadPosition(prev => prev + 0.1); // Advance by 0.1 seconds
-      }, 100);
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isPlaying]);
 
   const handleTrackUpdate = (trackId: number, updates: Partial<Track>) => {
     setTracks(prev => prev.map(track => 
@@ -56,108 +41,53 @@ export default function Timeline() {
     ));
   };
 
-  const handleStop = () => {
-    setIsPlaying(false);
-    setPlayheadPosition(0);
-  };
-
-  const handleRewind = () => {
-    setPlayheadPosition(prev => Math.max(0, prev - 10));
-  };
-
-  const handleFastForward = () => {
-    setPlayheadPosition(prev => prev + 10);
-  };
-
   return (
     <div className="h-full w-full bg-zinc-800 border border-zinc-600 flex flex-col">
-      {/* Transport Controls */}
-      <div className="h-12 bg-zinc-900 border-b border-zinc-600 flex items-center px-4 gap-3">
-        {/* Transport Buttons */}
-        <div className="flex items-center gap-1">
-          <button 
-            onClick={() => setIsPlaying(!isPlaying)}
-            className={`w-9 h-9 rounded-md flex items-center justify-center ${
-              isPlaying 
-                ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg' 
-                : 'bg-zinc-700 hover:bg-zinc-600 text-zinc-200 border border-zinc-600 hover:border-zinc-500'
-            } transition-all duration-200 text-sm font-medium`}
-          >
-            {isPlaying ? '⏸' : '▶'}
-          </button>
-          <button 
-            onClick={handleStop}
-            className="w-9 h-9 rounded-md flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-zinc-200 border border-zinc-600 hover:border-zinc-500 transition-all duration-200 text-sm"
-          >
-            ⏹
-          </button>
-          <button 
-            onClick={handleRewind}
-            className="w-9 h-9 rounded-md flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-zinc-200 border border-zinc-600 hover:border-zinc-500 transition-all duration-200 text-sm"
-          >
-            ⏮
-          </button>
-          <button 
-            onClick={handleFastForward}
-            className="w-9 h-9 rounded-md flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-zinc-200 border border-zinc-600 hover:border-zinc-500 transition-all duration-200 text-sm"
-          >
-            ⏭
-          </button>
-        </div>
+      {/* Zoom Controls Header */}
+      <div className="h-10 bg-zinc-900 border-b border-zinc-600 flex items-center justify-end px-4 gap-3">
+        <span className="text-zinc-300 text-sm font-medium">Zoom:</span>
         
-        {/* Time Display */}
-        <div className="ml-4 px-3 py-1 bg-zinc-800 border border-zinc-600 rounded-md">
-          <span className="text-zinc-200 text-sm font-mono tracking-wider">
-            {Math.floor(playheadPosition / 60)}:{(playheadPosition % 60).toFixed(2).padStart(5, '0')}
-          </span>
-        </div>
-        
-        {/* Zoom Controls */}
-        <div className="ml-auto flex items-center gap-3">
-          <span className="text-zinc-300 text-sm font-medium">Zoom:</span>
-          
-          {/* Zoom Preset Buttons */}
-          <div className="flex items-center gap-1 bg-zinc-800 border border-zinc-600 rounded-lg p-1">
-            {[
-              { value: 0.25, label: '25%' },
-              { value: 0.5, label: '50%' },
-              { value: 1, label: '100%' },
-              { value: 2, label: '200%' }
-            ].map(({ value, label }) => (
-              <button
-                key={value}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setZoom(value);
-                }}
-                onMouseDown={(e) => e.stopPropagation()}
-                className={`px-3 py-1 text-xs rounded-md font-medium transition-all duration-200 ${
-                  zoom === value 
-                    ? 'bg-blue-600 text-white shadow-sm' 
-                    : 'text-zinc-300 hover:bg-zinc-700 hover:text-white'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-          
-          {/* Zoom Slider */}
-          <div className="flex items-center gap-2">
-            <input 
-              type="range" 
-              min="0.25" 
-              max="4" 
-              step="0.25" 
-              value={zoom} 
-              onChange={(e) => setZoom(parseFloat(e.target.value))}
+        {/* Zoom Preset Buttons */}
+        <div className="flex items-center gap-1 bg-zinc-800 border border-zinc-600 rounded-lg p-1">
+          {[
+            { value: 0.25, label: '25%' },
+            { value: 0.5, label: '50%' },
+            { value: 1, label: '100%' },
+            { value: 2, label: '200%' }
+          ].map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={(e) => {
+                e.stopPropagation();
+                setZoom(value);
+              }}
               onMouseDown={(e) => e.stopPropagation()}
-              onClick={(e) => e.stopPropagation()}
-              className="w-24 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer slider"
-            />
-            <div className="min-w-[3rem] px-2 py-1 bg-zinc-800 border border-zinc-600 rounded text-zinc-300 text-xs font-mono text-center">
-              {(zoom * 100).toFixed(0)}%
-            </div>
+              className={`px-3 py-1 text-xs rounded-md font-medium transition-all duration-200 ${
+                zoom === value 
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'text-zinc-300 hover:bg-zinc-700 hover:text-white'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        
+        {/* Zoom Slider */}
+        <div className="flex items-center gap-2">
+          <input 
+            type="range" 
+            min="0.25" 
+            max="4" 
+            step="0.25" 
+            value={zoom} 
+            onChange={(e) => setZoom(parseFloat(e.target.value))}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
+            className="w-24 h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer slider"
+          />
+          <div className="min-w-[3rem] px-2 py-1 bg-zinc-800 border border-zinc-600 rounded text-zinc-300 text-xs font-mono text-center">
+            {(zoom * 100).toFixed(0)}%
           </div>
         </div>
       </div>
@@ -168,8 +98,8 @@ export default function Timeline() {
           tracks={tracks} 
           clips={clips} 
           zoom={zoom}
-          playheadPosition={playheadPosition}
-          onPlayheadMove={setPlayheadPosition}
+          playheadPosition={transportState?.playheadPosition || 0}
+          onPlayheadMove={onPlayheadMove}
         />
       </div>
     </div>
