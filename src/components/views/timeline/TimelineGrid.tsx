@@ -8,7 +8,7 @@ export default function TimelineGrid({tracks,clips,zoom=1,playheadPosition=0,onP
   const gridRef = useRef<HTMLDivElement>(null);
   const basePixelsPerSecond = 20;
   const pixelsPerSecond = Math.max(5,basePixelsPerSecond*zoom); 
-  const totalDuration = 300; 
+  const totalDuration = 500; 
   const totalWidth = Math.max(1000,totalDuration*pixelsPerSecond); 
   const generateTimeMarkers = () => {
     const markers = [];
@@ -56,8 +56,16 @@ export default function TimelineGrid({tracks,clips,zoom=1,playheadPosition=0,onP
   };
 
   return (
-    <div className="flex-1 bg-zinc-800 relative overflow-auto">
-      <div className="h-12 bg-zinc-900 border-b border-zinc-600 sticky top-0 z-20 relative">
+    <div className="flex-1 bg-zinc-800 overflow-auto">
+      <div 
+        className="h-12 sticky z-20 relative"
+        style={{width:`${totalWidth}px`}}
+      >
+        <div
+          className="absolute inset-0 bg-zinc-900 w-full"
+          style={{ minWidth: '100%' }}
+          aria-hidden="true"
+        />
         <div 
           className="relative h-full"
           style={{ width: `${totalWidth}px` }}
