@@ -5,37 +5,16 @@ import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 import { useTransportControls } from '../hooks/useTransportControls';
 
-interface WindowData {
-  id: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  title: string;
-  content?: 'timeline' | 'mixer' | null;
-}
+interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|null;}
 
 export default function Home() {
-  const [windows, setWindows] = useState<WindowData[]>([
-    { id: 1, x: 50, y: 50, width: 200, height: 150, title: 'Window 1', content: null }
-  ]);
-  const [nextId, setNextId] = useState(2);
-
-  // Global transport controls
+  const [windows,setWindows] = useState<WindowData[]>([{id:1,x:50,y:50,width:200,height:150,title:'Window 1',content:null}]);
+  const [nextId,setNextId] = useState(2);
   const transport = useTransportControls();
-
   const addNewWindow = () => {
-    const newWindow: WindowData = {
-      id: nextId,
-      x: 50 + (nextId - 1) * 30, // Offset new windows slightly
-      y: 50 + (nextId - 1) * 30,
-      width: 200,
-      height: 150,
-      title: `Window ${nextId}`,
-      content: null
-    };
-    setWindows(prev => [...prev, newWindow]);
-    setNextId(prev => prev + 1);
+    const newWindow:WindowData={id:nextId,x:50+(nextId-1)*30,y:50+(nextId-1)*30,width:200,height:150,title:`Window${nextId}`,content:null};
+    setWindows(prev=>[...prev,newWindow]);
+    setNextId(prev=>prev+1);
   };
 
   return (
@@ -44,21 +23,16 @@ export default function Home() {
         onNewWindow={addNewWindow}
         isPlaying={transport.isPlaying}
         playheadPosition={transport.playheadPosition}
-        zoom={transport.zoom}
         onTogglePlayPause={transport.togglePlayPause}
         onStop={transport.stop}
         onRewind={transport.rewind}
         onFastForward={transport.fastForward}
-        onZoomChange={transport.setZoom}
       />
       <main className="flex-1 flex">
         <Workspace 
           windows={windows} 
           setWindows={setWindows}
-          transportState={{
-            isPlaying: transport.isPlaying,
-            playheadPosition: transport.playheadPosition,
-          }}
+          transportState={{isPlaying:transport.isPlaying,playheadPosition:transport.playheadPosition}}
           onPlayheadMove={transport.setPlayheadPosition}
         />
       </main>

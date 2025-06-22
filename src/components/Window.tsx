@@ -5,125 +5,87 @@ import Timeline from './views/Timeline';
 import Mixer from './views/Mixer';
 
 interface WindowProps {
-  id: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  title: string;
-  content?: 'timeline' | 'mixer' | null;
-  workspaceBounds?: { width: number; height: number } | null;
-  otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
-  onMouseDown: (e: React.MouseEvent, id: number) => void;
-  onResize: (id: number, x: number, y: number, width: number, height: number) => void;
-  onClose: (id: number) => void;
-  onContentChange?: (id: number, content: 'timeline' | 'mixer') => void;
-  transportState?: {
-    isPlaying: boolean;
-    playheadPosition: number;
-  };
-  onPlayheadMove?: (position: number) => void;
+  id:number;
+  x:number;
+  y:number;
+  width:number;
+  height:number;
+  title:string;
+  content?:'timeline'|'mixer'|null;
+  workspaceBounds?:{width:number;height:number}|null;
+  otherWindows?:Array<{id:number;x:number;y:number;width:number;height:number}>;
+  onMouseDown:(e:React.MouseEvent,id:number)=>void;
+  onResize:(id:number,x:number,y:number,width:number,height:number)=>void;
+  onClose:(id:number)=>void;
+  onContentChange?:(id:number,content:'timeline'|'mixer')=>void;
+  transportState?:{isPlaying:boolean;playheadPosition:number;};
+  onPlayheadMove?:(position:number)=>void;
 }
 
 export default function Window({ 
-  id, x, y, width, height, title, content, workspaceBounds, otherWindows, 
-  onMouseDown, onResize, onClose, onContentChange, transportState, onPlayheadMove 
-}: WindowProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  id,x,y,width,height,title,content,workspaceBounds,otherWindows, 
+  onMouseDown,onResize,onClose,onContentChange,transportState,onPlayheadMove 
+}:WindowProps) {
+  const [isDropdownOpen,setIsDropdownOpen]=useState(false);
 
-  const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
+  const handleResizeMouseDown=(e:React.MouseEvent,direction:string)=>{
     e.stopPropagation();
     e.preventDefault();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startWindowX = x;
-    const startWindowY = y;
-    const startWidth = width;
-    const startHeight = height;
-
-    // Get the window element for direct manipulation
+    const startX=e.clientX;
+    const startY=e.clientY;
+    const startWindowX=x;
+    const startWindowY=y;
+    const startWidth=width;
+    const startHeight=height;
     const windowElement = e.currentTarget.closest('[data-window-id]') as HTMLElement;
     if (!windowElement) return;
-
-    // Prevent text selection during resize
-    document.body.style.userSelect = 'none';
-
-    let newX = startWindowX;
-    let newY = startWindowY;
-    let newWidth = startWidth;
-    let newHeight = startHeight;
-
-    const handleMouseMove = (e: MouseEvent) => {
+    document.body.style.userSelect='none';
+    let newX=startWindowX;
+    let newY=startWindowY;
+    let newWidth=startWidth;
+    let newHeight=startHeight;
+    const handleMouseMove=(e:MouseEvent)=>{
       e.preventDefault();
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-      
-      newX = startWindowX;
-      newY = startWindowY;
-      newWidth = startWidth;
-      newHeight = startHeight;
-
-      if (direction.includes('n')) {
-        newY = Math.max(0, startWindowY + deltaY);
-        newHeight = Math.max(100, startHeight - (newY - startWindowY));
-      }
-      if (direction.includes('s')) {
-        const maxHeight = workspaceBounds ? workspaceBounds.height - startWindowY : Infinity;
-        newHeight = Math.max(100, Math.min(startHeight + deltaY, maxHeight));
-      }
-      if (direction.includes('w')) {
-        newX = Math.max(0, startWindowX + deltaX);
-        newWidth = Math.max(150, startWidth - (newX - startWindowX));
-      }
-      if (direction.includes('e')) {
-        const maxWidth = workspaceBounds ? workspaceBounds.width - startWindowX : Infinity;
-        newWidth = Math.max(150, Math.min(startWidth + deltaX, maxWidth));
-      }
-
-      // Apply snapping to other windows (simplified for performance)
-      if (otherWindows && (direction.includes('e') || direction.includes('w') || direction.includes('s') || direction.includes('n'))) {
+      const deltaX=e.clientX-startX;
+      const deltaY=e.clientY-startY;
+      newX=startWindowX;
+      newY=startWindowY;
+      newWidth=startWidth;
+      newHeight=startHeight;
+      if (direction.includes('n')) {newY=Math.max(0,startWindowY+deltaY);newHeight=Math.max(100,startHeight-(newY-startWindowY));}
+      if(direction.includes('s'))newHeight=Math.max(100,Math.min(startHeight+deltaY,workspaceBounds?workspaceBounds.height-startWindowY:Infinity));
+      if(direction.includes('w')){newX=Math.max(0,startWindowX+deltaX);newWidth=Math.max(150,startWidth-(newX-startWindowX));}
+      if(direction.includes('e'))newWidth=Math.max(150,Math.min(startWidth+deltaX,workspaceBounds?workspaceBounds.width-startWindowX:Infinity));
+      if (otherWindows&&(direction.includes('e')||direction.includes('w')||direction.includes('s')||direction.includes('n'))) {
         const snapThreshold = 8;
-        
         for (const otherWindow of otherWindows) {
-          if (otherWindow.id === id) continue;
-          
+          if (otherWindow.id===id) continue;
           if (direction.includes('e')) {
-            const rightEdge = newX + newWidth;
-            const otherLeft = otherWindow.x;
-            if (Math.abs(rightEdge - otherLeft) < snapThreshold) {
-              newWidth = otherLeft - newX;
-            }
+            const rightEdge=newX+newWidth;
+            const otherLeft=otherWindow.x;
+            if (Math.abs(rightEdge-otherLeft)<snapThreshold) {newWidth=otherLeft-newX;}
           }
-          // Add other snap logic as needed, but keep it minimal
         }
       }
-
-      // Apply styles directly for immediate feedback
-      windowElement.style.left = `${newX}px`;
-      windowElement.style.top = `${newY}px`;
-      windowElement.style.width = `${newWidth}px`;
-      windowElement.style.height = `${newHeight}px`;
+      windowElement.style.left=`${newX}px`;
+      windowElement.style.top=`${newY}px`;
+      windowElement.style.width=`${newWidth}px`;
+      windowElement.style.height=`${newHeight}px`;
     };
-
     const handleMouseUp = () => {
-      // Restore text selection
-      document.body.style.userSelect = '';
-      
-      // Update React state with final values
-      onResize(id, newX, newY, newWidth, newHeight);
-      
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.body.style.userSelect='';
+      onResize(id,newX,newY,newWidth,newHeight);
+      document.removeEventListener('mousemove',handleMouseMove);
+      document.removeEventListener('mouseup',handleMouseUp);
     };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousemove',handleMouseMove);
+    document.addEventListener('mouseup',handleMouseUp);
   };
 
   return (
     <div
       data-window-id={id}
-      className="absolute bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move flex flex-col"
+      className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move flex flex-col"
       style={{ left: x, top: y, width, height }}
       onMouseDown={(e) => onMouseDown(e, id)}
     >
@@ -175,8 +137,6 @@ export default function Window({
           ×
         </button>
       </div>
-      
-      {/* Window Content */}
       <div className="flex-1 p-1 overflow-auto">
         {content === 'timeline' && (
           <Timeline 
@@ -191,19 +151,14 @@ export default function Window({
           </div>
         )}
       </div>
-      
-      {/* Resize handles */}
-      {/* Corners */}
-      <div className="absolute top-0 left-0 w-2 h-2 cursor-nw-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'nw')} />
-      <div className="absolute top-0 right-0 w-2 h-2 cursor-ne-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'ne')} />
-      <div className="absolute bottom-0 left-0 w-2 h-2 cursor-sw-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'sw')} />
-      <div className="absolute bottom-0 right-0 w-2 h-2 cursor-se-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'se')} />
-      
-      {/* Edges */}
-      <div className="absolute top-0 left-2 right-2 h-1 cursor-n-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'n')} />
-      <div className="absolute bottom-0 left-2 right-2 h-1 cursor-s-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 's')} />
-      <div className="absolute left-0 top-2 bottom-2 w-1 cursor-w-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'w')} />
-      <div className="absolute right-0 top-2 bottom-2 w-1 cursor-e-resize hover:bg-zinc-600" onMouseDown={(e) => handleResizeMouseDown(e, 'e')} />
+      <div className="absolute top-0 left-0 w-2 h-2 cursor-nw-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'nw')}/>
+      <div className="absolute top-0 right-0 w-2 h-2 cursor-ne-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'ne')}/>
+      <div className="absolute bottom-0 left-0 w-2 h-2 cursor-sw-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'sw')} />
+      <div className="absolute bottom-0 right-0 w-2 h-2 cursor-se-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'se')} />
+      <div className="absolute top-0 left-2 right-2 h-1 cursor-n-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'n')} />
+      <div className="absolute bottom-0 left-2 right-2 h-1 cursor-s-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'s')} />
+      <div className="absolute left-0 top-2 bottom-2 w-1 cursor-w-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'w')} />
+      <div className="absolute right-0 top-2 bottom-2 w-1 cursor-e-resize hover:bg-zinc-600" onMouseDown={(e)=>handleResizeMouseDown(e,'e')} />
     </div>
   );
 }

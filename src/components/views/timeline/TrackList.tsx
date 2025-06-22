@@ -1,24 +1,11 @@
 import React from 'react';
 
-interface Track {
-  id: number;
-  name: string;
-  color: string;
-  type: 'video' | 'audio';
-  muted: boolean;
-  solo: boolean;
-  volume: number;
-}
+interface Track {id:number;name:string;color:string;type:'video'|'audio';muted:boolean;solo:boolean;volume:number;}
+interface TrackListProps {tracks:Track[];onTrackUpdate?:(trackId:number,updates:Partial<Track>)=>void;}
 
-interface TrackListProps {
-  tracks: Track[];
-  onTrackUpdate?: (trackId: number, updates: Partial<Track>) => void;
-}
-
-export default function TrackList({ tracks, onTrackUpdate }: TrackListProps) {
+export default function TrackList({tracks,onTrackUpdate}:TrackListProps) {
   return (
     <div className="w-64 bg-zinc-800 border-r border-zinc-600 flex flex-col">
-      {/* Header space to align with time ruler */}
       <div className="h-12 bg-zinc-900 border-b border-zinc-600 flex items-center px-3">
         <span className="text-zinc-300 text-sm font-medium">Tracks</span>
       </div>
@@ -37,7 +24,6 @@ export default function TrackList({ tracks, onTrackUpdate }: TrackListProps) {
             </div>
             
             <div className="flex items-center gap-2">
-              {/* Mute button */}
               <button
                 onClick={() => onTrackUpdate?.(track.id, { muted: !track.muted })}
                 className={`w-7 h-5 text-xs rounded-md font-medium transition-all duration-200 ${
@@ -48,8 +34,6 @@ export default function TrackList({ tracks, onTrackUpdate }: TrackListProps) {
               >
                 M
               </button>
-              
-              {/* Solo button */}
               <button
                 onClick={() => onTrackUpdate?.(track.id, { solo: !track.solo })}
                 className={`w-7 h-5 text-xs rounded-md font-medium transition-all duration-200 ${
@@ -60,8 +44,6 @@ export default function TrackList({ tracks, onTrackUpdate }: TrackListProps) {
               >
                 S
               </button>
-              
-              {/* Volume slider */}
               <input
                 type="range"
                 min="0"
@@ -74,8 +56,6 @@ export default function TrackList({ tracks, onTrackUpdate }: TrackListProps) {
                   '--slider-progress': `${track.volume * 100}%`
                 } as React.CSSProperties}
               />
-              
-              {/* Volume value */}
               <div className="min-w-[2rem] text-zinc-400 text-xs font-mono text-right bg-zinc-800 px-1 py-0.5 rounded border border-zinc-700">
                 {Math.round(track.volume * 100)}
               </div>

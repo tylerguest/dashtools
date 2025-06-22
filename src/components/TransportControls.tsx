@@ -2,26 +2,12 @@
 
 import React from 'react';
 
-interface TransportControlsProps {
-  isPlaying: boolean;
-  playheadPosition: number;
-  onTogglePlayPause: () => void;
-  onStop: () => void;
-  onRewind: () => void;
-  onFastForward: () => void;
-}
+interface TransportControlsProps {isPlaying:boolean;playheadPosition:number;onTogglePlayPause:()=>void;onStop:()=>void;onRewind:()=>void;onFastForward:()=>void;}
 
-function TransportControls({
-  isPlaying,
-  playheadPosition,
-  onTogglePlayPause,
-  onStop,
-  onRewind,
-  onFastForward,
+function TransportControls({isPlaying,playheadPosition,onTogglePlayPause,onStop,onRewind,onFastForward,
 }: TransportControlsProps) {
   return (
     <div className="flex items-center gap-4">
-      {/* Transport Buttons */}
       <div className="flex items-center gap-1">
         <button 
           onClick={onTogglePlayPause}
@@ -31,7 +17,7 @@ function TransportControls({
               : 'bg-zinc-700 hover:bg-zinc-600 text-zinc-200 border border-zinc-600 hover:border-zinc-500'
           } transition-all duration-200 text-sm font-medium`}
         >
-          {isPlaying ? '⏸' : '▶'}
+          {isPlaying?'⏸':'▶'}
         </button>
         <button 
           onClick={onStop}
@@ -52,11 +38,9 @@ function TransportControls({
           ⏭
         </button>
       </div>
-      
-      {/* Time Display */}
       <div className="px-3 py-1 bg-zinc-800 border border-zinc-600 rounded-md">
         <span className="text-zinc-200 text-sm font-mono tracking-wider">
-          {Math.floor(playheadPosition / 60)}:{(playheadPosition % 60).toFixed(2).padStart(5, '0')}
+          {Math.floor(playheadPosition/60)}:{(playheadPosition%60).toFixed(2).padStart(5,'0')}
         </span>
       </div>
     </div>

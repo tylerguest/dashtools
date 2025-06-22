@@ -3,28 +3,11 @@
 import React from 'react';
 import TransportControls from './TransportControls';
 
-interface HeaderProps {
-  onNewWindow: () => void;
-  isPlaying: boolean;
-  playheadPosition: number;
-  zoom: number;
-  onTogglePlayPause: () => void;
-  onStop: () => void;
-  onRewind: () => void;
-  onFastForward: () => void;
-  onZoomChange: (zoom: number) => void;
-}
+interface HeaderProps {onNewWindow:()=>void;isPlaying:boolean;playheadPosition:number;onTogglePlayPause:()=>void;
+  onStop:()=>void;onRewind:()=>void;onFastForward:()=>void;}
 
-export default function Header({ 
-  onNewWindow,
-  isPlaying,
-  playheadPosition,
-  zoom,
-  onTogglePlayPause,
-  onStop,
-  onRewind,
-  onFastForward,
-  onZoomChange,
+export default function Header({onNewWindow,isPlaying,playheadPosition,onTogglePlayPause,
+  onStop,onRewind,onFastForward,
 }: HeaderProps) {
   return (
     <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex justify-between items-center">
@@ -33,12 +16,10 @@ export default function Header({
         <TransportControls
           isPlaying={isPlaying}
           playheadPosition={playheadPosition}
-          zoom={zoom}
           onTogglePlayPause={onTogglePlayPause}
           onStop={onStop}
           onRewind={onRewind}
           onFastForward={onFastForward}
-          onZoomChange={onZoomChange}
         />
       </div>
       <button

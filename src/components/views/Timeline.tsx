@@ -2,50 +2,21 @@ import React, { useState } from 'react';
 import TrackList from './timeline/TrackList';
 import TimelineGrid from './timeline/TimelineGrid';
 
-interface Track {
-  id: number;
-  name: string;
-  color: string;
-  type: 'video' | 'audio';
-  muted: boolean;
-  solo: boolean;
-  volume: number;
-}
-
-interface Clip {
-  id: number;
-  trackId: number;
-  name: string;
-  startTime: number;
-  duration: number;
-  color: string;
-  type: 'audio' | 'video' | 'midi';
-}
-
+interface Track {id:number;name:string;color:string;type:'video'|'audio';muted:boolean;solo:boolean;volume:number;}
+interface Clip {id:number;trackId:number;name:string;startTime:number;duration:number;color:string;type:'audio'|'video'|'midi';}
 interface TimelineProps {
-  transportState?: {
-    isPlaying: boolean;
-    playheadPosition: number;
-  };
-  onPlayheadMove?: (position: number) => void;
+  transportState?:{isPlaying:boolean;playheadPosition:number};
+  onPlayheadMove?:(position:number)=>void;
 }
 
-export default function Timeline({ transportState, onPlayheadMove }: TimelineProps) {
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [clips, setClips] = useState<Clip[]>([]);
-  const [zoom, setZoom] = useState(1);
-
-  const handleTrackUpdate = (trackId: number, updates: Partial<Track>) => {
-    setTracks(prev => prev.map(track => 
-      track.id === trackId ? { ...track, ...updates } : track
-    ));
-  };
-
+export default function Timeline({transportState,onPlayheadMove}:TimelineProps) {
+  const [tracks,setTracks]=useState<Track[]>([]);
+  const [clips,setClips]=useState<Clip[]>([]);
+  const [zoom,setZoom]=useState(1);
+  const handleTrackUpdate=(id:number,updates:Partial<Track>)=>setTracks(tracks=>tracks.map(t=>t.id===id?{ ...t,...updates}:t));
   return (
     <div className="h-full w-full bg-zinc-800 border border-zinc-600 flex flex-col">
-      {/* Zoom Controls Header */}
       <div className="h-10 bg-zinc-900 border-b border-zinc-600 flex items-center justify-end px-4 gap-3">
-        {/* Zoom Slider Only */}
         <div className="flex items-center gap-2">
           <input 
             type="range" 
@@ -63,7 +34,6 @@ export default function Timeline({ transportState, onPlayheadMove }: TimelinePro
           </div>
         </div>
       </div>
-
       <div className="flex-1 flex">
         <TrackList tracks={tracks} onTrackUpdate={handleTrackUpdate} />
         <TimelineGrid 

@@ -4,11 +4,7 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "WebTools",
-  description: "Modern web development tools",
-};
-
+export const metadata: Metadata = {title: "WebTools",description: "Modern web development tools",};
 export default function RootLayout({
   children,
 }: {
