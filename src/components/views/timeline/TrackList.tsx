@@ -6,8 +6,14 @@ interface TrackListProps {tracks:Track[];onTrackUpdate?:(trackId:number,updates:
 export default function TrackList({tracks,onTrackUpdate}:TrackListProps) {
   return (
     <div className="w-64 bg-zinc-800 border-r border-zinc-600 flex flex-col">
-      <div className="h-12 bg-zinc-900 border-zinc-600 flex items-center px-3">
+      <div className="h-12 bg-zinc-900 border-zinc-600 flex items-center px-3 justify-between">
         <span className="text-zinc-300 text-sm font-medium">Tracks</span>
+        <button
+          className="w-7 h-7 flex items-center justify-center hover:bg-zinc-600 text-zinc-200 text-lg font-bold hover:border-zinc-500 transition"
+          title="Add Track"
+        >
+          +
+        </button>
       </div>
       
       {tracks.map((track) => (
