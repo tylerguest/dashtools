@@ -12,13 +12,15 @@ interface WindowProps {
   height: number;
   title: string;
   content?: 'timeline' | 'mixer' | null;
+  workspaceBounds?: { width: number; height: number } | null;
+  otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
   onMouseDown: (e: React.MouseEvent, id: number) => void;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
   onClose: (id: number) => void;
   onContentChange?: (id: number, content: 'timeline' | 'mixer') => void;
 }
 
-export default function Window({ id, x, y, width, height, title, content, onMouseDown, onResize, onClose, onContentChange }: WindowProps) {
+export default function Window({ id, x, y, width, height, title, content, workspaceBounds, otherWindows, onMouseDown, onResize, onClose, onContentChange }: WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
@@ -45,18 +47,83 @@ export default function Window({ id, x, y, width, height, title, content, onMous
       let newHeight = startHeight;
 
       if (direction.includes('n')) {
-        newY = startWindowY + deltaY;
-        newHeight = Math.max(100, startHeight - deltaY);
+        newY = Math.max(0, startWindowY + deltaY);
+        newHeight = Math.max(100, startHeight - (newY - startWindowY));
       }
       if (direction.includes('s')) {
-        newHeight = Math.max(100, startHeight + deltaY);
+        const maxHeight = workspaceBounds ? workspaceBounds.height - startWindowY : Infinity;
+        newHeight = Math.max(100, Math.min(startHeight + deltaY, maxHeight));
       }
       if (direction.includes('w')) {
-        newX = startWindowX + deltaX;
-        newWidth = Math.max(150, startWidth - deltaX);
+        newX = Math.max(0, startWindowX + deltaX);
+        newWidth = Math.max(150, startWidth - (newX - startWindowX));
       }
       if (direction.includes('e')) {
-        newWidth = Math.max(150, startWidth + deltaX);
+        const maxWidth = workspaceBounds ? workspaceBounds.width - startWindowX : Infinity;
+        newWidth = Math.max(150, Math.min(startWidth + deltaX, maxWidth));
+      }
+
+      // Apply snapping to other windows
+      if (otherWindows) {
+        const snapThreshold = 8;
+        
+        for (const otherWindow of otherWindows) {
+          if (otherWindow.id === id) continue;
+          
+          if (direction.includes('e')) {
+            const rightEdge = newX + newWidth;
+            const otherLeft = otherWindow.x;
+            const otherRight = otherWindow.x + otherWindow.width;
+            
+            if (Math.abs(rightEdge - otherLeft) < snapThreshold) {
+              newWidth = otherLeft - newX;
+            } else if (Math.abs(rightEdge - otherRight) < snapThreshold) {
+              newWidth = otherRight - newX;
+            }
+          }
+          
+          if (direction.includes('w')) {
+            const otherLeft = otherWindow.x;
+            const otherRight = otherWindow.x + otherWindow.width;
+            
+            if (Math.abs(newX - otherRight) < snapThreshold) {
+              const deltaX = newX - otherRight;
+              newX = otherRight;
+              newWidth = newWidth + deltaX;
+            } else if (Math.abs(newX - otherLeft) < snapThreshold) {
+              const deltaX = newX - otherLeft;
+              newX = otherLeft;
+              newWidth = newWidth + deltaX;
+            }
+          }
+          
+          if (direction.includes('s')) {
+            const bottomEdge = newY + newHeight;
+            const otherTop = otherWindow.y;
+            const otherBottom = otherWindow.y + otherWindow.height;
+            
+            if (Math.abs(bottomEdge - otherTop) < snapThreshold) {
+              newHeight = otherTop - newY;
+            } else if (Math.abs(bottomEdge - otherBottom) < snapThreshold) {
+              newHeight = otherBottom - newY;
+            }
+          }
+          
+          if (direction.includes('n')) {
+            const otherTop = otherWindow.y;
+            const otherBottom = otherWindow.y + otherWindow.height;
+            
+            if (Math.abs(newY - otherBottom) < snapThreshold) {
+              const deltaY = newY - otherBottom;
+              newY = otherBottom;
+              newHeight = newHeight + deltaY;
+            } else if (Math.abs(newY - otherTop) < snapThreshold) {
+              const deltaY = newY - otherTop;
+              newY = otherTop;
+              newHeight = newHeight + deltaY;
+            }
+          }
+        }
       }
 
       onResize(id, newX, newY, newWidth, newHeight);

@@ -99,6 +99,11 @@ export default function Workspace({ windows, setWindows }: WorkspaceProps) {
           height={window.height}
           title={window.title}
           content={window.content}
+          workspaceBounds={workspaceRef ? {
+            width: workspaceRef.getBoundingClientRect().width,
+            height: workspaceRef.getBoundingClientRect().height
+          } : null}
+          otherWindows={windows}
           onMouseDown={handleMouseDown}
           onResize={handleResize}
           onClose={handleClose}
