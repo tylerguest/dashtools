@@ -19,15 +19,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
-      <Header 
-        onNewWindow={addNewWindow}
-        isPlaying={transport.isPlaying}
-        playheadPosition={transport.playheadPosition}
-        onTogglePlayPause={transport.togglePlayPause}
-        onStop={transport.stop}
-        onRewind={transport.rewind}
-        onFastForward={transport.fastForward}
-      />
+      <Header onNewWindow={addNewWindow} />
       <main className="flex-1 flex">
         <Workspace 
           windows={windows} 

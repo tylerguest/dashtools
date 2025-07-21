@@ -2,21 +2,17 @@
 
 import React from 'react';
 
-interface HeaderProps {onNewWindow:()=>void;isPlaying:boolean;playheadPosition:number;onTogglePlayPause:()=>void;
-  onStop:()=>void;onRewind:()=>void;onFastForward:()=>void;}
+interface HeaderProps {
+  onNewWindow: () => void;
+}
 
-export default function Header({onNewWindow,isPlaying,playheadPosition,onTogglePlayPause,
-  onStop,onRewind,onFastForward,
-}: HeaderProps) {
+export default function Header({ onNewWindow }: HeaderProps) {
   return (
     <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex justify-between items-center">
       <div className="flex items-center gap-6">
         <h1 className="text-zinc-200 text-lg font-black">dashtools</h1>
       </div>
-      <button
-        onClick={onNewWindow}
-        className="px-3 py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-200 text-sm rounded border border-zinc-600 hover:border-zinc-500 transition-colors"
-      >
+      <button onClick={onNewWindow}>
         + New Window
       </button>
     </header>

@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 
+import StockChartView from './views/StockChartView';
+import QuoteMonitorView from './views/QuoteMonitorView';
+
 interface WindowProps {
   id:number;
   x:number;
@@ -9,13 +12,13 @@ interface WindowProps {
   width:number;
   height:number;
   title:string;
-  content?:'timeline'|'mixer'|null;
+  content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|null;
   workspaceBounds?:{width:number;height:number}|null;
   otherWindows?:Array<{id:number;x:number;y:number;width:number;height:number}>;
   onMouseDown:(e:React.MouseEvent,id:number)=>void;
   onResize:(id:number,x:number,y:number,width:number,height:number)=>void;
   onClose:(id:number)=>void;
-  onContentChange?:(id:number,content:'timeline'|'mixer')=>void;
+  onContentChange?:(id:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor')=>void;
   transportState?:{isPlaying:boolean;playheadPosition:number;};
   onPlayheadMove?:(position:number)=>void;
 }
@@ -24,71 +27,83 @@ export default function Window({
   id,x,y,width,height,title,content,workspaceBounds,otherWindows, 
   onMouseDown,onResize,onClose,onContentChange,transportState,onPlayheadMove 
 }:WindowProps) {
-  const [isDropdownOpen,setIsDropdownOpen]=useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [resizing, setResizing] = useState<null | { x: number; y: number; width: number; height: number }> (null);
 
-  const handleResizeMouseDown=(e:React.MouseEvent,direction:string)=>{
+  const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
     e.stopPropagation();
     e.preventDefault();
-    const startX=e.clientX;
-    const startY=e.clientY;
-    const startWindowX=x;
-    const startWindowY=y;
-    const startWidth=width;
-    const startHeight=height;
-    const windowElement = e.currentTarget.closest('[data-window-id]') as HTMLElement;
-    if (!windowElement) return;
-    document.body.style.userSelect='none';
-    let newX=startWindowX;
-    let newY=startWindowY;
-    let newWidth=startWidth;
-    let newHeight=startHeight;
-    const handleMouseMove=(e:MouseEvent)=>{
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWindowX = resizing ? resizing.x : x;
+    const startWindowY = resizing ? resizing.y : y;
+    const startWidth = resizing ? resizing.width : width;
+    const startHeight = resizing ? resizing.height : height;
+    document.body.style.userSelect = 'none';
+
+    const handleMouseMove = (e: MouseEvent) => {
       e.preventDefault();
-      const deltaX=e.clientX-startX;
-      const deltaY=e.clientY-startY;
-      newX=startWindowX;
-      newY=startWindowY;
-      newWidth=startWidth;
-      newHeight=startHeight;
-      if (direction.includes('n')) {newY=Math.max(0,startWindowY+deltaY);newHeight=Math.max(100,startHeight-(newY-startWindowY));}
-      if(direction.includes('s'))newHeight=Math.max(100,Math.min(startHeight+deltaY,workspaceBounds?workspaceBounds.height-startWindowY:Infinity));
-      if(direction.includes('w')){newX=Math.max(0,startWindowX+deltaX);newWidth=Math.max(150,startWidth-(newX-startWindowX));}
-      if(direction.includes('e'))newWidth=Math.max(150,Math.min(startWidth+deltaX,workspaceBounds?workspaceBounds.width-startWindowX:Infinity));
-      if (otherWindows&&(direction.includes('e')||direction.includes('w')||direction.includes('s')||direction.includes('n'))) {
+      let newX = startWindowX;
+      let newY = startWindowY;
+      let newWidth = startWidth;
+      let newHeight = startHeight;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      if (direction.includes('n')) {
+        newY = Math.max(0, startWindowY + deltaY);
+        newHeight = Math.max(100, startHeight - (newY - startWindowY));
+      }
+      if (direction.includes('s')) newHeight = Math.max(100, Math.min(startHeight + deltaY, workspaceBounds ? workspaceBounds.height - startWindowY : Infinity));
+      if (direction.includes('w')) {
+        newX = Math.max(0, startWindowX + deltaX);
+        newWidth = Math.max(150, startWidth - (newX - startWindowX));
+      }
+      if (direction.includes('e')) newWidth = Math.max(150, Math.min(startWidth + deltaX, workspaceBounds ? workspaceBounds.width - startWindowX : Infinity));
+      if (otherWindows && (direction.includes('e') || direction.includes('w') || direction.includes('s') || direction.includes('n'))) {
         const snapThreshold = 8;
         for (const otherWindow of otherWindows) {
-          if (otherWindow.id===id) continue;
+          if (otherWindow.id === id) continue;
           if (direction.includes('e')) {
-            const rightEdge=newX+newWidth;
-            const otherLeft=otherWindow.x;
-            if (Math.abs(rightEdge-otherLeft)<snapThreshold) {newWidth=otherLeft-newX;}
+            const rightEdge = newX + newWidth;
+            const otherLeft = otherWindow.x;
+            if (Math.abs(rightEdge - otherLeft) < snapThreshold) {
+              newWidth = otherLeft - newX;
+            }
           }
         }
       }
-      windowElement.style.left=`${newX}px`;
-      windowElement.style.top=`${newY}px`;
-      windowElement.style.width=`${newWidth}px`;
-      windowElement.style.height=`${newHeight}px`;
+      setResizing({ x: newX, y: newY, width: newWidth, height: newHeight });
     };
+
     const handleMouseUp = () => {
-      document.body.style.userSelect='';
-      onResize(id,newX,newY,newWidth,newHeight);
-      document.removeEventListener('mousemove',handleMouseMove);
-      document.removeEventListener('mouseup',handleMouseUp);
+      document.body.style.userSelect = '';
+      if (resizing) {
+        onResize(id, resizing.x, resizing.y, resizing.width, resizing.height);
+      }
+      setResizing(null);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
     };
-    document.addEventListener('mousemove',handleMouseMove);
-    document.addEventListener('mouseup',handleMouseUp);
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
+
+  // Use resizing state if present, otherwise props
+  const renderX = resizing ? resizing.x : x;
+  const renderY = resizing ? resizing.y : y;
+  const renderWidth = resizing ? resizing.width : width;
+  const renderHeight = resizing ? resizing.height : height;
 
   return (
     <div
       data-window-id={id}
       className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move flex flex-col"
-      style={{ left: x, top: y, width, height }}
+      style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight }}
       onMouseDown={(e) => onMouseDown(e, id)}
     >
       <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative">
-        <div className="relative">
+        <div className="relative flex items-center">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -99,8 +114,36 @@ export default function Window({
             ☰
           </button>
           {isDropdownOpen && (
-            <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded shadow-lg z-50 min-w-32">
+            <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded shadow-lg z-50 min-w-32 py-1">
+              <button
+                className="block w-full text-left px-4 py-2 text-zinc-200 hover:bg-zinc-700 text-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onContentChange) onContentChange(id, 'stockchart');
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Stock Chart
+              </button>
+              <button
+                className="block w-full text-left px-4 py-2 text-zinc-200 hover:bg-zinc-700 text-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onContentChange) onContentChange(id, 'quotemonitor');
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Quote Monitor
+              </button>
             </div>
+          )}
+        </div>
+        <div className="flex-1 flex justify-center items-center select-none pointer-events-none">
+          {content === 'stockchart' && (
+            <span className="text-zinc-200 text-base font-bold">Stock Chart (Mock)</span>
+          )}
+          {content === 'quotemonitor' && (
+            <span className="text-zinc-200 text-base font-bold">Quote Monitor</span>
           )}
         </div>
         <button
@@ -114,8 +157,11 @@ export default function Window({
         </button>
       </div>
       <div className="flex-1 p-1 overflow-auto">
+        {content === 'stockchart' && <StockChartView />}
+        {content === 'quotemonitor' && <QuoteMonitorView />}
         {!content && (
           <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
+            Select a view from the dropdown menu
           </div>
         )}
       </div>
