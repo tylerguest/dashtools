@@ -8,11 +8,11 @@ import { useTransportControls } from '../hooks/useTransportControls';
 interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|null;}
 
 export default function Home() {
-  const [windows,setWindows] = useState<WindowData[]>([{id:1,x:50,y:50,width:200,height:150,title:'Window 1',content:null}]);
+  const [windows,setWindows] = useState<WindowData[]>([{id:1,x:50,y:50,width:1400,height:800,title:'Window 1',content:null}]);
   const [nextId,setNextId] = useState(2);
   const transport = useTransportControls();
   const addNewWindow = () => {
-    const newWindow:WindowData={id:nextId,x:50+(nextId-1)*30,y:50+(nextId-1)*30,width:200,height:150,title:`Window${nextId}`,content:null};
+    const newWindow:WindowData={id:nextId,x:50+(nextId-1)*30,y:50+(nextId-1)*30,width:1400,height:800,title:`Window${nextId}`,content:null};
     setWindows(prev=>[...prev,newWindow]);
     setNextId(prev=>prev+1);
   };

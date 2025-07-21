@@ -1,7 +1,6 @@
 "use client";
 
 import React from 'react';
-import TransportControls from './TransportControls';
 
 interface HeaderProps {onNewWindow:()=>void;isPlaying:boolean;playheadPosition:number;onTogglePlayPause:()=>void;
   onStop:()=>void;onRewind:()=>void;onFastForward:()=>void;}
@@ -12,15 +11,7 @@ export default function Header({onNewWindow,isPlaying,playheadPosition,onToggleP
   return (
     <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex justify-between items-center">
       <div className="flex items-center gap-6">
-        <h1 className="text-zinc-200 text-lg font-black">WebTools</h1>
-        <TransportControls
-          isPlaying={isPlaying}
-          playheadPosition={playheadPosition}
-          onTogglePlayPause={onTogglePlayPause}
-          onStop={onStop}
-          onRewind={onRewind}
-          onFastForward={onFastForward}
-        />
+        <h1 className="text-zinc-200 text-lg font-black">dashtools</h1>
       </div>
       <button
         onClick={onNewWindow}

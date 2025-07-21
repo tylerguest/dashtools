@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import Timeline from './views/Timeline';
-import Mixer from './views/Mixer';
 
 interface WindowProps {
   id:number;
@@ -102,28 +100,6 @@ export default function Window({
           </button>
           {isDropdownOpen && (
             <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded shadow-lg z-50 min-w-32">
-              <div className="py-1">
-                <button 
-                  className="w-full px-3 py-1 text-left text-zinc-300 hover:bg-zinc-700 text-xs"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsDropdownOpen(false);
-                    onContentChange?.(id, 'timeline');
-                  }}
-                >
-                  Timeline
-                </button>
-                <button 
-                  className="w-full px-3 py-1 text-left text-zinc-300 hover:bg-zinc-700 text-xs"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsDropdownOpen(false);
-                    onContentChange?.(id, 'mixer');
-                  }}
-                >
-                  Mixer
-                </button>
-              </div>
             </div>
           )}
         </div>
@@ -138,16 +114,8 @@ export default function Window({
         </button>
       </div>
       <div className="flex-1 p-1 overflow-auto">
-        {content === 'timeline' && (
-          <Timeline 
-            transportState={transportState}
-            onPlayheadMove={onPlayheadMove}
-          />
-        )}
-        {content === 'mixer' && <Mixer />}
         {!content && (
           <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
-            Select a view from the dropdown menu
           </div>
         )}
       </div>
