@@ -59,7 +59,7 @@ export default function ChatbotView() {
           placeholder="Type your message..."
         />
         <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold"
+          className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded font-bold"
           onClick={handleSend}
         >
           Send

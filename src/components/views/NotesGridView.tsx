@@ -12,6 +12,7 @@ interface Note {
 
 export default function NotesGridView({ user }: { user: any }) {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [localNotes, setLocalNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [showEditor, setShowEditor] = useState(false);
@@ -20,7 +21,11 @@ export default function NotesGridView({ user }: { user: any }) {
   const supabase = createClient();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setNotes([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     supabase
       .from("notes")
@@ -48,21 +53,40 @@ export default function NotesGridView({ user }: { user: any }) {
 
   const handleSave = async () => {
     if (!user || !user.id) {
-      alert("User not found. Please log in again.");
-      console.warn("No user or user.id in NotesGridView handleSave", user);
+      if (selectedNote) {
+        setLocalNotes((prev) =>
+          prev.map((n) =>
+            n.id === selectedNote.id
+              ? { ...n, title: newTitle, content: newContent }
+              : n
+          )
+        );
+      } else {
+        setLocalNotes((prev) => [
+          {
+            id: Math.random().toString(36).slice(2),
+            title: newTitle,
+            content: newContent,
+            created_at: new Date().toISOString(),
+          },
+          ...prev,
+        ]);
+      }
+      setShowEditor(false);
+      setSelectedNote(null);
+      setNewTitle('');
+      setNewContent('');
       return;
     }
     try {
       let error = null;
       if (selectedNote) {
-        // Update existing note
         const { error: updateError } = await supabase
           .from("notes")
           .update({ title: newTitle, content: newContent })
           .eq("id", selectedNote.id);
         error = updateError;
       } else {
-        // Create new note
         const { error: insertError } = await supabase.from("notes").insert({
           user_id: user.id,
           title: newTitle,
@@ -76,7 +100,6 @@ export default function NotesGridView({ user }: { user: any }) {
         return;
       }
       setShowEditor(false);
-      // Refresh notes
       const { data, error: fetchError } = await supabase
         .from("notes")
         .select("id, title, content, created_at")
@@ -119,7 +142,7 @@ export default function NotesGridView({ user }: { user: any }) {
               Cancel
             </button>
             <button
-              className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-bold transition"
+              className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-900 text-white font-bold transition"
               onClick={handleSave}
             >
               Save
@@ -133,19 +156,18 @@ export default function NotesGridView({ user }: { user: any }) {
           <div className="w-full min-h-[200px] p-4 bg-zinc-800">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               <div
-                className="flex flex-col items-center justify-center border-2 border-dashed border-zinc-400 bg-zinc-900 rounded p-4 cursor-pointer hover:border-blue-400 hover:bg-zinc-800 transition min-h-[120px]"
+                className="flex flex-col items-center justify-center border-2 border-zinc-400 bg-zinc-800 rounded p-4 cursor-pointer hover:border-zinc-900 hover:bg-zinc-800 transition min-h-[120px]"
                 onClick={handleAddNote}
                 title="Add new note"
               >
                 <span className="text-3xl text-zinc-400 font-light mb-1">+</span>
                 <span className="text-zinc-500 text-sm">Add Note</span>
               </div>
-              {notes.length === 0 ? (
+              {(user ? notes : localNotes).length === 0 ? (
                 <div className="col-span-full text-center text-zinc-500 py-12">
-                  No notes yet.
                 </div>
               ) : (
-                notes.map((note) => (
+                (user ? notes : localNotes).map((note) => (
                   <div
                     key={note.id}
                     className="bg-zinc-800 border border-zinc-700 rounded p-4 cursor-pointer hover:bg-zinc-700 transition"
