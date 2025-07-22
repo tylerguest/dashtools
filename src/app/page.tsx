@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 import { useTransportControls } from '../hooks/useTransportControls';
 
-interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|null;}
+interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|null;}
 
 export default function Home() {
   const [windows,setWindows] = useState<WindowData[]>([{id:1,x:50,y:50,width:1400,height:800,title:'Window 1',content:null}]);

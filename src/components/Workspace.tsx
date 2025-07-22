@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Window from './Window';
 
-interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|null;}
+interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|null;}
 interface WorkspaceProps {windows:WindowData[];setWindows:React.Dispatch<React.SetStateAction<WindowData[]>>;
   transportState:{isPlaying:boolean;playheadPosition:number;};onPlayheadMove:(position:number)=>void;}
 
@@ -48,7 +48,7 @@ export default function Workspace({windows,setWindows,transportState,onPlayheadM
   };
   const handleResize=(id:number,x:number,y:number,width:number,height:number)=>setWindows(p=>p.map(w=>w.id===id?{...w,x,y,width,height}:w));
   const handleClose=(windowId:number)=>setWindows(prev=>prev.filter(w=>w.id!==windowId));
-  const handleContentChange=(windowId:number,content:'timeline'|'mixer')=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
+  const handleContentChange=(windowId:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot')=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
   return (
     <div 
       ref={setWorkspaceRef}
@@ -73,8 +73,6 @@ export default function Workspace({windows,setWindows,transportState,onPlayheadM
           onResize={handleResize}
           onClose={handleClose}
           onContentChange={handleContentChange}
-          transportState={transportState}
-          onPlayheadMove={onPlayheadMove}
         />
       ))}
     </div>

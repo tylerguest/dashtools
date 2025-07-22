@@ -12,9 +12,7 @@ export default function Header({ onNewWindow }: HeaderProps) {
       <div className="flex items-center gap-6">
         <h1 className="text-zinc-200 text-lg font-black">dashtools</h1>
       </div>
-      <button onClick={onNewWindow}>
-        + New Window
-      </button>
+      <button onClick={onNewWindow}>+</button>
     </header>
   );
 }

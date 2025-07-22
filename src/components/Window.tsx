@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import StockChartView from './views/StockChartView';
 import QuoteMonitorView from './views/QuoteMonitorView';
+import ChatbotView from './views/ChatbotView';
 
 interface WindowProps {
   id:number;
@@ -12,33 +13,34 @@ interface WindowProps {
   width:number;
   height:number;
   title:string;
-  content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|null;
+  content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|null;
   workspaceBounds?:{width:number;height:number}|null;
   otherWindows?:Array<{id:number;x:number;y:number;width:number;height:number}>;
   onMouseDown:(e:React.MouseEvent,id:number)=>void;
   onResize:(id:number,x:number,y:number,width:number,height:number)=>void;
   onClose:(id:number)=>void;
-  onContentChange?:(id:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor')=>void;
-  transportState?:{isPlaying:boolean;playheadPosition:number;};
-  onPlayheadMove?:(position:number)=>void;
+  onContentChange?:(id:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot')=>void;
 }
 
 export default function Window({ 
   id,x,y,width,height,title,content,workspaceBounds,otherWindows, 
-  onMouseDown,onResize,onClose,onContentChange,transportState,onPlayheadMove 
+  onMouseDown,onResize,onClose,onContentChange 
 }:WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [resizing, setResizing] = useState<null | { x: number; y: number; width: number; height: number }> (null);
+  const [dragRect, setDragRect] = useState<null | { x: number; y: number; width: number; height: number }>(null);
+  const dragRectRef = useRef<null | { x: number; y: number; width: number; height: number }>(null);
+  const [dragActive, setDragActive] = useState(false);
 
   const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
     e.stopPropagation();
     e.preventDefault();
+    setDragActive(true);
     const startX = e.clientX;
     const startY = e.clientY;
-    const startWindowX = resizing ? resizing.x : x;
-    const startWindowY = resizing ? resizing.y : y;
-    const startWidth = resizing ? resizing.width : width;
-    const startHeight = resizing ? resizing.height : height;
+    const startWindowX = x;
+    const startWindowY = y;
+    const startWidth = width;
+    const startHeight = height;
     document.body.style.userSelect = 'none';
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -72,15 +74,23 @@ export default function Window({
           }
         }
       }
-      setResizing({ x: newX, y: newY, width: newWidth, height: newHeight });
+      const rect = { x: newX, y: newY, width: newWidth, height: newHeight };
+      setDragRect(rect);
+      dragRectRef.current = rect;
     };
 
     const handleMouseUp = () => {
       document.body.style.userSelect = '';
-      if (resizing) {
-        onResize(id, resizing.x, resizing.y, resizing.width, resizing.height);
+      setDragActive(false);
+      const rect = dragRectRef.current;
+      if (rect) {
+        setDragRect(null);
+        dragRectRef.current = null;
+        onResize(id, rect.x, rect.y, rect.width, rect.height);
+      } else {
+        setDragRect(null);
+        dragRectRef.current = null;
       }
-      setResizing(null);
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
@@ -89,11 +99,11 @@ export default function Window({
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  // Use resizing state if present, otherwise props
-  const renderX = resizing ? resizing.x : x;
-  const renderY = resizing ? resizing.y : y;
-  const renderWidth = resizing ? resizing.width : width;
-  const renderHeight = resizing ? resizing.height : height;
+  // Use dragRect for live feedback, otherwise parent state
+  const renderX = dragRect ? dragRect.x : x;
+  const renderY = dragRect ? dragRect.y : y;
+  const renderWidth = dragRect ? dragRect.width : width;
+  const renderHeight = dragRect ? dragRect.height : height;
 
   return (
     <div
@@ -135,6 +145,16 @@ export default function Window({
               >
                 Quote Monitor
               </button>
+              <button
+                className="block w-full text-left px-4 py-2 text-zinc-200 hover:bg-zinc-700 text-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onContentChange) onContentChange(id, 'chatbot');
+                  setIsDropdownOpen(false);
+                }}
+              >
+                Chatbot
+              </button>
             </div>
           )}
         </div>
@@ -144,6 +164,9 @@ export default function Window({
           )}
           {content === 'quotemonitor' && (
             <span className="text-zinc-200 text-base font-bold">Quote Monitor</span>
+          )}
+          {content === 'chatbot' && (
+            <span className="text-zinc-200 text-base font-bold">Chatbot</span>
           )}
         </div>
         <button
@@ -159,6 +182,7 @@ export default function Window({
       <div className="flex-1 p-1 overflow-auto">
         {content === 'stockchart' && <StockChartView />}
         {content === 'quotemonitor' && <QuoteMonitorView />}
+        {content === 'chatbot' && <ChatbotView />}
         {!content && (
           <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
             Select a view from the dropdown menu
