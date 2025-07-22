@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Window from './window/Window';
+import { ZOrderProvider, useZOrder } from './window/ZOrderContext';
 
 interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null;notes?:string;}
 interface WorkspaceProps {
@@ -10,8 +11,7 @@ interface WorkspaceProps {
   user?: any;
 }
 
-export default function Workspace({windows,setWindows,user}:WorkspaceProps) {
-  console.log('[Workspace] windows state:', windows.map(w => ({ id: w.id, notes: w.notes })));
+function WorkspaceInner({windows,setWindows,user}:WorkspaceProps) {
   const [workspaceRef,setWorkspaceRef]=useState<HTMLDivElement|null>(null);
   const handleMouseDown=(e:React.MouseEvent,windowId:number) => {
     e.preventDefault();
@@ -54,14 +54,14 @@ export default function Workspace({windows,setWindows,user}:WorkspaceProps) {
   const handleClose=(windowId:number)=>setWindows(prev=>prev.filter(w=>w.id!==windowId));
   const handleContentChange=(windowId:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null)=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
   const handleNotesChange = (windowId: number, notes: string) => {
-    console.log('[Workspace] handleNotesChange called', { windowId, notes });
-    setWindows(prev => {
-      const updated = prev.map(w => w.id === windowId ? { ...w, notes } : w);
-      console.log('[Workspace] windows after notes change:', updated);
-      return updated;
-    });
+    setWindows(prev => prev.map(w => w.id === windowId ? { ...w, notes } : w));
   };
 
+  const { bringToFront, getZIndex, setInitialOrder } = useZOrder();
+  // Keep z-order in sync with window list
+  useEffect(() => {
+    setInitialOrder(windows.map(w => String(w.id)));
+  }, [windows]);
   return (
     <div 
       ref={setWorkspaceRef}
@@ -83,14 +83,31 @@ export default function Workspace({windows,setWindows,user}:WorkspaceProps) {
             height: workspaceRef.getBoundingClientRect().height
           } : null}
           otherWindows={windows}
-          onMouseDown={handleMouseDown}
+          onMouseDown={(e, id) => {
+            // Only bring to front if this window is not already on top
+            const currentZ = getZIndex(String(id));
+            const maxZ = Math.max(...windows.map(w => getZIndex(String(w.id))));
+            if (currentZ !== maxZ) {
+              bringToFront(String(id));
+            }
+            handleMouseDown(e, id);
+          }}
           onResize={handleResize}
           onClose={handleClose}
           onContentChange={handleContentChange}
           onNotesChange={handleNotesChange}
           user={user}
+          zIndex={getZIndex(String(window.id))}
         />
       ))}
     </div>
+  );
+}
+
+export default function Workspace(props: WorkspaceProps) {
+  return (
+    <ZOrderProvider>
+      <WorkspaceInner {...props} />
+    </ZOrderProvider>
   );
 }

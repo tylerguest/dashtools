@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useZOrder } from './ZOrderContext';
 import WindowHeader from './WindowHeader';
 import WindowContent from './WindowContent';
 import WindowResizer from './WindowResizer';
 import { useWindowDragResize } from './useWindowDragResize';
 import { WindowProps, WindowContent as WindowContentType } from '../../types/window';
 
-const Window: React.FC<WindowProps & { user?: any }> = ({
+const Window: React.FC<WindowProps & { user?: any; zIndex?: number }> = ({
   id, x, y, width, height, title, content, notes, workspaceBounds, otherWindows,
-  onMouseDown, onResize, onClose, onContentChange, onNotesChange, user
+  onMouseDown, onResize, onClose, onContentChange, onNotesChange, user, zIndex
 }) => {
+  const { bringToFront } = useZOrder();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const {
     dragRect,
@@ -27,11 +29,19 @@ const Window: React.FC<WindowProps & { user?: any }> = ({
   return (
     <div
       data-window-id={id}
-      className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col"
-      style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight }}
+      className="absolute bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col"
+      style={{
+        left: renderX,
+        top: renderY,
+        width: renderWidth,
+        height: renderHeight,
+        zIndex: zIndex || 10,
+        willChange: 'transform',
+      }}
       onMouseDown={e => {
         const tag = (e.target as HTMLElement).tagName.toLowerCase();
         if (["input", "textarea", "select", "button"].includes(tag)) return;
+        bringToFront(String(id));
         onMouseDown(e, id);
       }}
     >
