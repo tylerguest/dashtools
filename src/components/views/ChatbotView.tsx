@@ -42,7 +42,7 @@ export default function ChatbotView() {
 
   return (
     <div className="w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2">
-      <div className="mb-2 text-base font-bold">Chatbot</div>
+      {/* <div className="mb-2 text-base font-bold">Chatbot</div> */}
       <div className="flex-1 overflow-y-auto rounded bg-zinc-800 p-2 mb-2">
         {messages.map((msg, i) => (
           <div key={i} className={`mb-2 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>

@@ -38,7 +38,6 @@ export default function QuoteMonitorView() {
   return (
     <div className="w-full h-full bg-zinc-900 text-zinc-200 font-mono text-xs p-2 overflow-auto">
       <div className="mb-2 flex items-center gap-2">
-        <span className="text-base font-bold">Quote Monitor</span>
         <span className="bg-green-900 text-green-300 px-2 py-0.5 rounded text-xs ml-2">Main</span>
         <span className="text-zinc-400 text-xs">Ticker ^</span>
       </div>

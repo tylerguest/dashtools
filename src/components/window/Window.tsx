@@ -42,6 +42,7 @@ const Window: React.FC<WindowProps> = ({
           content === 'stockchart' ? 'Stock Chart'
           : content === 'quotemonitor' ? 'Quote Monitor'
           : content === 'chatbot' ? 'Chatbot'
+          : content === 'notes' ? 'Notes'
           : title
         }
         isDropdownOpen={isDropdownOpen}

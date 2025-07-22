@@ -27,20 +27,28 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
         ☰
       </button>
       {isDropdownOpen && (
-        <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded shadow-lg z-50 min-w-32 py-1">
-          {['stockchart', 'quotemonitor', 'chatbot', 'notes'].map(option => (
-            <button
-              key={option}
-              className="block w-full text-left px-4 py-2 text-zinc-200 hover:bg-zinc-700 text-sm"
-              onClick={e => {
-                e.stopPropagation();
-                onContentChange && onContentChange(option);
-                setIsDropdownOpen(false);
-              }}
-            >
-              {option.charAt(0).toUpperCase() + option.slice(1).replace('chart', ' Chart').replace('monitor', ' Monitor')}
-            </button>
-          ))}
+        <div className="absolute top-6 left-0 bg-zinc-800 border border-zinc-600 rounded shadow-lg z-50 min-w-48 py-1">
+          {['stockchart', 'quotemonitor', 'chatbot', 'notes'].map(option => {
+            const displayNames: Record<string, string> = {
+              stockchart: 'Stock Chart',
+              quotemonitor: 'Quote Monitor',
+              chatbot: 'Chatbot',
+              notes: 'Notes'
+            };
+            return (
+              <button
+                key={option}
+                className="block w-full text-left px-4 py-2 text-zinc-200 hover:bg-zinc-700 text-sm"
+                onClick={e => {
+                  e.stopPropagation();
+                  onContentChange && onContentChange(option);
+                  setIsDropdownOpen(false);
+                }}
+              >
+                {displayNames[option]}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

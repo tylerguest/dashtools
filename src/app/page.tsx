@@ -8,7 +8,7 @@ import type { WindowData } from '../types/window';
 
 export default function Home() {
   const [windows, setWindows] = useState<WindowData[]>([
-    { id: 1, x: 50, y: 50, width: 1400, height: 800, title: 'Window 1', content: null, notes: '' }
+    { id: 1, x: 50, y: 50, width: 1400, height: 800, title: '', content: null, notes: '' }
   ]);
   const [nextId, setNextId] = useState(2);
   const transport = useTransportControls();
