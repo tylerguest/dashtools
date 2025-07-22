@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
+import { createClient } from '@/utils/supabase/client';
 import { useTransportControls } from '../hooks/useTransportControls';
 import type { WindowData } from '../types/window';
 
 export default function Home() {
+  const [user, setUser] = useState<any>(null);
   const gap = 24;
   const windowCount = 4;
   const defaultWindowWidth = 320;
@@ -36,6 +38,12 @@ export default function Home() {
   const [nextId, setNextId] = useState(5);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    fetchUser();
     const updateLayout = () => {
       setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
     };
@@ -75,6 +83,7 @@ export default function Home() {
           setWindows={setWindows}
           transportState={{isPlaying:transport.isPlaying,playheadPosition:transport.playheadPosition}}
           onPlayheadMove={transport.setPlayheadPosition}
+          user={user}
         />
       </main>
     </div>

@@ -7,9 +7,9 @@ import WindowResizer from './WindowResizer';
 import { useWindowDragResize } from './useWindowDragResize';
 import { WindowProps, WindowContent as WindowContentType } from '../../types/window';
 
-const Window: React.FC<WindowProps> = ({
+const Window: React.FC<WindowProps & { user?: any }> = ({
   id, x, y, width, height, title, content, notes, workspaceBounds, otherWindows,
-  onMouseDown, onResize, onClose, onContentChange, onNotesChange
+  onMouseDown, onResize, onClose, onContentChange, onNotesChange, user
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const {
@@ -55,6 +55,7 @@ const Window: React.FC<WindowProps> = ({
           content={content as WindowContentType}
           notes={notes}
           onNotesChange={onNotesChange ? (notesVal => onNotesChange(id, notesVal)) : undefined}
+          user={user}
         />
       </div>
       <WindowResizer onResizeMouseDown={handleResizeMouseDown} />

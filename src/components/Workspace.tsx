@@ -4,10 +4,15 @@ import React, { useState } from 'react';
 import Window from './window/Window';
 
 interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null;notes?:string;}
-interface WorkspaceProps {windows:WindowData[];setWindows:React.Dispatch<React.SetStateAction<WindowData[]>>;
-  transportState:{isPlaying:boolean;playheadPosition:number;};onPlayheadMove:(position:number)=>void;}
+interface WorkspaceProps {
+  windows: WindowData[];
+  setWindows: React.Dispatch<React.SetStateAction<WindowData[]>>;
+  transportState: { isPlaying: boolean; playheadPosition: number; };
+  onPlayheadMove: (position: number) => void;
+  user?: any;
+}
 
-export default function Workspace({windows,setWindows,transportState,onPlayheadMove}:WorkspaceProps) {
+export default function Workspace({windows,setWindows,transportState,onPlayheadMove,user}:WorkspaceProps) {
   console.log('[Workspace] windows state:', windows.map(w => ({ id: w.id, notes: w.notes })));
   const [workspaceRef,setWorkspaceRef]=useState<HTMLDivElement|null>(null);
   const handleMouseDown=(e:React.MouseEvent,windowId:number) => {
@@ -85,6 +90,7 @@ export default function Workspace({windows,setWindows,transportState,onPlayheadM
           onClose={handleClose}
           onContentChange={handleContentChange}
           onNotesChange={handleNotesChange}
+          user={user}
         />
       ))}
     </div>
