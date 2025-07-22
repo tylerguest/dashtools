@@ -10,7 +10,6 @@ const initialMessages: Message[] = [
 ];
 
 function getMockLLMResponse(input: string): string {
-  // Simple mock logic for demo
   if (input.toLowerCase().includes('hello')) return 'Hi there! How can I assist you?';
   if (input.toLowerCase().includes('price')) return 'The current price is $123.45.';
   return "I'm here to help!";
@@ -42,7 +41,6 @@ export default function ChatbotView() {
 
   return (
     <div className="w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2">
-      {/* <div className="mb-2 text-base font-bold">Chatbot</div> */}
       <div className="flex-1 overflow-y-auto rounded bg-zinc-800 p-2 mb-2">
         {messages.map((msg, i) => (
           <div key={i} className={`mb-2 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>

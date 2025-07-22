@@ -30,7 +30,6 @@ const Window: React.FC<WindowProps> = ({
       className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col"
       style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight }}
       onMouseDown={e => {
-        // Only trigger drag if the click is not on an input, textarea, select, or button
         const tag = (e.target as HTMLElement).tagName.toLowerCase();
         if (["input", "textarea", "select", "button"].includes(tag)) return;
         onMouseDown(e, id);

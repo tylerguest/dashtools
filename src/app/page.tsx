@@ -20,7 +20,6 @@ export default function Home() {
     const windowWidth = Math.max(320, Math.floor((browserWidth - totalGap) / windowCount));
     const totalWindowsWidth = windowWidth * windowCount + totalGap;
     const leftOffset = Math.max(0, Math.floor((browserWidth - totalWindowsWidth) / 2));
-    // Calculate dynamic height: leave some space for header/footer, min height enforced
     const availableHeight = Math.max(minWindowHeight, Math.floor(browserHeight - 120));
     return Array.from({ length: windowCount }, (_, i) => ({
       id: i + 1,
@@ -33,12 +32,10 @@ export default function Home() {
       notes: ''
     }));
   };
-  // Use static default for SSR, update on client
   const [windows, setWindows] = useState<WindowData[]>(() => getWindowLayout());
   const [nextId, setNextId] = useState(5);
 
   useEffect(() => {
-    // On mount and resize, update to real browser width/height
     const updateLayout = () => {
       setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
     };

@@ -12,7 +12,6 @@ interface WindowContentProps {
   onNotesChange?: (notes: string) => void;
 }
 
-
 const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesChange }) => {
   console.log('[WindowContent] rendered with content:', content, 'notes:', notes, 'onNotesChange:', typeof onNotesChange);
   if (content === 'stockchart') return <StockChartView />;
