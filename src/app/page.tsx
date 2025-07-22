@@ -1,20 +1,31 @@
-"use client";
 
-import { useState } from 'react';
+"use client";
+import React, { useState } from 'react';
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 import { useTransportControls } from '../hooks/useTransportControls';
-
-interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|null;}
+import type { WindowData } from '../types/window';
 
 export default function Home() {
-  const [windows,setWindows] = useState<WindowData[]>([{id:1,x:50,y:50,width:1400,height:800,title:'Window 1',content:null}]);
-  const [nextId,setNextId] = useState(2);
+  const [windows, setWindows] = useState<WindowData[]>([
+    { id: 1, x: 50, y: 50, width: 1400, height: 800, title: 'Window 1', content: null, notes: '' }
+  ]);
+  const [nextId, setNextId] = useState(2);
   const transport = useTransportControls();
+  console.log('[Home] render, windows state:', windows.map(w => ({ id: w.id, notes: w.notes })));
   const addNewWindow = () => {
-    const newWindow:WindowData={id:nextId,x:50+(nextId-1)*30,y:50+(nextId-1)*30,width:1400,height:800,title:`Window${nextId}`,content:null};
-    setWindows(prev=>[...prev,newWindow]);
-    setNextId(prev=>prev+1);
+    const newWindow: WindowData = {
+      id: nextId,
+      x: 50 + (nextId - 1) * 30,
+      y: 50 + (nextId - 1) * 30,
+      width: 1400,
+      height: 800,
+      title: `Window${nextId}`,
+      content: null,
+      notes: ''
+    };
+    setWindows((prev: WindowData[]) => [...prev, newWindow]);
+    setNextId((prev: number) => prev + 1);
   };
 
   return (

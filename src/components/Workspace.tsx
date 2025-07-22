@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import Window from './Window';
+import Window from './window/Window';
 
-interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|null;}
+interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null;notes?:string;}
 interface WorkspaceProps {windows:WindowData[];setWindows:React.Dispatch<React.SetStateAction<WindowData[]>>;
   transportState:{isPlaying:boolean;playheadPosition:number;};onPlayheadMove:(position:number)=>void;}
 
 export default function Workspace({windows,setWindows,transportState,onPlayheadMove}:WorkspaceProps) {
+  console.log('[Workspace] windows state:', windows.map(w => ({ id: w.id, notes: w.notes })));
   const [workspaceRef,setWorkspaceRef]=useState<HTMLDivElement|null>(null);
   const handleMouseDown=(e:React.MouseEvent,windowId:number) => {
     e.preventDefault();
@@ -48,7 +49,16 @@ export default function Workspace({windows,setWindows,transportState,onPlayheadM
   };
   const handleResize=(id:number,x:number,y:number,width:number,height:number)=>setWindows(p=>p.map(w=>w.id===id?{...w,x,y,width,height}:w));
   const handleClose=(windowId:number)=>setWindows(prev=>prev.filter(w=>w.id!==windowId));
-  const handleContentChange=(windowId:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot')=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
+  const handleContentChange=(windowId:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null)=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
+  const handleNotesChange = (windowId: number, notes: string) => {
+    console.log('[Workspace] handleNotesChange called', { windowId, notes });
+    setWindows(prev => {
+      const updated = prev.map(w => w.id === windowId ? { ...w, notes } : w);
+      console.log('[Workspace] windows after notes change:', updated);
+      return updated;
+    });
+  };
+
   return (
     <div 
       ref={setWorkspaceRef}
@@ -64,6 +74,7 @@ export default function Workspace({windows,setWindows,transportState,onPlayheadM
           height={window.height}
           title={window.title}
           content={window.content}
+          notes={window.notes}
           workspaceBounds={workspaceRef ? {
             width: workspaceRef.getBoundingClientRect().width,
             height: workspaceRef.getBoundingClientRect().height
@@ -73,6 +84,7 @@ export default function Workspace({windows,setWindows,transportState,onPlayheadM
           onResize={handleResize}
           onClose={handleClose}
           onContentChange={handleContentChange}
+          onNotesChange={handleNotesChange}
         />
       ))}
     </div>
