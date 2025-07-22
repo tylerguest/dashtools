@@ -1,1 +1,1 @@
-![Dashboard Screenshot](dashtools.png)
+![Dashboard Screenshot](./images/dashtools.png)
