@@ -3,7 +3,6 @@ import React from 'react';
 import StockChartView from '../views/StockChartView';
 import QuoteMonitorView from '../views/QuoteMonitorView';
 import ChatbotView from '../views/ChatbotView';
-import NotesView from '../views/NotesView';
 import NotesGridView from '../views/NotesGridView';
 import { WindowContent as WindowContentType } from '../../types/window';
 
