@@ -156,12 +156,14 @@ export default function NotesGridView({ user }: { user: any }) {
           <div className="w-full min-h-[200px] p-4 bg-zinc-800">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               <div
-                className="flex flex-col items-center justify-center border-2 border-zinc-400 bg-zinc-800 rounded p-4 cursor-pointer hover:border-zinc-900 hover:bg-zinc-800 transition min-h-[120px]"
+                className="flex flex-col items-center justify-center w-32 h-40 border-2 border-dashed border-zinc-500 rounded-lg bg-zinc-800 hover:bg-zinc-700 hover:border-zinc-400 transition-all duration-200 shadow-md cursor-pointer group"
                 onClick={handleAddNote}
                 title="Add new note"
               >
-                <span className="text-3xl text-zinc-400 font-light mb-1">+</span>
-                <span className="text-zinc-500 text-sm">Add Note</span>
+                <div className="flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-zinc-700 group-hover:bg-zinc-600 transition-all duration-200 shadow">
+                  <span className="text-3xl text-zinc-300 group-hover:text-white">+</span>
+                </div>
+                <span className="text-zinc-400 group-hover:text-zinc-100 font-medium">Add Note</span>
               </div>
               {(user ? notes : localNotes).length === 0 ? (
                 <div className="col-span-full text-center text-zinc-500 py-12">
