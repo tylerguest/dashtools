@@ -9,10 +9,21 @@ const initialMessages: Message[] = [
   { sender: 'bot', text: 'Hello! I am your AI assistant. How can I help you today?' },
 ];
 
-function getMockLLMResponse(input: string): string {
-  if (input.toLowerCase().includes('hello')) return 'Hi there! How can I assist you?';
-  if (input.toLowerCase().includes('price')) return 'The current price is $123.45.';
-  return "I'm here to help!";
+async function fetchLLMResponse(input: string): Promise<string> {
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: input }),
+    });
+    if (!res.ok) {
+      return 'Sorry, there was an error contacting the AI.';
+    }
+    const data = await res.json();
+    return data.response || 'Sorry, no response from the AI.';
+  } catch {
+    return 'Sorry, there was a network error.';
+  }
 }
 
 export default function ChatbotView() {
@@ -24,15 +35,16 @@ export default function ChatbotView() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSend = () => {
+  const [loadingMsg, setLoadingMsg] = useState(false);
+  const handleSend = async () => {
     if (!input.trim()) return;
     const userMsg: Message = { sender: 'user', text: input };
     setMessages((msgs) => [...msgs, userMsg]);
-    setTimeout(() => {
-      const botMsg: Message = { sender: 'bot', text: getMockLLMResponse(input) };
-      setMessages((msgs) => [...msgs, botMsg]);
-    }, 600);
+    setLoadingMsg(true);
     setInput('');
+    const botText = await fetchLLMResponse(input);
+    setMessages((msgs) => [...msgs, { sender: 'bot', text: botText }]);
+    setLoadingMsg(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -47,6 +59,11 @@ export default function ChatbotView() {
             <div className={`max-w-[70%] px-3 py-2 rounded-lg ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-zinc-200'}`}>{msg.text}</div>
           </div>
         ))}
+        {loadingMsg && (
+          <div className="mb-2 flex justify-start">
+            <div className="max-w-[70%] px-3 py-2 rounded-lg bg-zinc-700 text-zinc-400 italic animate-pulse">Thinking…</div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
       <div className="flex gap-2">

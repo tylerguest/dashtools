@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 import { createClient } from '@/utils/supabase/client';
-import { useTransportControls } from '../hooks/useTransportControls';
 import type { WindowData } from '../types/window';
 
 export default function Home() {
@@ -52,8 +51,6 @@ export default function Home() {
     return () => window.removeEventListener('resize', updateLayout);
   }, []);
 
-  const transport = useTransportControls();
-  console.log('[Home] render, windows state:', windows.map(w => ({ id: w.id, notes: w.notes })));
   const addNewWindow = () => {
     const browserWidth = typeof window !== 'undefined' ? window.innerWidth : 2400;
     const browserHeight = typeof window !== 'undefined' ? window.innerHeight : defaultWindowHeight + 40;
@@ -81,8 +78,6 @@ export default function Home() {
         <Workspace 
           windows={windows} 
           setWindows={setWindows}
-          transportState={{isPlaying:transport.isPlaying,playheadPosition:transport.playheadPosition}}
-          onPlayheadMove={transport.setPlayheadPosition}
           user={user}
         />
       </main>
