@@ -91,7 +91,6 @@ export default function QuoteMonitorView() {
             const prev = updated[ticker]?.last || 0;
             const chg = prev !== 0 ? ((last - prev) / prev) * 100 : 0;
             const volume = trade.v ? trade.v.toLocaleString() : updated[ticker]?.volume || '';
-            // Determine if fields changed
             const lastChanged = last !== updated[ticker]?.last;
             const chgChanged = chg !== updated[ticker]?.chg;
             const volumeChanged = volume !== updated[ticker]?.volume;
@@ -244,7 +243,11 @@ export default function QuoteMonitorView() {
                 <tr key={ticker} className="odd:bg-zinc-900 even:bg-zinc-800">
                   <td className="px-2 py-1 font-bold text-zinc-100">{ticker}</td>
                   <td className={`px-2 py-1 text-right transition-colors duration-150 ${flash.last ? 'bg-yellow-400/30' : ''}`}>{q.last !== 0 ? q.last : '-'}</td>
-                  <td className={`px-2 py-1 text-right font-bold transition-colors duration-150 ${getChgColor(q.chg)} ${flash.chg ? 'bg-yellow-400/30' : ''}`}>{q.chg > 0 ? '+' : ''}{q.chg !== 0 ? q.chg.toFixed(2) : '-'}%</td>
+                  <td className={`px-2 py-1 text-right font-bold transition-colors duration-150 ${getChgColor(q.chg)} ${flash.chg ? 'bg-yellow-400/30' : ''}`}>
+                    {typeof q.chg === 'number' && !isNaN(q.chg)
+                      ? (q.chg > 0 ? '+' : '') + q.chg.toFixed(2)
+                      : ''}
+                  </td>
                   <td className={`px-2 py-1 text-right transition-colors duration-150 ${flash.volume ? 'bg-yellow-400/30' : ''}`}>{q.volume || '-'}</td>
                   <td className="px-2 py-1 text-right text-green-300">{q.latency || '-'}</td>
                   <td className="px-2 py-1 text-right">
