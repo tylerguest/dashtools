@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-// Helper to fetch initial quote for a ticker
+
 async function fetchQuote(ticker: string, apiKey: string) {
   const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(ticker)}&token=${apiKey}`);
   if (!res.ok) return null;
@@ -135,13 +135,18 @@ export default function QuoteMonitorView() {
       }
     };
     ws.onerror = (err) => {
-      console.error('Finnhub WebSocket error:', err);
+      const errorMsg = err instanceof Error ? err.message : JSON.stringify(err);
+      console.error('Finnhub WebSocket error:', errorMsg, 'readyState:', ws.readyState, 'url:', ws.url);
     };
     return () => {
       tickers.forEach(ticker => {
-        ws.send(JSON.stringify({ type: 'unsubscribe', symbol: ticker }));
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'unsubscribe', symbol: ticker }));
+        }
       });
-      ws.close();
+      if (ws && ws.readyState !== WebSocket.CLOSED && ws.readyState !== WebSocket.CLOSING) {
+        ws.close();
+      }
     };
   }, [tickers]);
 

@@ -18,12 +18,9 @@ export function useZOrder() {
 
 export function ZOrderProvider({ children }: { children: ReactNode }) {
   const [zOrder, setZOrder] = useState<string[]>([]);
-  // Set initial z-order, but only add new IDs that aren't present, and preserve order for existing ones
   const setInitialOrder = useCallback((ids: string[]) => {
     setZOrder(prev => {
-      // Remove IDs that no longer exist
       let filtered = prev.filter(id => ids.includes(id));
-      // Add new IDs at the end
       ids.forEach(id => {
         if (!filtered.includes(id)) filtered.push(id);
       });

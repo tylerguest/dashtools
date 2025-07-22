@@ -1,12 +1,15 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
-import { createClient } from '@/utils/supabase/client';
+import { createClient, saveCustomView, fetchCustomViews, deleteCustomView, fetchUserWindowLayout, upsertUserWindowLayout } from '@/utils/supabase/client';
 import type { WindowData } from '../types/window';
+import CustomViewsMenu from '../components/CustomViewsMenu';
 
 export default function Home() {
   const [user, setUser] = useState<any>(null);
+  const [customViews, setCustomViews] = useState<any[]>([]);
   const gap = 24;
   const windowCount = 4;
   const defaultWindowWidth = 320;
@@ -37,16 +40,31 @@ export default function Home() {
   const [nextId, setNextId] = useState(5);
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserAndViewsAndLayout = async () => {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
+      if (user) {
+        const { data: views, error: viewsError } = await fetchCustomViews(user.id);
+        if (!viewsError && views) setCustomViews(views);
+        const { data: layoutRow, error: layoutError } = await fetchUserWindowLayout(user.id);
+        if (layoutError) {
+          console.error('[App] Error fetching user window layout:', layoutError);
+        }
+        if (!layoutError && layoutRow && layoutRow.layout) {
+          setWindows(layoutRow.layout);
+          setNextId(layoutRow.layout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
+        } else {
+          setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+        }
+      } else {
+        setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+      }
     };
-    fetchUser();
+    fetchUserAndViewsAndLayout();
     const updateLayout = () => {
       setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
     };
-    updateLayout();
     window.addEventListener('resize', updateLayout);
     return () => window.removeEventListener('resize', updateLayout);
   }, []);
@@ -57,10 +75,15 @@ export default function Home() {
     const totalGap = gap * (windowCount + 1);
     const windowWidth = Math.max(320, Math.floor((browserWidth - totalGap) / windowCount));
     const availableHeight = Math.max(minWindowHeight, Math.floor(browserHeight - 120));
+    const margin = 40;
+    const maxX = Math.max(margin, browserWidth - windowWidth - margin);
+    const maxY = Math.max(margin, browserHeight - availableHeight - margin - 120);
+    const x = Math.floor(Math.random() * (maxX - margin + 1)) + margin;
+    const y = Math.floor(Math.random() * (maxY - margin + 1)) + margin;
     const newWindow: WindowData = {
       id: nextId,
-      x: gap,
-      y: 50,
+      x,
+      y,
       width: windowWidth,
       height: availableHeight,
       title: `Window${nextId}`,
@@ -71,9 +94,51 @@ export default function Home() {
     setNextId((prev: number) => prev + 1);
   };
 
+  const handleSaveView = async (name: string, layout: any) => {
+    if (!user) return;
+    const { error } = await saveCustomView(user.id, name, layout);
+    if (!error) {
+      const { data: views } = await fetchCustomViews(user.id);
+      if (views) setCustomViews(views);
+    } else {
+      alert('Failed to save view: ' + error.message);
+    }
+  };
+  const handleLoadView = (view: any) => {
+    setWindows(view.layout);
+    setNextId(view.layout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
+    if (user) upsertUserWindowLayout(user.id, view.layout);
+  };
+  const handleDeleteView = async (id: string) => {
+    if (!user) return;
+    const { error } = await deleteCustomView(id, user.id);
+    if (!error) {
+      setCustomViews(prev => prev.filter(v => v.id !== id));
+    } else {
+      alert('Failed to delete view: ' + error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) return;
+    const timeout = setTimeout(() => {
+      upsertUserWindowLayout(user.id, windows)
+        .catch(err => console.error('[App] upsertUserWindowLayout error:', err));
+    }, 600);
+    return () => clearTimeout(timeout);
+  }, [windows, user]);
+
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
-      <Header onNewWindow={addNewWindow} />
+      <Header onNewWindow={addNewWindow}>
+        <CustomViewsMenu
+          views={customViews}
+          onSave={handleSaveView}
+          onLoad={handleLoadView}
+          onDelete={handleDeleteView}
+          currentLayout={windows}
+        />
+      </Header>
       <main className="flex-1 flex">
         <Workspace 
           windows={windows} 

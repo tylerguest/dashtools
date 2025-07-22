@@ -58,7 +58,6 @@ function WorkspaceInner({windows,setWindows,user}:WorkspaceProps) {
   };
 
   const { bringToFront, getZIndex, setInitialOrder } = useZOrder();
-  // Keep z-order in sync with window list
   useEffect(() => {
     setInitialOrder(windows.map(w => String(w.id)));
   }, [windows]);
@@ -84,7 +83,6 @@ function WorkspaceInner({windows,setWindows,user}:WorkspaceProps) {
           } : null}
           otherWindows={windows}
           onMouseDown={(e, id) => {
-            // Only bring to front if this window is not already on top
             const currentZ = getZIndex(String(id));
             const maxZ = Math.max(...windows.map(w => getZIndex(String(w.id))));
             if (currentZ !== maxZ) {
