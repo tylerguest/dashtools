@@ -154,9 +154,9 @@ export default function NotesGridView({ user }: { user: any }) {
           <div className="text-zinc-400 p-4">Loading...</div>
         ) : (
           <div className="w-full min-h-[200px] p-4 bg-zinc-800">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch justify-items-stretch">
               <div
-                className="flex flex-col items-center justify-center w-32 h-40 border-2 border-dashed border-zinc-500 rounded-lg bg-zinc-800 hover:bg-zinc-700 hover:border-zinc-400 transition-all duration-200 shadow-md cursor-pointer group"
+                className="flex flex-col items-center justify-center min-h-[180px] h-full border-2 border-dashed border-zinc-500 rounded-lg bg-zinc-800 hover:bg-zinc-700 hover:border-zinc-400 transition-all duration-200 shadow-md cursor-pointer group p-4"
                 onClick={handleAddNote}
                 title="Add new note"
               >
@@ -172,15 +172,17 @@ export default function NotesGridView({ user }: { user: any }) {
                 (user ? notes : localNotes).map((note) => (
                   <div
                     key={note.id}
-                    className="bg-zinc-800 border border-zinc-700 rounded p-4 cursor-pointer hover:bg-zinc-700 transition"
+                    className="flex flex-col justify-between min-h-[180px] h-full bg-zinc-800 border border-zinc-700 rounded p-4 cursor-pointer hover:bg-zinc-700 transition"
                     onClick={() => handleEditNote(note)}
                   >
-                    <div className="font-bold text-zinc-100 mb-2 truncate">{note.title || "Untitled"}</div>
-                    <div className="text-zinc-400 text-xs mb-2">{new Date(note.created_at).toLocaleString()}</div>
-                    <div className="text-zinc-300 text-sm">
-                      {note.content.length > 100
-                        ? note.content.slice(0, 100) + "…"
-                        : note.content}
+                    <div>
+                      <div className="font-bold text-zinc-100 mb-2 truncate">{note.title || "Untitled"}</div>
+                      <div className="text-zinc-400 text-xs mb-2">{new Date(note.created_at).toLocaleString()}</div>
+                      <div className="text-zinc-300 text-sm">
+                        {note.content.length > 100
+                          ? note.content.slice(0, 100) + "…"
+                          : note.content}
+                      </div>
                     </div>
                   </div>
                 ))
