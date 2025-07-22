@@ -27,11 +27,17 @@ const Window: React.FC<WindowProps> = ({
   return (
     <div
       data-window-id={id}
-      className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move flex flex-col"
+      className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col"
       style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight }}
-      onMouseDown={e => onMouseDown(e, id)}
+      onMouseDown={e => {
+        // Only trigger drag if the click is not on an input, textarea, select, or button
+        const tag = (e.target as HTMLElement).tagName.toLowerCase();
+        if (["input", "textarea", "select", "button"].includes(tag)) return;
+        onMouseDown(e, id);
+      }}
     >
-      <WindowHeader
+      <div className="cursor-move">
+        <WindowHeader
         title={
           content === 'stockchart' ? 'Stock Chart'
           : content === 'quotemonitor' ? 'Quote Monitor'
@@ -42,7 +48,8 @@ const Window: React.FC<WindowProps> = ({
         setIsDropdownOpen={setIsDropdownOpen}
         onContentChange={option => onContentChange && onContentChange(id, option as WindowContentType)}
         onClose={() => onClose(id)}
-      />
+        />
+      </div>
       <div className="flex-1 p-1 overflow-auto">
         <WindowContent 
           content={content as WindowContentType}
