@@ -1,4 +1,3 @@
-
 import React from 'react';
 import StockChartView from '../views/StockChartView';
 import QuoteMonitorView from '../views/QuoteMonitorView';
@@ -13,12 +12,31 @@ interface WindowContentProps {
   user?: any;
 }
 
+const viewMap: Record<Exclude<WindowContentType, null>, React.FC<any>> = {
+  stockchart: StockChartView,
+  quotemonitor: QuoteMonitorView,
+  chatbot: ChatbotView,
+  notes: NotesGridView,
+};
+
 const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesChange, user }) => {
-  console.log('[WindowContent] rendered with content:', content, 'notes:', notes, 'onNotesChange:', typeof onNotesChange);
-  if (content === 'stockchart') return <StockChartView />;
-  if (content === 'quotemonitor') return <QuoteMonitorView />;
-  if (content === 'chatbot') return <ChatbotView />;
-  if (content === 'notes') return <NotesGridView user={user} />;
+  if (content == null) {
+    return (
+      <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
+        Select a view from the dropdown menu
+      </div>
+    );
+  }
+
+  const ViewComponent = viewMap[content];
+
+  if (ViewComponent) {
+    if (content === 'notes') {
+      return <NotesGridView user={user} />;
+    }
+    return <ViewComponent />;
+  }
+
   return (
     <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
       Select a view from the dropdown menu
