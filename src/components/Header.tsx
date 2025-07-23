@@ -16,9 +16,9 @@ export default function Header({ onNewWindow, children }: HeaderProps) {
         <h1 className="text-zinc-200 text-lg font-black">dashtools</h1>
       </div>
       <div className="flex items-center gap-4">
-        {children}
         <FPSMonitor />
         <button onClick={onNewWindow} className="text-zinc-200 text-xl font-bold px-2 py-1 rounded hover:bg-zinc-800">+</button>
+        {children}
         <UserMenu />
       </div>
     </header>

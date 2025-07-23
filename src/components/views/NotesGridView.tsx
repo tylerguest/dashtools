@@ -203,31 +203,33 @@ export default function NotesGridView({ user }: { user: any }) {
         <div className="text-zinc-400 p-4">Loading...</div>
       ) : (
         <div className="w-full min-h-[200px] p-4 bg-zinc-800">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch justify-items-stretch">
+          <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 items-stretch justify-items-stretch">
+            {/* Add Note Card */}
             <div
-              className="flex flex-col items-center justify-center min-h-[180px] h-full border-2 border-dashed border-zinc-500 rounded-lg bg-zinc-800 hover:bg-zinc-700 hover:border-zinc-400 transition-all duration-200 shadow-md cursor-pointer group p-4"
+              className="flex flex-col items-center justify-center min-h-[120px] sm:min-h-[160px] md:min-h-[180px] h-full rounded-2xl bg-zinc-900/60 border border-zinc-700/60 shadow-xl backdrop-blur-md cursor-pointer group p-4 sm:p-6 transition-all duration-200 hover:scale-[1.04] hover:bg-zinc-800/80 hover:border-zinc-500/80 focus:outline-none focus:ring-2 focus:ring-zinc-500 min-w-0 w-full sm:max-w-md sm:mx-auto"
               onClick={handleAddNote}
               title="Add new note"
             >
-              <div className="flex items-center justify-center w-12 h-12 mb-2 rounded-full bg-zinc-700 group-hover:bg-zinc-600 transition-all duration-200 shadow">
-                <span className="text-3xl text-zinc-300 group-hover:text-white">+</span>
+              <div className="flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 mb-2 sm:mb-3 rounded-full bg-zinc-700/80 group-hover:bg-zinc-600/90 transition-all duration-200 shadow-lg">
+                <span className="text-2xl sm:text-4xl text-zinc-300 group-hover:text-white select-none">+</span>
               </div>
-              <span className="text-zinc-400 group-hover:text-zinc-100 font-medium">Add Note</span>
+              <span className="text-zinc-400 group-hover:text-zinc-100 font-semibold tracking-wide text-base sm:text-lg select-none text-center">Add Note</span>
             </div>
+            {/* Notes Grid */}
             {(user ? notes : localNotes).length === 0 ? (
-              <div className="col-span-full text-center text-zinc-500 py-12">
+              <div className="col-span-full text-center text-zinc-500 py-12 text-lg font-medium">
                 No notes yet.
               </div>
             ) : (
               (user ? notes : localNotes).map((note) => (
                 <div
                   key={note.id}
-                  className="relative flex flex-col justify-between min-h-[180px] h-full bg-zinc-800 border border-zinc-700 rounded p-4 cursor-pointer hover:bg-zinc-700 transition"
+                  className="relative flex flex-col justify-between min-h-[120px] sm:min-h-[160px] md:min-h-[180px] h-full rounded-2xl bg-zinc-900/70 border border-zinc-700/70 shadow-lg backdrop-blur-md p-4 sm:p-6 cursor-pointer transition-all duration-200 hover:scale-[1.03] hover:bg-zinc-800/90 hover:border-zinc-500/80 group min-w-0 w-full sm:max-w-md sm:mx-auto"
                   onClick={() => handleEditNote(note)}
                 >
                   {/* Delete icon */}
                   <button
-                    className="absolute top-2 right-2 z-10 p-1 rounded-full bg-transparent hover:bg-zinc-700/60 focus:bg-zinc-700/80 transition group"
+                    className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 p-1 sm:p-1.5 rounded-full bg-transparent hover:bg-zinc-700/60 focus:bg-zinc-700/80 transition group"
                     title="Delete note"
                     aria-label="Delete note"
                     onClick={e => {
@@ -241,8 +243,8 @@ export default function NotesGridView({ user }: { user: any }) {
                     </svg>
                   </button>
                   <div>
-                    <div className="font-bold text-zinc-100 mb-2 truncate pr-8">{note.title || "Untitled"}</div>
-                    <div className="text-zinc-300 text-sm">
+                    <div className="font-bold text-zinc-100 mb-1 sm:mb-2 truncate pr-8 text-base sm:text-lg group-hover:text-white transition-colors">{note.title || "Untitled"}</div>
+                    <div className="text-zinc-300 text-sm sm:text-base group-hover:text-zinc-100 transition-colors break-words">
                       {note.content.length > 100
                         ? note.content.slice(0, 100) + "…"
                         : note.content}
