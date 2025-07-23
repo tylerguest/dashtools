@@ -19,6 +19,7 @@ export default function NotesGridView({ user }: { user: any }) {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [showNotesPane, setShowNotesPane] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
@@ -169,10 +170,21 @@ export default function NotesGridView({ user }: { user: any }) {
   return (
     <div className="h-full w-full flex bg-zinc-800">
       {/* Only show left column if not editing or adding */}
-      {!(isAdding || selectedNote) && (
+      {showNotesPane && !(isAdding || selectedNote) && (
         <div className="w-64 min-w-[220px] max-w-[320px] h-full border-r border-zinc-700 bg-zinc-900/95 flex flex-col">
-          <div className="flex items-center px-4 py-3 border-b border-zinc-800">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
             <span className="text-lg font-bold text-zinc-100">Notes</span>
+            <button
+              className="ml-1 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center"
+              title="Hide notes pane"
+              onClick={() => setShowNotesPane(false)}
+              aria-label="Hide notes pane"
+              style={{ minWidth: 24, minHeight: 24 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
           </div>
           <div className="flex-1 overflow-y-auto">
             {(user ? notes : localNotes).length === 0 ? (
@@ -268,14 +280,31 @@ export default function NotesGridView({ user }: { user: any }) {
             />
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full">
-            <button
-              className="px-4 py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-zinc-600 shadow-none rounded-none"
-              onClick={handleAddNote}
-              title="Add new note"
-            >
-              + New Note
-            </button>
+          <div className="flex flex-col h-full w-full">
+            {!showNotesPane && (
+              <div className="flex items-start">
+                <button
+                  className="mt-3 ml-3 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center"
+                  onClick={() => setShowNotesPane(true)}
+                  title="Show notes pane"
+                  aria-label="Show notes pane"
+                  style={{ minWidth: 24, minHeight: 24 }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+            <div className="flex flex-1 items-center justify-center">
+              <button
+                className="px-4 py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-zinc-600 shadow-none rounded-none"
+                onClick={handleAddNote}
+                title="Add new note"
+              >
+                + New Note
+              </button>
+            </div>
           </div>
         )}
       </div>
