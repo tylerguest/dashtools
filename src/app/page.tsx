@@ -80,16 +80,23 @@ export default function Home() {
     }
   }, []);
   // When user modifies layout (e.g., moves/resizes a window), update base refs
-  const setWindowsAndBase = useCallback((updater) => {
-    setWindows(prev => {
-      const next = typeof updater === 'function' ? updater(prev) : updater;
-      baseLayoutRef.current = next.map((w: WindowData) => ({ ...w }));
-      if (typeof window !== 'undefined') {
-        baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
-      }
-      return next;
-    });
-  }, []);
+  const setWindowsAndBase = useCallback(
+    (
+      updater:
+        | ((prev: WindowData[]) => WindowData[])
+        | WindowData[]
+    ) => {
+      setWindows(prev => {
+        const next = typeof updater === 'function' ? updater(prev) : updater;
+        baseLayoutRef.current = next.map((w: WindowData) => ({ ...w }));
+        if (typeof window !== 'undefined') {
+          baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
+        }
+        return next;
+      });
+    },
+    []
+  );
 
   // Replace all setWindows calls with setWindowsAndBase below
 
@@ -148,7 +155,7 @@ export default function Home() {
       content: 'quotemonitor',
       notes: ''
     };
-    setWindowsAndBase(prev => [...prev, newWindow]);
+    setWindowsAndBase((prev: WindowData[]) => [...prev, newWindow]);
     setNextId(prev => prev + 1);
   }, [nextId, setWindowsAndBase]);
 
