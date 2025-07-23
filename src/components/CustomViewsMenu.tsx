@@ -62,7 +62,7 @@ export default function CustomViewsMenu({
     <div className="relative flex items-center">
       <button
         ref={buttonRef}
-        className="text-xs px-2 py-1 rounded bg-zinc-800 text-zinc-200 border border-zinc-700 hover:bg-zinc-700 mr-2"
+        className="text-xs px-2 py-1 bg-zinc-800 text-zinc-200 border border-zinc-700 hover:bg-zinc-700 mr-2"
         onClick={() => setShowInput(v => !v)}
         aria-label="Custom views menu"
       >
@@ -71,17 +71,17 @@ export default function CustomViewsMenu({
       {showInput && (
         <div
           ref={dropdownRef}
-          className={`absolute top-10 ${dropdownAlignRight ? 'right-0' : 'left-0'} min-w-[180px] max-w-[240px] bg-zinc-900/95 backdrop-blur border border-zinc-700 rounded-lg shadow-xl p-2 z-50 transition-all`}
+          className={`absolute top-10 ${dropdownAlignRight ? 'right-0' : 'left-0'} min-w-[180px] max-w-[240px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl p-2 z-50 transition-all`}
         >
           <div className="mb-2">
             <input
-              className="w-full px-2 py-1 rounded bg-zinc-800/90 text-zinc-200 border border-zinc-700 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/20 outline-none mb-1 text-xs transition-all placeholder-zinc-400"
+              className="w-full px-2 py-1 bg-zinc-800/90 text-zinc-200 border border-zinc-700 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500/20 outline-none mb-1 text-xs transition-all placeholder-zinc-400"
               placeholder="View name"
               value={viewName}
               onChange={e => setViewName(e.target.value)}
             />
             <button
-              className="w-full py-1 rounded bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all mb-1"
+              className="w-full py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all mb-1"
               onClick={() => {
                 if (viewName.trim()) {
                   onSave(viewName.trim(), currentLayout);
@@ -98,7 +98,7 @@ export default function CustomViewsMenu({
             {views.map(view => (
               <div
                 key={view.id}
-                className="flex items-center group bg-zinc-800/70 hover:bg-zinc-700/80 rounded px-1 py-0.5 transition-all"
+                className="flex items-center group bg-zinc-800/70 hover:bg-zinc-700/80 px-1 py-0.5 transition-all"
               >
                 <button
                   className="text-left text-zinc-200 group-hover:text-zinc-100 font-medium text-xs flex-1 truncate transition-all"
@@ -108,7 +108,7 @@ export default function CustomViewsMenu({
                   {view.name}
                 </button>
                 <button
-                  className="ml-1 text-red-500 opacity-70 hover:opacity-100 text-sm font-bold px-0.5 rounded transition-all"
+                  className="ml-1 text-red-500 opacity-70 hover:opacity-100 text-sm font-bold px-0.5 transition-all"
                   onClick={() => onDelete(view.id)}
                   title="Delete view"
                 >

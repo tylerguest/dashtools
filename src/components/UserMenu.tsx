@@ -75,7 +75,7 @@ export default function UserMenu() {
     <div className="relative">
       <button
         ref={buttonRef}
-        className="w-9 h-9 flex items-center justify-center rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200"
+        className="w-9 h-9 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200"
         onClick={() => setDropdownOpen((v) => !v)}
         aria-label="User menu"
       >
@@ -87,13 +87,13 @@ export default function UserMenu() {
       {dropdownOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 mt-2 min-w-[160px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 rounded-lg shadow-xl p-2 z-[9999] transition-all"
+          className="absolute right-0 mt-2 min-w-[160px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl p-2 z-[9999] transition-all"
         >
           {!user ? (
             <form onSubmit={mode === "login" ? handleLogin : handleSignup} className="flex flex-col gap-2">
               <label className="text-zinc-200 text-sm">Email</label>
               <input
-                className="rounded bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500 text-zinc-200"
+                className="bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500 text-zinc-200"
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
@@ -101,7 +101,7 @@ export default function UserMenu() {
               />
               <label className="text-zinc-200 text-sm">Password</label>
               <input
-                className="rounded bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500 text-zinc-200"
+                className="bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500 text-zinc-200"
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -110,7 +110,7 @@ export default function UserMenu() {
               {error && <div className="text-red-400 text-xs">{error}</div>}
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-bold mt-2"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-bold mt-2"
                 disabled={loading}
               >
                 {loading ? (mode === "login" ? "Signing in..." : "Signing up...") : (mode === "login" ? "Sign In" : "Sign Up")}
@@ -127,7 +127,7 @@ export default function UserMenu() {
             <div className="flex flex-col gap-2 items-center py-2">
               <div className="text-zinc-100 font-semibold text-xs mb-2 break-all text-center">{user.email}</div>
               <button
-                className="w-full py-2 rounded bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all"
+                className="w-full py-2 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all"
                 onClick={handleLogout}
               >
                 Sign Out

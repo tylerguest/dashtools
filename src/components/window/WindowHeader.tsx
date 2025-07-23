@@ -48,7 +48,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
             e.stopPropagation();
             setIsDropdownOpen(!isDropdownOpen);
           }}
-          className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 rounded-none transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur"
+          className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur"
           aria-label="Open window menu"
           tabIndex={0}
         >
@@ -61,7 +61,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
         </button>
         {isDropdownOpen && (
           <div
-            className="absolute top-8 left-0 min-w-[170px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 rounded-none shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
+            className="absolute top-8 left-0 min-w-[170px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
             tabIndex={-1}
             role="menu"
           >
@@ -75,7 +75,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
                 onBlur={() => setSubmenuOpen(null)}
               >
                 <button
-                  className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm rounded-none transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white flex justify-between items-center"
+                  className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white flex justify-between items-center"
                   tabIndex={0}
                   aria-haspopup={category.children ? 'menu' : undefined}
                   aria-expanded={submenuOpen === category.label}
@@ -87,13 +87,13 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
                 </button>
                 {category.children && submenuOpen === category.label && (
                   <div
-                    className="absolute left-full top-0 min-w-[150px] max-w-[200px] bg-zinc-900/95 backdrop-blur border border-zinc-700 rounded-none shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
+                    className="absolute left-full top-0 min-w-[150px] max-w-[200px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
                     role="menu"
                   >
                     {category.children.map(item => (
                       <button
                         key={item.key}
-                        className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm rounded-none transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white"
+                        className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white"
                         onClick={e => {
                           e.stopPropagation();
                           onContentChange && onContentChange(item.key);
@@ -121,7 +121,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
         e.stopPropagation();
         onClose();
       }}
-      className="w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 rounded text-xs font-bold"
+      className="w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 text-xs font-bold"
     >
       ×
     </button>
