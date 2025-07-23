@@ -38,8 +38,27 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
   onClose,
 }) => {
   const [submenuOpen, setSubmenuOpen] = React.useState<string | null>(null);
+  const dropdownRef = React.useRef<HTMLDivElement | null>(null);
   // Close submenu when dropdown closes
   React.useEffect(() => { if (!isDropdownOpen) setSubmenuOpen(null); }, [isDropdownOpen]);
+
+  // Click-away handler
+  React.useEffect(() => {
+    if (!isDropdownOpen) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen, setIsDropdownOpen]);
+
   return (
     <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative">
       <div className="relative flex items-center">
@@ -61,6 +80,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
         </button>
         {isDropdownOpen && (
           <div
+            ref={dropdownRef}
             className="absolute top-8 left-0 min-w-[170px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
             tabIndex={-1}
             role="menu"
