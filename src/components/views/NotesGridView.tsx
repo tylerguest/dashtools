@@ -15,7 +15,7 @@ export default function NotesGridView({ user }: { user: any }) {
   const [localNotes, setLocalNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const [showEditor, setShowEditor] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
@@ -45,14 +45,14 @@ export default function NotesGridView({ user }: { user: any }) {
     setSelectedNote(null);
     setNewTitle("");
     setNewContent("");
-    setShowEditor(true);
+    setIsAdding(true);
   };
 
-  const handleEditNote = (note: Note) => {
+  const handleSelectNote = (note: Note) => {
     setSelectedNote(note);
     setNewTitle(note.title);
     setNewContent(note.content);
-    setShowEditor(true);
+    setIsAdding(false);
   };
 
   const handleSave = async (closeEditor = true) => {
@@ -77,7 +77,7 @@ export default function NotesGridView({ user }: { user: any }) {
         ]);
       }
       if (closeEditor) {
-        setShowEditor(false);
+        setIsAdding(false);
         setSelectedNote(null);
         setNewTitle("");
         setNewContent("");
@@ -106,7 +106,7 @@ export default function NotesGridView({ user }: { user: any }) {
         return;
       }
       if (closeEditor) {
-        setShowEditor(false);
+        setIsAdding(false);
         setSelectedNote(null);
         setNewTitle("");
         setNewContent("");
@@ -126,14 +126,14 @@ export default function NotesGridView({ user }: { user: any }) {
     }
   };
 
-  const handleBackToGrid = async () => {
+  const handleBackToList = async () => {
     if (
       (selectedNote && (selectedNote.title !== newTitle || selectedNote.content !== newContent)) ||
-      (!selectedNote && (newTitle.trim() || newContent.trim()))
+      (isAdding && (newTitle.trim() || newContent.trim()))
     ) {
-      await handleSave(false); 
+      await handleSave(false);
     }
-    setShowEditor(false);
+    setIsAdding(false);
     setSelectedNote(null);
     setNewTitle("");
     setNewContent("");
@@ -167,95 +167,118 @@ export default function NotesGridView({ user }: { user: any }) {
     }
   };
   return (
-    <div className="h-full w-full p-0 bg-zinc-800">
-      {showEditor ? (
-        <div className="h-full w-full flex flex-col bg-zinc-800 p-8">
-          <div className="flex items-center mb-4">
-            <button
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-700 hover:bg-zinc-600 text-zinc-200 transition shadow focus:outline-none focus:ring-2 focus:ring-zinc-500"
-              onClick={handleBackToGrid}
-              title="Back to Notes"
-              type="button"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
+    <div className="h-full w-full flex bg-zinc-800">
+      {/* Only show left column if not editing or adding */}
+      {!(isAdding || selectedNote) && (
+        <div className="w-64 min-w-[220px] max-w-[320px] h-full border-r border-zinc-700 bg-zinc-900/95 flex flex-col">
+          <div className="flex items-center px-4 py-3 border-b border-zinc-800">
+            <span className="text-lg font-bold text-zinc-100">Notes</span>
           </div>
-          <input
-            className="mb-4 text-2xl font-semibold bg-transparent border-none outline-none text-white placeholder-zinc-400"
-            type="text"
-            placeholder="Title"
-            value={newTitle}
-            onChange={e => setNewTitle(e.target.value)}
-            autoFocus
-          />
-          <textarea
-            className="flex-1 resize-none bg-zinc-800 border-none outline-none text-white placeholder-zinc-400 text-lg"
-            placeholder="Write your note..."
-            value={newContent}
-            onChange={e => setNewContent(e.target.value)}
-            style={{ minHeight: '300px' }}
-          />
-          {/* Save and Cancel buttons removed: autosave is now handled on back navigation */}
-        </div>
-      ) : loading ? (
-        <div className="text-zinc-400 p-4">Loading...</div>
-      ) : (
-        <div className="w-full min-h-[200px] p-4 bg-zinc-800">
-          <div className="w-full min-w-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 items-stretch justify-items-stretch">
-            {/* Add Note Card */}
-            <div
-              className="flex flex-col items-center justify-center min-h-[120px] sm:min-h-[160px] md:min-h-[180px] h-full rounded-2xl bg-zinc-900/60 border border-zinc-700/60 shadow-xl backdrop-blur-md cursor-pointer group p-4 sm:p-6 transition-all duration-200 hover:scale-[1.04] hover:bg-zinc-800/80 hover:border-zinc-500/80 focus:outline-none focus:ring-2 focus:ring-zinc-500 min-w-0 w-full sm:max-w-md sm:mx-auto"
-              onClick={handleAddNote}
-              title="Add new note"
-            >
-              <div className="flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 mb-2 sm:mb-3 rounded-full bg-zinc-700/80 group-hover:bg-zinc-600/90 transition-all duration-200 shadow-lg">
-                <span className="text-2xl sm:text-4xl text-zinc-300 group-hover:text-white select-none">+</span>
-              </div>
-              <span className="text-zinc-400 group-hover:text-zinc-100 font-semibold tracking-wide text-base sm:text-lg select-none text-center">Add Note</span>
-            </div>
-            {/* Notes Grid */}
+          <div className="flex-1 overflow-y-auto">
             {(user ? notes : localNotes).length === 0 ? (
-              <div className="col-span-full text-center text-zinc-500 py-12 text-lg font-medium">
-                No notes yet.
-              </div>
+              <div className="text-zinc-500 text-center py-8">No notes yet.</div>
             ) : (
-              (user ? notes : localNotes).map((note) => (
-                <div
-                  key={note.id}
-                  className="relative flex flex-col justify-between min-h-[120px] sm:min-h-[160px] md:min-h-[180px] h-full rounded-2xl bg-zinc-900/70 border border-zinc-700/70 shadow-lg backdrop-blur-md p-4 sm:p-6 cursor-pointer transition-all duration-200 hover:scale-[1.03] hover:bg-zinc-800/90 hover:border-zinc-500/80 group min-w-0 w-full sm:max-w-md sm:mx-auto"
-                  onClick={() => handleEditNote(note)}
-                >
-                  {/* Delete icon */}
-                  <button
-                    className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10 p-1 sm:p-1.5 rounded-full bg-transparent hover:bg-zinc-700/60 focus:bg-zinc-700/80 transition group"
-                    title="Delete note"
-                    aria-label="Delete note"
-                    onClick={e => {
-                      e.stopPropagation();
-                      setPendingDeleteId(note.id);
-                    }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-zinc-400 group-hover:text-red-500 group-focus:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.12" fill="none" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 8l8 8M16 8l-8 8" />
-                    </svg>
-                  </button>
-                  <div>
-                    <div className="font-bold text-zinc-100 mb-1 sm:mb-2 truncate pr-8 text-base sm:text-lg group-hover:text-white transition-colors">{note.title || "Untitled"}</div>
-                    <div className="text-zinc-300 text-sm sm:text-base group-hover:text-zinc-100 transition-colors break-words">
-                      {note.content.length > 100
-                        ? note.content.slice(0, 100) + "…"
-                        : note.content}
-                    </div>
-                  </div>
+            (user ? notes : localNotes).map((note: Note) => (
+              <div
+                key={note.id}
+                className={`group flex items-center px-4 py-3 border-b border-zinc-800 cursor-pointer transition-all ${selectedNote && (selectedNote as Note).id === note.id ? 'bg-zinc-800/80' : 'hover:bg-zinc-800/60'}`}
+                onClick={() => handleSelectNote(note)}
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-zinc-100 truncate text-base">{note.title || "Untitled"}</div>
+                  <div className="text-zinc-400 text-xs truncate">{note.content.length > 60 ? note.content.slice(0, 60) + "…" : note.content}</div>
                 </div>
-              ))
+                <button
+                  className="ml-2 text-red-500 opacity-70 hover:opacity-100 text-sm font-bold px-1 rounded transition-all"
+                  onClick={e => { e.stopPropagation(); setPendingDeleteId(note.id); }}
+                  title="Delete note"
+                >
+                  ×
+                </button>
+              </div>
+            ))
             )}
           </div>
         </div>
       )}
+      {/* Right pane: Note content or add form */}
+      <div className="flex-1 h-full flex flex-col bg-zinc-800">
+        {loading ? (
+          <div className="text-zinc-400 p-8">Loading...</div>
+        ) : isAdding ? (
+          <div className="h-full w-full flex flex-col p-8">
+            <div className="flex items-center mb-4">
+              <button
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-700 hover:bg-zinc-600 text-zinc-200 transition shadow focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                onClick={handleBackToList}
+                title="Back to Notes"
+                type="button"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <span className="ml-3 text-xl font-semibold text-zinc-100">New Note</span>
+            </div>
+            <input
+              className="mb-4 text-2xl font-semibold bg-transparent border-none outline-none text-white placeholder-zinc-400"
+              type="text"
+              placeholder="Title"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              autoFocus
+            />
+            <textarea
+              className="flex-1 resize-none bg-zinc-800 border-none outline-none text-white placeholder-zinc-400 text-lg"
+              placeholder="Write your note..."
+              value={newContent}
+              onChange={e => setNewContent(e.target.value)}
+              style={{ minHeight: '300px' }}
+            />
+          </div>
+        ) : selectedNote ? (
+          <div className="h-full w-full flex flex-col p-8">
+            <div className="flex items-center mb-4">
+              <button
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-700 hover:bg-zinc-600 text-zinc-200 transition shadow focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                onClick={handleBackToList}
+                title="Back to Notes"
+                type="button"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <span className="ml-3 text-xl font-semibold text-zinc-100">Edit Note</span>
+            </div>
+            <input
+              className="mb-4 text-2xl font-semibold bg-transparent border-none outline-none text-white placeholder-zinc-400"
+              type="text"
+              placeholder="Title"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+              autoFocus
+            />
+            <textarea
+              className="flex-1 resize-none bg-zinc-800 border-none outline-none text-white placeholder-zinc-400 text-lg"
+              placeholder="Write your note..."
+              value={newContent}
+              onChange={e => setNewContent(e.target.value)}
+              style={{ minHeight: '300px' }}
+            />
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <button
+              className="px-4 py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-zinc-600 shadow-none rounded-none"
+              onClick={handleAddNote}
+              title="Add new note"
+            >
+              + New Note
+            </button>
+          </div>
+        )}
+      </div>
       {/* Custom Delete Confirmation Modal */}
       {pendingDeleteId && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm">
