@@ -18,6 +18,7 @@ export default function NotesGridView({ user }: { user: any }) {
   const [showEditor, setShowEditor] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -141,12 +142,14 @@ export default function NotesGridView({ user }: { user: any }) {
   const handleDeleteNote = async (id: string) => {
     if (!user || !user.id) {
       setLocalNotes((prev) => prev.filter((n) => n.id !== id));
+      setPendingDeleteId(null);
       return;
     }
     try {
       const { error } = await supabase.from("notes").delete().eq("id", id);
       if (error) {
         alert("Failed to delete note: " + error.message);
+        setPendingDeleteId(null);
         return;
       }
       const { data, error: fetchError } = await supabase
@@ -159,6 +162,8 @@ export default function NotesGridView({ user }: { user: any }) {
       setNotes(data || []);
     } catch (err) {
       alert("Unexpected error: " + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setPendingDeleteId(null);
     }
   };
   return (
@@ -227,9 +232,7 @@ export default function NotesGridView({ user }: { user: any }) {
                     aria-label="Delete note"
                     onClick={e => {
                       e.stopPropagation();
-                      if (window.confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
-                        handleDeleteNote(note.id);
-                      }
+                      setPendingDeleteId(note.id);
                     }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-zinc-400 group-hover:text-red-500 group-focus:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -248,6 +251,31 @@ export default function NotesGridView({ user }: { user: any }) {
                 </div>
               ))
             )}
+          </div>
+        </div>
+      )}
+      {/* Custom Delete Confirmation Modal */}
+      {pendingDeleteId && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-8 min-w-[340px] max-w-[90vw] flex flex-col items-center animate-fadeIn">
+            <div className="text-2xl font-bold text-white mb-2 tracking-tight">Delete Note</div>
+            <div className="text-zinc-400 mb-8 text-center text-base">Are you sure you want to delete this note? <br />This action cannot be undone.</div>
+            <div className="flex gap-4 w-full justify-center">
+              <button
+                className="px-6 py-2 rounded-full bg-zinc-700 hover:bg-zinc-600 active:bg-zinc-800 text-zinc-200 font-semibold transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-zinc-500"
+                onClick={() => setPendingDeleteId(null)}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="px-6 py-2 rounded-full bg-gradient-to-tr from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 active:from-red-800 active:to-red-700 text-white font-bold transition-all shadow focus:outline-none focus:ring-2 focus:ring-red-500"
+                onClick={() => handleDeleteNote(pendingDeleteId)}
+                type="button"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
