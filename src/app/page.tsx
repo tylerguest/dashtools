@@ -25,20 +25,15 @@ const DEFAULT_WINDOW_COUNT = 4;
 export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [customViews, setCustomViews] = useState<CustomView[]>([]);
-  // SSR-safe initial layout (fixed size, no window, no randomness)
   const [windows, setWindows] = useState<WindowData[]>(() => getWindowLayout());
   const [nextId, setNextId] = useState<number>(5);
-  // Hydration guard
   const [hydrated, setHydrated] = useState(false);
 
-  // After mount, update layout with real browser values and listen for resize
   useEffect(() => {
     setHydrated(true);
     if (typeof window !== 'undefined') {
-      // Initial layout
       setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
 
-      // Debounced resize handler
       let resizeTimeout: NodeJS.Timeout | null = null;
       const handleResize = () => {
         if (resizeTimeout) clearTimeout(resizeTimeout);
