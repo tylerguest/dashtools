@@ -26,12 +26,10 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [customViews, setCustomViews] = useState<CustomView[]>([]);
   const [windows, setWindows] = useState<WindowData[]>(() => getWindowLayout());
-  // Ref to always hold the latest windows state
   const windowsRef = useRef<WindowData[]>([]);
   useEffect(() => {
     windowsRef.current = windows;
   }, [windows]);
-  // Store the base layout and browser size for proportional scaling
   const baseLayoutRef = useRef<WindowData[] | null>(null);
   const baseSizeRef = useRef<{ width: number; height: number } | null>(null);
   const resizingRef = useRef(false);
@@ -56,7 +54,6 @@ export default function Home() {
         const newHeight = window.innerHeight;
         const scaleX = newWidth / baseWidth;
         const scaleY = newHeight / baseHeight;
-        // Calculate the new layout
         const newLayout = baseLayoutRef.current.map(w => ({
           ...w,
           x: Math.round(w.x * scaleX),
@@ -65,7 +62,6 @@ export default function Home() {
           height: Math.round(w.height * scaleY),
         }));
         setWindows(newLayout);
-        // After resizing stops, update base refs to the latest windows and size
         resizeTimeout = setTimeout(() => {
           baseLayoutRef.current = windowsRef.current.map(w => ({ ...w }));
           baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
@@ -79,7 +75,6 @@ export default function Home() {
       };
     }
   }, []);
-  // When user modifies layout (e.g., moves/resizes a window), update base refs
   const setWindowsAndBase = useCallback(
     (
       updater:
@@ -97,8 +92,6 @@ export default function Home() {
     },
     []
   );
-
-  // Replace all setWindows calls with setWindowsAndBase below
 
   useEffect(() => {
     const fetchUserAndViewsAndLayout = async () => {
