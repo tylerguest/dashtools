@@ -12,14 +12,14 @@ interface WindowProps {
   width: number;
   height: number;
   title: string;
-  content?: 'timeline' | 'mixer' | 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
+  content?: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
   notes?: string;
   workspaceBounds?: { width: number; height: number } | null;
   otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
   onMouseDown: (e: React.MouseEvent, id: number) => void;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
   onClose: (id: number) => void;
-  onContentChange?: (id: number, content: 'timeline' | 'mixer' | 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes') => void;
+  onContentChange?: (id: number, content: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes') => void;
   onNotesChange?: (id: number, notes: string) => void;
 }
 
