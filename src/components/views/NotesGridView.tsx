@@ -11,6 +11,35 @@ interface Note {
 }
 
 export default function NotesGridView({ user }: { user: any }) {
+  // ...existing code...
+  // For resizing
+  const minNotesPaneWidth = 180;
+  const maxNotesPaneWidth = 400;
+
+  // Mouse drag handler for resizing
+  const handleResizerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation(); // Prevent parent drag logic
+    const startX = e.clientX;
+    const startWidth = notesPaneWidth;
+    // Save original user-select
+    const originalUserSelect = document.body.style.userSelect;
+    document.body.style.userSelect = 'none';
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const delta = moveEvent.clientX - startX;
+      let newWidth = startWidth + delta;
+      if (newWidth < minNotesPaneWidth) newWidth = minNotesPaneWidth;
+      if (newWidth > maxNotesPaneWidth) newWidth = maxNotesPaneWidth;
+      setNotesPaneWidth(newWidth);
+    };
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+      document.body.style.userSelect = originalUserSelect;
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
   const [notes, setNotes] = useState<Note[]>([]);
   const [localNotes, setLocalNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +49,7 @@ export default function NotesGridView({ user }: { user: any }) {
   const [newContent, setNewContent] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [showNotesPane, setShowNotesPane] = useState(true);
+  const [notesPaneWidth, setNotesPaneWidth] = useState(260); // px, default width
   const supabase = createClient();
 
   useEffect(() => {
@@ -171,7 +201,17 @@ export default function NotesGridView({ user }: { user: any }) {
     <div className="h-full w-full flex bg-zinc-800">
       {/* Only show left column if not editing or adding */}
       {showNotesPane && !(isAdding || selectedNote) && (
-        <div className="w-64 min-w-[220px] max-w-[320px] h-full border-r border-zinc-700 bg-zinc-900/95 flex flex-col">
+        <>
+          <div
+            className="h-full border-r border-zinc-700 bg-zinc-900/95 flex flex-col"
+            style={{
+              width: Math.max(minNotesPaneWidth, Math.min(notesPaneWidth, maxNotesPaneWidth)),
+              minWidth: minNotesPaneWidth,
+              maxWidth: maxNotesPaneWidth,
+              transition: 'none', // disables unwanted transitions
+              userSelect: 'none', // disables text selection while resizing
+            }}
+          >
           <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
             <span className="text-lg font-bold text-zinc-100">Notes</span>
             <button
@@ -211,7 +251,20 @@ export default function NotesGridView({ user }: { user: any }) {
             ))
             )}
           </div>
-        </div>
+          </div>
+          {/* Vertical resizer */}
+          <div
+            className="group w-2 cursor-col-resize h-full bg-transparent hover:bg-zinc-700/40 transition-colors z-30 select-none"
+            style={{ marginLeft: -1, marginRight: -1 }}
+            onMouseDown={handleResizerMouseDown}
+            onMouseUp={e => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
+            role="separator"
+            aria-orientation="vertical"
+            tabIndex={0}
+            title="Resize notes pane"
+          />
+        </>
       )}
       {/* Right pane: Note content or add form */}
       <div className="flex-1 h-full flex flex-col bg-zinc-800">
