@@ -172,9 +172,26 @@ export default function NotesGridView({ user }: { user: any }) {
                 (user ? notes : localNotes).map((note) => (
                   <div
                     key={note.id}
-                    className="flex flex-col justify-between min-h-[180px] h-full bg-zinc-800 border border-zinc-700 rounded p-4 cursor-pointer hover:bg-zinc-700 transition"
+                    className="relative flex flex-col justify-between min-h-[180px] h-full bg-zinc-800 border border-zinc-700 rounded p-4 cursor-pointer hover:bg-zinc-700 transition"
                     onClick={() => handleEditNote(note)}
                   >
+                    {/* Delete icon */}
+                    <button
+                      className="absolute top-2 right-2 z-10 p-1 rounded-full bg-transparent hover:bg-zinc-700/60 focus:bg-zinc-700/80 transition group"
+                      title="Delete note"
+                      aria-label="Delete note"
+                      onClick={e => {
+                        e.stopPropagation();
+                        if (window.confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+                          handleDeleteNote(note.id);
+                        }
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-zinc-400 group-hover:text-red-500 group-focus:text-red-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.12" fill="none" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 8l8 8M16 8l-8 8" />
+                      </svg>
+                    </button>
                     <div>
                       <div className="font-bold text-zinc-100 mb-2 truncate">{note.title || "Untitled"}</div>
                       <div className="text-zinc-400 text-xs mb-2">{new Date(note.created_at).toLocaleString()}</div>
@@ -193,4 +210,22 @@ export default function NotesGridView({ user }: { user: any }) {
       )}
     </div>
   );
+
+  // Delete note handler
+  async function handleDeleteNote(id: string) {
+    if (!user || !user.id) {
+      setLocalNotes(prev => prev.filter(n => n.id !== id));
+      return;
+    }
+    try {
+      const { error } = await supabase.from("notes").delete().eq("id", id);
+      if (error) {
+        alert("Failed to delete note: " + error.message);
+        return;
+      }
+      setNotes(prev => prev.filter(n => n.id !== id));
+    } catch (err) {
+      alert("Unexpected error: " + (err instanceof Error ? err.message : String(err)));
+    }
+  }
 }
