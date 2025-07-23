@@ -31,11 +31,26 @@ export default function Home() {
   // Hydration guard
   const [hydrated, setHydrated] = useState(false);
 
-  // After mount, update layout with real browser values
+  // After mount, update layout with real browser values and listen for resize
   useEffect(() => {
     setHydrated(true);
     if (typeof window !== 'undefined') {
+      // Initial layout
       setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+
+      // Debounced resize handler
+      let resizeTimeout: NodeJS.Timeout | null = null;
+      const handleResize = () => {
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+        }, 150);
+      };
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+      };
     }
   }, []);
 
