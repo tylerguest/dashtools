@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Window from './window/Window';
 import { ZOrderProvider, useZOrder } from './window/ZOrderContext';
 
-interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null;notes?:string;}
+interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'stockchart'|'quotemonitor'|'chatbot'|'notes'|null;notes?:string;}
 interface WorkspaceProps {
   windows: WindowData[];
   setWindows: React.Dispatch<React.SetStateAction<WindowData[]>>;
@@ -52,7 +52,7 @@ function WorkspaceInner({windows,setWindows,user}:WorkspaceProps) {
   };
   const handleResize=(id:number,x:number,y:number,width:number,height:number)=>setWindows(p=>p.map(w=>w.id===id?{...w,x,y,width,height}:w));
   const handleClose=(windowId:number)=>setWindows(prev=>prev.filter(w=>w.id!==windowId));
-  const handleContentChange=(windowId:number,content:'timeline'|'mixer'|'stockchart'|'quotemonitor'|'chatbot'|'notes'|null)=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
+  const handleContentChange=(windowId:number,content:'stockchart'|'quotemonitor'|'chatbot'|'notes'|null)=>setWindows(prev=>prev.map(w=>w.id===windowId?{...w,content}:w));
   const handleNotesChange = (windowId: number, notes: string) => {
     setWindows(prev => prev.map(w => w.id === windowId ? { ...w, notes } : w));
   };

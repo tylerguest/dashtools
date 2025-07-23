@@ -52,21 +52,39 @@ export default function Home() {
           console.error('[App] Error fetching user window layout:', layoutError);
         }
         if (!layoutError && layoutRow && layoutRow.layout) {
-          setWindows(layoutRow.layout);
-          setNextId(layoutRow.layout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
+          let layoutData = layoutRow.layout;
+          if (typeof layoutData === 'string') {
+            try {
+              layoutData = JSON.parse(layoutData);
+            } catch (e) {
+              console.error('[App] Failed to parse layout JSON:', e, layoutData);
+              layoutData = [];
+            }
+          }
+          if (Array.isArray(layoutData) && layoutData.length > 0) {
+            setWindows(layoutData);
+            setNextId(layoutData.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
+          } else {
+            const defaultLayout = getWindowLayout(window.innerWidth, window.innerHeight);
+            setWindows(defaultLayout);
+            setNextId(defaultLayout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
+            if (user) {
+              await upsertUserWindowLayout(user.id, defaultLayout);
+            }
+          }
         } else {
-          setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+          const defaultLayout = getWindowLayout(window.innerWidth, window.innerHeight);
+          setWindows(defaultLayout);
+          setNextId(defaultLayout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
+          if (user) {
+            await upsertUserWindowLayout(user.id, defaultLayout);
+          }
         }
       } else {
         setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
       }
     };
     fetchUserAndViewsAndLayout();
-    const updateLayout = () => {
-      setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
-    };
-    window.addEventListener('resize', updateLayout);
-    return () => window.removeEventListener('resize', updateLayout);
   }, []);
 
   const addNewWindow = () => {

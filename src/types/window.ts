@@ -1,4 +1,4 @@
-export type WindowContent = 'timeline' | 'mixer' | 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
+export type WindowContent = 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
 
 export interface WindowData {
   id: number;
