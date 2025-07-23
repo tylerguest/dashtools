@@ -12,6 +12,25 @@ export default function UserMenu() {
   const [user, setUser] = useState<any>(null);
   const [mode, setMode] = useState<"login" | "signup">("login");
   const supabase = createClient();
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [dropdownOpen]);
 
   useEffect(() => {
     const getSession = async () => {
@@ -55,6 +74,7 @@ export default function UserMenu() {
   return (
     <div className="relative">
       <button
+        ref={buttonRef}
         className="w-9 h-9 flex items-center justify-center rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200"
         onClick={() => setDropdownOpen((v) => !v)}
         aria-label="User menu"
@@ -65,7 +85,10 @@ export default function UserMenu() {
         </svg>
       </button>
       {dropdownOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-zinc-900 border border-zinc-700 rounded shadow-lg z-[9999] p-4">
+        <div
+          ref={dropdownRef}
+          className="absolute right-0 mt-2 min-w-[160px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 rounded-lg shadow-xl p-2 z-[9999] transition-all"
+        >
           {!user ? (
             <form onSubmit={mode === "login" ? handleLogin : handleSignup} className="flex flex-col gap-2">
               <label className="text-zinc-200 text-sm">Email</label>
@@ -101,10 +124,10 @@ export default function UserMenu() {
               </button>
             </form>
           ) : (
-            <div className="flex flex-col gap-2">
-              <div className="text-zinc-200 font-bold">{user.email}</div>
+            <div className="flex flex-col gap-2 items-center py-2">
+              <div className="text-zinc-100 font-semibold text-xs mb-2 break-all text-center">{user.email}</div>
               <button
-                className="bg-zinc-700 hover:bg-zinc-600 text-zinc-200 px-4 py-2 rounded font-bold mt-2"
+                className="w-full py-2 rounded bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all"
                 onClick={handleLogout}
               >
                 Sign Out
