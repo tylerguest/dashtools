@@ -25,10 +25,20 @@ const DEFAULT_WINDOW_COUNT = 4;
 export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [customViews, setCustomViews] = useState<CustomView[]>([]);
+  // SSR-safe initial layout (fixed size, no window, no randomness)
   const [windows, setWindows] = useState<WindowData[]>(() => getWindowLayout());
   const [nextId, setNextId] = useState<number>(5);
+  // Hydration guard
+  const [hydrated, setHydrated] = useState(false);
 
-  // Fetch user, custom views, and layout on mount
+  // After mount, update layout with real browser values
+  useEffect(() => {
+    setHydrated(true);
+    if (typeof window !== 'undefined') {
+      setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+    }
+  }, []);
+
   useEffect(() => {
     const fetchUserAndViewsAndLayout = async () => {
       const supabase = createClient();
@@ -63,7 +73,6 @@ export default function Home() {
     fetchUserAndViewsAndLayout();
   }, []);
 
-  // Add a new window to the layout
   const addNewWindow = useCallback(() => {
     const browserWidth = typeof window !== 'undefined' ? window.innerWidth : 2400;
     const browserHeight = typeof window !== 'undefined' ? window.innerHeight : 940;
@@ -89,7 +98,6 @@ export default function Home() {
     setNextId(prev => prev + 1);
   }, [nextId]);
 
-  // Handlers for custom views
   const handleSaveView = useCallback(async (name: string, layout: WindowData[]) => {
     if (!user) return;
     const { error } = await saveCustomView(user.id, name, layout);
@@ -117,7 +125,6 @@ export default function Home() {
     }
   }, [user]);
 
-  // Persist window layout on change
   useEffect(() => {
     if (!user) return;
     const timeout = setTimeout(() => {
@@ -127,6 +134,7 @@ export default function Home() {
     return () => clearTimeout(timeout);
   }, [windows, user]);
 
+  if (!hydrated) return null;
   return (
     <div className="min-h-screen bg-gray-950 flex flex-col">
       <Header onNewWindow={addNewWindow}>
