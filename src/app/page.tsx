@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 import CustomViewsMenu from '../components/CustomViewsMenu';
@@ -26,20 +26,51 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [customViews, setCustomViews] = useState<CustomView[]>([]);
   const [windows, setWindows] = useState<WindowData[]>(() => getWindowLayout());
+  // Ref to always hold the latest windows state
+  const windowsRef = useRef<WindowData[]>([]);
+  useEffect(() => {
+    windowsRef.current = windows;
+  }, [windows]);
+  // Store the base layout and browser size for proportional scaling
+  const baseLayoutRef = useRef<WindowData[] | null>(null);
+  const baseSizeRef = useRef<{ width: number; height: number } | null>(null);
+  const resizingRef = useRef(false);
   const [nextId, setNextId] = useState<number>(5);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     setHydrated(true);
     if (typeof window !== 'undefined') {
-      setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+      const baseLayout = getWindowLayout(window.innerWidth, window.innerHeight);
+      setWindows(baseLayout);
+      baseLayoutRef.current = baseLayout;
+      baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
 
       let resizeTimeout: NodeJS.Timeout | null = null;
       const handleResize = () => {
+        if (!baseLayoutRef.current || !baseSizeRef.current) return;
+        resizingRef.current = true;
         if (resizeTimeout) clearTimeout(resizeTimeout);
+        const { width: baseWidth, height: baseHeight } = baseSizeRef.current;
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+        const scaleX = newWidth / baseWidth;
+        const scaleY = newHeight / baseHeight;
+        // Calculate the new layout
+        const newLayout = baseLayoutRef.current.map(w => ({
+          ...w,
+          x: Math.round(w.x * scaleX),
+          y: Math.round(w.y * scaleY),
+          width: Math.round(w.width * scaleX),
+          height: Math.round(w.height * scaleY),
+        }));
+        setWindows(newLayout);
+        // After resizing stops, update base refs to the latest windows and size
         resizeTimeout = setTimeout(() => {
-          setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
-        }, 150);
+          baseLayoutRef.current = windowsRef.current.map(w => ({ ...w }));
+          baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
+          resizingRef.current = false;
+        }, 300);
       };
       window.addEventListener('resize', handleResize);
       return () => {
@@ -48,6 +79,19 @@ export default function Home() {
       };
     }
   }, []);
+  // When user modifies layout (e.g., moves/resizes a window), update base refs
+  const setWindowsAndBase = useCallback((updater) => {
+    setWindows(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      baseLayoutRef.current = next.map((w: WindowData) => ({ ...w }));
+      if (typeof window !== 'undefined') {
+        baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
+      }
+      return next;
+    });
+  }, []);
+
+  // Replace all setWindows calls with setWindowsAndBase below
 
   useEffect(() => {
     const fetchUserAndViewsAndLayout = async () => {
@@ -68,16 +112,16 @@ export default function Home() {
           }
         }
         if (Array.isArray(layoutData) && layoutData.length > 0) {
-          setWindows(layoutData);
+          setWindowsAndBase(layoutData);
           setNextId(layoutData.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
         } else {
           const defaultLayout = getWindowLayout(window.innerWidth, window.innerHeight);
-          setWindows(defaultLayout);
+          setWindowsAndBase(defaultLayout);
           setNextId(defaultLayout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
           await upsertUserWindowLayout(user.id, defaultLayout);
         }
       } else {
-        setWindows(getWindowLayout(window.innerWidth, window.innerHeight));
+        setWindowsAndBase(getWindowLayout(window.innerWidth, window.innerHeight));
       }
     };
     fetchUserAndViewsAndLayout();
@@ -104,9 +148,9 @@ export default function Home() {
       content: 'quotemonitor',
       notes: ''
     };
-    setWindows(prev => [...prev, newWindow]);
+    setWindowsAndBase(prev => [...prev, newWindow]);
     setNextId(prev => prev + 1);
-  }, [nextId]);
+  }, [nextId, setWindowsAndBase]);
 
   const handleSaveView = useCallback(async (name: string, layout: WindowData[]) => {
     if (!user) return;
@@ -120,10 +164,10 @@ export default function Home() {
   }, [user]);
 
   const handleLoadView = useCallback((view: CustomView) => {
-    setWindows(view.layout);
+    setWindowsAndBase(view.layout);
     setNextId(view.layout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
     if (user) upsertUserWindowLayout(user.id, view.layout);
-  }, [user]);
+  }, [user, setWindowsAndBase]);
 
   const handleDeleteView = useCallback(async (id: string) => {
     if (!user) return;
@@ -159,7 +203,7 @@ export default function Home() {
       <main className="flex-1 flex">
         <Workspace
           windows={windows}
-          setWindows={setWindows}
+          setWindows={setWindowsAndBase}
           user={user}
         />
       </main>
