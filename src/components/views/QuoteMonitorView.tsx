@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import TickerSelectorWindow from './TickerSelectorWindow';
 
 async function fetchQuote(ticker: string, apiKey: string) {
   const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(ticker)}&token=${apiKey}`);
@@ -29,6 +30,9 @@ export default function QuoteMonitorView() {
   const [sortKey, setSortKey] = useState<SortKey>('ticker');
   const [sortAsc, setSortAsc] = useState<boolean>(true);
   const [inputTicker, setInputTicker] = useState('');
+  const [showTickerSelector, setShowTickerSelector] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const selectorRef = React.useRef<HTMLDivElement>(null);
   const [quotes, setQuotes] = useState<Record<string, Quote>>(() =>
     Object.fromEntries(DEFAULT_TICKERS.map(ticker => [ticker, {
       ticker,
@@ -176,38 +180,63 @@ export default function QuoteMonitorView() {
     });
   }, [tickers, sortKey, sortAsc, quotes]);
 
+  // Click-away handler for selector window (global event)
+  React.useEffect(() => {
+    if (!showTickerSelector) return;
+    function handleMouseDown(e: MouseEvent) {
+      const input = inputRef.current;
+      const selector = selectorRef.current;
+      if (
+        (input && input.contains(e.target as Node)) ||
+        (selector && selector.contains(e.target as Node))
+      ) {
+        return;
+      }
+      setShowTickerSelector(false);
+    }
+    document.addEventListener('mousedown', handleMouseDown);
+    return () => document.removeEventListener('mousedown', handleMouseDown);
+  }, [showTickerSelector]);
+
   return (
-    <div className="w-full h-full bg-zinc-900 text-zinc-200 font-mono text-xs p-2 overflow-auto">
+    <div className="w-full h-full bg-zinc-900 text-zinc-200 font-mono text-xs p-2 overflow-auto relative">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="bg-green-900 text-green-300 px-2 py-0.5 rounded text-xs ml-2">Main</span>
         </div>
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            const t = inputTicker.trim().toUpperCase();
-            if (t && !tickers.includes(t)) {
-              setTickers(prev => [...prev, t]);
-              setQuotes(prev => ({ ...prev, [t]: { ticker: t, last: 0, chg: 0, volume: '', latency: '', prev: 0 } }));
-              setFlashCells(prev => ({ ...prev, [t]: { last: false, chg: false, volume: false } }));
-            }
-            setInputTicker('');
-          }}
-          className="flex items-center gap-1"
-          style={{ minWidth: 0 }}
-        >
+        <div className="flex items-center gap-1 relative" style={{ minWidth: 0 }}>
           <input
+            ref={inputRef}
             type="text"
             value={inputTicker}
             onChange={e => setInputTicker(e.target.value)}
+            onFocus={() => setShowTickerSelector(true)}
+            onClick={() => setShowTickerSelector(true)}
             placeholder="Add ticker..."
             className="bg-zinc-800 text-zinc-200 px-2 py-0.5 rounded text-xs border border-zinc-700 focus:outline-none w-24"
             maxLength={8}
             style={{ minWidth: 0 }}
+            autoComplete="off"
           />
-          <button type="submit" className="bg-green-700 text-xs px-2 py-0.5 rounded text-green-100 hover:bg-green-600">Add</button>
-        </form>
+          <button
+            type="submit"
+            className="bg-green-700 text-xs px-2 py-0.5 rounded text-green-100 hover:bg-green-600"
+          >Add</button>
+          {showTickerSelector && (
+            <div className="absolute left-0 top-full z-50 mt-1" ref={selectorRef}>
+              <TickerSelectorWindow
+                onSelect={ticker => {
+                  setInputTicker(ticker);
+                  setShowTickerSelector(false);
+                  setTimeout(() => { inputRef.current?.focus(); }, 0);
+                }}
+                onClose={() => setShowTickerSelector(false)}
+              />
+            </div>
+          )}
+        </div>
       </div>
+      // ...existing code...
       <div className="overflow-x-auto">
         <table className="w-full border-separate border-spacing-y-0.5">
           <thead>
