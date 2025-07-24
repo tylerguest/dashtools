@@ -76,11 +76,7 @@ export default function Home() {
     }
   }, []);
   const setWindowsAndBase = useCallback(
-    (
-      updater:
-        | ((prev: WindowData[]) => WindowData[])
-        | WindowData[]
-    ) => {
+    (updater: React.SetStateAction<WindowData[]>) => {
       setWindows(prev => {
         const next = typeof updater === 'function' ? updater(prev) : updater;
         baseLayoutRef.current = next.map((w: WindowData) => ({ ...w }));
