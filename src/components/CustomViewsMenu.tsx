@@ -25,7 +25,6 @@ export default function CustomViewsMenu({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownAlignRight, setDropdownAlignRight] = useState(false);
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!showInput) return;
     function handleClick(e: MouseEvent) {
@@ -42,14 +41,12 @@ export default function CustomViewsMenu({
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showInput]);
 
-  // Effect to check for overflow and align dropdown
   useEffect(() => {
     if (showInput && buttonRef.current && dropdownRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
       const workspace = document.querySelector('main') || document.body;
       const workspaceRect = workspace.getBoundingClientRect();
-      // If dropdown would overflow right edge of workspace, align right
       if (buttonRect.left + dropdownRect.width > workspaceRect.right) {
         setDropdownAlignRight(true);
       } else {

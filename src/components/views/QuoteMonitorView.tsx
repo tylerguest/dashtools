@@ -180,7 +180,6 @@ export default function QuoteMonitorView() {
     });
   }, [tickers, sortKey, sortAsc, quotes]);
 
-  // Click-away handler for selector window (global event)
   React.useEffect(() => {
     if (!showTickerSelector) return;
     function handleMouseDown(e: MouseEvent) {
@@ -236,7 +235,6 @@ export default function QuoteMonitorView() {
           )}
         </div>
       </div>
-      // ...existing code...
       <div className="overflow-x-auto">
         <table className="w-full border-separate border-spacing-y-0.5">
           <thead>

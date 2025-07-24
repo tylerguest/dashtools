@@ -11,18 +11,14 @@ interface Note {
 }
 
 export default function NotesGridView({ user }: { user: any }) {
-  // ...existing code...
-  // For resizing
   const minNotesPaneWidth = 180;
   const maxNotesPaneWidth = 400;
 
-  // Mouse drag handler for resizing
   const handleResizerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent parent drag logic
+    e.stopPropagation(); 
     const startX = e.clientX;
     const startWidth = notesPaneWidth;
-    // Save original user-select
     const originalUserSelect = document.body.style.userSelect;
     document.body.style.userSelect = 'none';
     const onMouseMove = (moveEvent: MouseEvent) => {

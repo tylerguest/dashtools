@@ -39,10 +39,8 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
 }) => {
   const [submenuOpen, setSubmenuOpen] = React.useState<string | null>(null);
   const dropdownRef = React.useRef<HTMLDivElement | null>(null);
-  // Close submenu when dropdown closes
   React.useEffect(() => { if (!isDropdownOpen) setSubmenuOpen(null); }, [isDropdownOpen]);
 
-  // Click-away handler
   React.useEffect(() => {
     if (!isDropdownOpen) return;
     function handleClickOutside(event: MouseEvent) {
