@@ -1,17 +1,3 @@
-export const chatbotViewClassNames = {
-  container: 'w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2',
-  chatArea: 'flex-1 overflow-y-auto rounded bg-zinc-800 p-2 mb-2',
-  messageRowBase: 'mb-2 flex',
-  userMessageRow: 'justify-end',
-  botMessageRow: 'justify-start',
-  messageBubbleBase: 'max-w-[70%] px-3 py-2 rounded-lg',
-  userMessageBubble: 'bg-blue-600 text-white',
-  botMessageBubble: 'bg-zinc-700 text-zinc-200',
-  loadingRow: 'mb-2 flex justify-start',
-  loadingBubble: 'max-w-[70%] px-3 py-2 rounded-lg bg-zinc-700 text-zinc-400 italic animate-pulse',
-  inputRow: 'flex gap-2',
-  input: 'flex-1 rounded bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500',
-};
 export const buttonClassNames = {
   base: [
     'inline-flex items-center justify-center font-medium',
@@ -80,6 +66,20 @@ export const buttonClassNames = {
     lg: 'w-12 h-12 text-lg p-0',
     xl: 'w-16 h-16 text-xl p-0',
   },
+};
+export const chatbotViewClassNames = {
+  container: 'w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2',
+  chatArea: 'flex-1 overflow-y-auto rounded bg-zinc-800 p-2 mb-2',
+  messageRowBase: 'mb-2 flex',
+  userMessageRow: 'justify-end',
+  botMessageRow: 'justify-start',
+  messageBubbleBase: 'max-w-[70%] px-3 py-2 rounded-lg',
+  userMessageBubble: 'bg-blue-600 text-white',
+  botMessageBubble: 'bg-zinc-700 text-zinc-200',
+  loadingRow: 'mb-2 flex justify-start',
+  loadingBubble: 'max-w-[70%] px-3 py-2 rounded-lg bg-zinc-700 text-zinc-400 italic animate-pulse',
+  inputRow: 'flex gap-2',
+  input: 'flex-1 rounded bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500',
 };
 export const notesGridViewClassNames = {
   container: "h-full w-full flex bg-zinc-800",
@@ -214,12 +214,4 @@ export const workspaceClassNames = {
   container: 'flex h-full w-full bg-zinc-800',
   workspaceArea: 'flex-1 h-full relative overflow-hidden',
 };
-export const workspaceSidebarClassNames = {
-  container: 'relative h-full flex flex-col bg-zinc-900 border-r border-zinc-700 select-none',
-  sidebarContent: 'flex-1 p-3 overflow-y-auto',
-  sidebarTitle: 'text-zinc-200 font-bold text-lg mb-4',
-  sidebarSubtitle: 'text-zinc-400 text-xs mb-2',
-  resizer: 'absolute top-0 right-0 w-2 h-full cursor-col-resize z-30 bg-transparent hover:bg-zinc-700/40 transition-colors',
-  showButton: 'mt-3 ml-3 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center',
-  hideButton: 'absolute top-3 right-2 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center',
-};
+// Sidebar removed: workspaceSidebarClassNames deleted

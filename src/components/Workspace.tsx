@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react';
-import WorkspaceSidebar from './WorkspaceSidebar';
+
 import Window from './window/Window';
 import { useWindowStore } from '../stores/windowStore';
 import type { WindowContent, WindowData } from '../types/window';
 import { workspaceClassNames } from '../styles/classNames';
+import { useCallback } from 'react';
 
 interface WorkspaceProps {
   user?: any;
@@ -15,10 +16,11 @@ interface WorkspaceProps {
 
 export default function Workspace({ user, windows: propWindows, setWindows }: WorkspaceProps) {
   const [workspaceRef, setWorkspaceRef] = useState<HTMLDivElement | null>(null);
-  const [sidebarWidth, setSidebarWidth] = useState(220);
   const zOrder = useWindowStore(state => state.zOrder);
   const windowsById = useWindowStore(state => state.windowsById);
   const addWindow = useWindowStore(state => state.addWindow);
+  const updateWindow = useWindowStore(state => state.updateWindow);
+
 
   const windows = useMemo(
     () => zOrder.map(id => windowsById[id]).filter(Boolean),
@@ -54,7 +56,6 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
 
   return (
     <div className={workspaceClassNames.container}>
-      <WorkspaceSidebar width={sidebarWidth} onWidthChange={setSidebarWidth} />
       <div
         ref={setWorkspaceRef}
         className={workspaceClassNames.workspaceArea}
