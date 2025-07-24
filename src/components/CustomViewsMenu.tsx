@@ -1,25 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useCustomViewsStore } from '../stores/customViewsStore';
 
-interface CustomView {
-  id: string;
-  name: string;
-  layout: any;
-}
-
-export default function CustomViewsMenu({
-  views, onSave, onLoad, onDelete, currentLayout
-}: {
-  views: CustomView[];
-  onSave: (name: string, layout: any) => void;
-  onLoad: (view: CustomView) => void;
-  onDelete: (id: string) => void;
-  currentLayout: any;
-}) {
+export default function CustomViewsMenu({ currentLayout }: { currentLayout: any }) {
   const [showInput, setShowInput] = useState(false);
   const [viewName, setViewName] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [dropdownAlignRight, setDropdownAlignRight] = useState(false);
+  const customViews = useCustomViewsStore(state => state.customViews);
+  const setCustomViews = useCustomViewsStore(state => state.setCustomViews);
+  const addCustomView = useCustomViewsStore(state => state.addCustomView);
+  const removeCustomView = useCustomViewsStore(state => state.removeCustomView);
 
   useEffect(() => {
     if (!showInput) return;
@@ -74,29 +65,33 @@ export default function CustomViewsMenu({
             <button
               className="w-full py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all mb-1"
               onClick={() => {
-                if (viewName.trim()) { onSave(viewName.trim(), currentLayout); setViewName(""); setShowInput(false); }
+                if (viewName.trim()) {
+                  addCustomView({ id: Date.now().toString(), name: viewName.trim(), layout: currentLayout });
+                  setViewName("");
+                  setShowInput(false);
+                }
               }}
             >
               Save View
             </button>
           </div>
           <div className="max-h-32 overflow-y-auto space-y-0.5">
-            {views.length === 0 && <div className="text-zinc-400 text-xs text-center py-1">No saved views</div>}
-            {views.map(view => (
+            {customViews.length === 0 && <div className="text-zinc-400 text-xs text-center py-1">No saved views</div>}
+            {customViews.map(view => (
               <div
                 key={view.id}
                 className="flex items-center group bg-zinc-800/70 hover:bg-zinc-700/80 px-1 py-0.5 transition-all"
               >
                 <button
                   className="text-left text-zinc-200 group-hover:text-zinc-100 font-medium text-xs flex-1 truncate transition-all"
-                  onClick={() => { onLoad(view); setShowInput(false); }}
+                  onClick={() => { /* handle load view logic here */ setShowInput(false); }}
                   title={view.name}
                 >
                   {view.name}
                 </button>
                 <button
                   className="ml-1 text-red-500 opacity-70 hover:opacity-100 text-sm font-bold px-0.5 transition-all"
-                  onClick={() => onDelete(view.id)}
+                  onClick={() => removeCustomView(view.id)}
                   title="Delete view"
                 >
                   ×

@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import TickerSelectorWindow from './TickerSelectorWindow';
+import { useQuoteMonitorStore } from '../../stores/quoteMonitorStore';
 
 async function fetchQuote(ticker: string, apiKey: string) {
   const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(ticker)}&token=${apiKey}`);
   if (!res.ok) return null;
   return res.json();
 }
-
-const DEFAULT_TICKERS = ['AAPL', 'AMZN', 'MSFT', 'GOOG', 'NVDA'];
 
 function getChgColor(chg: number) {
   if (chg > 0) return 'text-green-400';
@@ -17,23 +16,25 @@ function getChgColor(chg: number) {
 
 interface Quote { ticker: string; last: number; chg: number; volume: string; latency: string; prev?: number; }
 
-type SortKey = 'ticker' | 'last' | 'chg' | 'volume' | 'latency';
 export default function QuoteMonitorView() {
-  const [tickers, setTickers] = useState<string[]>(DEFAULT_TICKERS);
-  const [sortKey, setSortKey] = useState<SortKey>('ticker');
-  const [sortAsc, setSortAsc] = useState<boolean>(true);
-  const [inputTicker, setInputTicker] = useState('');
-  const [showTickerSelector, setShowTickerSelector] = useState(false);
+  const tickers = useQuoteMonitorStore(state => state.tickers);
+  const setTickers = useQuoteMonitorStore(state => state.setTickers);
+  const sortKey = useQuoteMonitorStore(state => state.sortKey);
+  const setSortKey = useQuoteMonitorStore(state => state.setSortKey);
+  const sortAsc = useQuoteMonitorStore(state => state.sortAsc);
+  const setSortAsc = useQuoteMonitorStore(state => state.setSortAsc);
+  const inputTicker = useQuoteMonitorStore(state => state.inputTicker);
+  const setInputTicker = useQuoteMonitorStore(state => state.setInputTicker);
+  const showTickerSelector = useQuoteMonitorStore(state => state.showTickerSelector);
+  const setShowTickerSelector = useQuoteMonitorStore(state => state.setShowTickerSelector);
+  const quotes = useQuoteMonitorStore(state => state.quotes);
+  const setQuotes = useQuoteMonitorStore(state => state.setQuotes);
+  const updateQuotes = useQuoteMonitorStore(state => state.updateQuotes);
+  const flashCells = useQuoteMonitorStore(state => state.flashCells);
+  const setFlashCells = useQuoteMonitorStore(state => state.setFlashCells);
+  const updateFlashCells = useQuoteMonitorStore(state => state.updateFlashCells);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const selectorRef = React.useRef<HTMLDivElement>(null);
-  const [quotes, setQuotes] = useState<Record<string, Quote>>(() =>
-    Object.fromEntries(DEFAULT_TICKERS.map(ticker => [ticker, {
-      ticker, last: 0, chg: 0, volume: '', latency: '', prev: 0
-    }]))
-  );
-  const [flashCells, setFlashCells] = useState<Record<string, { last: boolean; chg: boolean; volume: boolean }>>(() =>
-    Object.fromEntries(DEFAULT_TICKERS.map(ticker => [ticker, { last: false, chg: false, volume: false }]))
-  );
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -47,23 +48,21 @@ export default function QuoteMonitorView() {
     if (!apiKey) { return; }
     (async () => {
       const results = await Promise.all(tickers.map(ticker => fetchQuote(ticker, apiKey)));
-      setQuotes(prevQuotes => {
-        const updated = { ...prevQuotes };
-        tickers.forEach((ticker, i) => {
-          const data = results[i];
-          if (data && typeof data.c === 'number' && typeof data.pc === 'number') {
-            updated[ticker] = {
-              ...updated[ticker],
-              last: data.c,
-              chg: data.pc !== 0 ? ((data.c - data.pc) / data.pc) * 100 : 0,
-              volume: data.v ? data.v.toLocaleString() : '',
-              prev: data.pc,
-              latency: '-',
-            };
-          }
-        });
-        return updated;
+      const updated = { ...quotes };
+      tickers.forEach((ticker, i) => {
+        const data = results[i];
+        if (data && typeof data.c === 'number' && typeof data.pc === 'number') {
+          updated[ticker] = {
+            ...updated[ticker],
+            last: data.c,
+            chg: data.pc !== 0 ? ((data.c - data.pc) / data.pc) * 100 : 0,
+            volume: data.v ? data.v.toLocaleString() : '',
+            prev: data.pc,
+            latency: '-',
+          };
+        }
       });
+      updateQuotes(updated);
     })();
 
     const ws = new WebSocket(`wss://ws.finnhub.io?token=${apiKey}`);
@@ -74,49 +73,45 @@ export default function QuoteMonitorView() {
     ws.onmessage = (event) => {
       const msg = JSON.parse(event.data);
       if (msg.type === 'trade' && Array.isArray(msg.data)) {
-        setQuotes(prevQuotes => {
-          const updated = { ...prevQuotes };
-          const newFlashCells: Record<string, { last: boolean; chg: boolean; volume: boolean }> = {};
-          msg.data.forEach((trade: any) => {
-            const ticker = trade.s;
-            const last = trade.p;
-            const prev = updated[ticker]?.last || 0;
-            const chg = prev !== 0 ? ((last - prev) / prev) * 100 : 0;
-            const volume = trade.v ? trade.v.toLocaleString() : updated[ticker]?.volume || '';
-            const lastChanged = last !== updated[ticker]?.last;
-            const chgChanged = chg !== updated[ticker]?.chg;
-            const volumeChanged = volume !== updated[ticker]?.volume;
-            newFlashCells[ticker] = { last: lastChanged, chg: chgChanged, volume: volumeChanged };
-            updated[ticker] = {
-              ...updated[ticker],
-              last,
-              chg,
-              volume,
-              latency: `${Math.max(0, Math.round((Date.now() - trade.t) / 1000))}s`,
-              prev
-            };
-          });
-          setFlashCells(prev => {
-            const merged = { ...prev };
-            Object.entries(newFlashCells).forEach(([ticker, fields]) => {
-              merged[ticker] = {
-                last: fields.last ? true : prev[ticker]?.last || false,
-                chg: fields.chg ? true : prev[ticker]?.chg || false,
-                volume: fields.volume ? true : prev[ticker]?.volume || false,
-              };
-            });
-            return merged;
-          });
-          Object.keys(newFlashCells).forEach(ticker => {
-            if (newFlashCells[ticker].last || newFlashCells[ticker].chg || newFlashCells[ticker].volume) {
-              clearTimeout((window as any)[`__flashTimeout_${ticker}`]);
-              (window as any)[`__flashTimeout_${ticker}`] = setTimeout(() => {
-                setFlashCells(prev => ({ ...prev, [ticker]: { last: false, chg: false, volume: false } }));
-              }, 200);
-            }
-          });
-          return updated;
+        const updated = { ...quotes };
+        const newFlashCells: Record<string, { last: boolean; chg: boolean; volume: boolean }> = {};
+        msg.data.forEach((trade: any) => {
+          const ticker = trade.s;
+          const last = trade.p;
+          const prev = updated[ticker]?.last || 0;
+          const chg = prev !== 0 ? ((last - prev) / prev) * 100 : 0;
+          const volume = trade.v ? trade.v.toLocaleString() : updated[ticker]?.volume || '';
+          const lastChanged = last !== updated[ticker]?.last;
+          const chgChanged = chg !== updated[ticker]?.chg;
+          const volumeChanged = volume !== updated[ticker]?.volume;
+          newFlashCells[ticker] = { last: lastChanged, chg: chgChanged, volume: volumeChanged };
+          updated[ticker] = {
+            ...updated[ticker],
+            last,
+            chg,
+            volume,
+            latency: `${Math.max(0, Math.round((Date.now() - trade.t) / 1000))}s`,
+            prev
+          };
         });
+        const merged: Record<string, { last: boolean; chg: boolean; volume: boolean }> = { ...flashCells };
+        Object.entries(newFlashCells).forEach(([ticker, fields]) => {
+          merged[ticker] = {
+            last: fields.last ? true : flashCells[ticker]?.last || false,
+            chg: fields.chg ? true : flashCells[ticker]?.chg || false,
+            volume: fields.volume ? true : flashCells[ticker]?.volume || false,
+          };
+        });
+        updateFlashCells(merged);
+        Object.keys(newFlashCells).forEach(ticker => {
+          if (newFlashCells[ticker].last || newFlashCells[ticker].chg || newFlashCells[ticker].volume) {
+            clearTimeout((window as any)[`__flashTimeout_${ticker}`]);
+            (window as any)[`__flashTimeout_${ticker}`] = setTimeout(() => {
+              updateFlashCells({ [ticker]: { last: false, chg: false, volume: false } });
+            }, 200);
+          }
+        });
+        updateQuotes(updated);
       }
     };
     ws.onerror = () => {};
@@ -212,27 +207,27 @@ export default function QuoteMonitorView() {
           <thead>
             <tr className="text-zinc-400 bg-zinc-800">
               <th className="px-2 py-1 text-left cursor-pointer select-none"
-                  onClick={() => { setSortKey('ticker'); setSortAsc(k => sortKey === 'ticker' ? !k : true); }}>
+                  onClick={() => { setSortKey('ticker'); setSortAsc(sortKey === 'ticker' ? !sortAsc : true); }}>
                 Ticker
                 {sortKey === 'ticker' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
               <th className="px-2 py-1 text-right cursor-pointer select-none"
-                  onClick={() => { setSortKey('last'); setSortAsc(k => sortKey === 'last' ? !k : true); }}>
+                  onClick={() => { setSortKey('last'); setSortAsc(sortKey === 'last' ? !sortAsc : true); }}>
                 Last
                 {sortKey === 'last' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
               <th className="px-2 py-1 text-right cursor-pointer select-none"
-                  onClick={() => { setSortKey('chg'); setSortAsc(k => sortKey === 'chg' ? !k : true); }}>
+                  onClick={() => { setSortKey('chg'); setSortAsc(sortKey === 'chg' ? !sortAsc : true); }}>
                 Chg %
                 {sortKey === 'chg' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
               <th className="px-2 py-1 text-right cursor-pointer select-none"
-                  onClick={() => { setSortKey('volume'); setSortAsc(k => sortKey === 'volume' ? !k : true); }}>
+                  onClick={() => { setSortKey('volume'); setSortAsc(sortKey === 'volume' ? !sortAsc : true); }}>
                 Volume
                 {sortKey === 'volume' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
               <th className="px-2 py-1 text-right cursor-pointer select-none"
-                  onClick={() => { setSortKey('latency'); setSortAsc(k => sortKey === 'latency' ? !k : true); }}>
+                  onClick={() => { setSortKey('latency'); setSortAsc(sortKey === 'latency' ? !sortAsc : true); }}>
                 Latency
                 {sortKey === 'latency' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
@@ -257,7 +252,7 @@ export default function QuoteMonitorView() {
                       <button
                         className="text-red-400 hover:text-red-600 text-xs px-1"
                         title="Remove"
-                        onClick={() => { setTickers(prev => prev.filter(t => t !== ticker)); }}
+                        onClick={() => { setTickers(tickers.filter(t => t !== ticker)); }}
                       >✕</button>
                     )}
                   </td>
