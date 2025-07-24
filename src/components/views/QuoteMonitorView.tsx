@@ -49,9 +49,16 @@ export default function QuoteMonitorView() {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+
+    if (wsRef.current) {
+      try {
+        wsRef.current.close();
+      } catch (e) {}
+      wsRef.current = null;
+    }
+
     const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
     if (!apiKey) {
-      console.error('Finnhub API key not set in NEXT_PUBLIC_FINNHUB_API_KEY');
       return;
     }
 
@@ -138,10 +145,8 @@ export default function QuoteMonitorView() {
         });
       }
     };
-    ws.onerror = (err) => {
-      const errorMsg = err instanceof Error ? err.message : JSON.stringify(err);
-      console.error('Finnhub WebSocket error:', errorMsg, 'readyState:', ws.readyState, 'url:', ws.url);
-    };
+    ws.onerror = () => {};
+    ws.onclose = () => {};
     return () => {
       tickers.forEach(ticker => {
         if (ws && ws.readyState === WebSocket.OPEN) {

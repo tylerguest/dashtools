@@ -15,7 +15,6 @@ export default function UserMenu() {
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!dropdownOpen) return;
     function handleClick(e: MouseEvent) {
