@@ -3,13 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Header from '../components/Header';
 import Workspace from '../components/Workspace';
 import CustomViewsMenu from '../components/CustomViewsMenu';
-import {
-  createClient,
-  saveCustomView,
-  fetchCustomViews,
-  deleteCustomView,
-  fetchUserWindowLayout,
-  upsertUserWindowLayout,
+import { createClient, saveCustomView, fetchCustomViews, deleteCustomView, fetchUserWindowLayout, upsertUserWindowLayout,
 } from '@/utils/supabase/client';
 import type { WindowData } from '../types/window';
 import { getWindowLayout } from '@/lib/windowUtils';
