@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { workspaceSidebarClassNames } from '../styles/classNames';
 
 interface WorkspaceSidebarProps {
   width?: number;
@@ -61,7 +62,7 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ width: controlledWi
     return (
       <div className="flex items-start">
         <button
-          className="mt-3 ml-3 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center"
+          className={workspaceSidebarClassNames.showButton}
           onClick={() => setShow(true)}
           title="Show left pane"
           aria-label="Show left pane"
@@ -77,18 +78,18 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ width: controlledWi
 
   return (
     <div
-      className="relative h-full flex flex-col bg-zinc-900 border-r border-zinc-700 select-none"
+      className={workspaceSidebarClassNames.container}
       style={{ width, minWidth: minPaneWidth, maxWidth: maxPaneWidth, transition: 'width 0.2s', zIndex: 20 }}
     >
       {/* Sidebar content goes here */}
-      <div className="flex-1 p-3 overflow-y-auto">
+      <div className={workspaceSidebarClassNames.sidebarContent}>
         {/* Example content, replace with your actual sidebar content */}
-        <div className="text-zinc-200 font-bold text-lg mb-4">Workspace</div>
-        <div className="text-zinc-400 text-xs mb-2">Sidebar content here</div>
+        <div className={workspaceSidebarClassNames.sidebarTitle}>Workspace</div>
+        <div className={workspaceSidebarClassNames.sidebarSubtitle}>Sidebar content here</div>
       </div>
       {/* Resizer */}
       <div
-        className="absolute top-0 right-0 w-2 h-full cursor-col-resize z-30 bg-transparent hover:bg-zinc-700/40 transition-colors"
+        className={workspaceSidebarClassNames.resizer}
         style={{ marginRight: -1 }}
         onMouseDown={() => { isResizing.current = true; }}
         role="separator"
@@ -98,7 +99,7 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ width: controlledWi
       />
       {/* Hide button */}
       <button
-        className="absolute top-3 right-2 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center"
+        className={workspaceSidebarClassNames.hideButton}
         onClick={() => setShow(false)}
         title="Hide left pane"
         aria-label="Hide left pane"

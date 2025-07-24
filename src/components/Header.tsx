@@ -3,6 +3,7 @@
 import React from 'react';
 import UserMenu from './UserMenu';
 import FPSMonitor from './FPSMonitor';
+import { headerClassNames } from '../styles/classNames';
 
 interface HeaderProps {
   onNewWindow: () => void;
@@ -11,13 +12,13 @@ interface HeaderProps {
 
 export default function Header({ onNewWindow, children }: HeaderProps) {
   return (
-    <header className="bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex justify-between items-center">
-      <div className="flex items-center gap-6">
-        <h1 className="text-zinc-200 text-lg font-black">dashtools</h1>
+    <header className={headerClassNames.header}>
+      <div className={headerClassNames.left}>
+        <h1 className={headerClassNames.title}>dashtools</h1>
       </div>
-      <div className="flex items-center gap-4">
+      <div className={headerClassNames.right}>
         <FPSMonitor />
-        <button onClick={onNewWindow} className="text-zinc-200 text-xl font-bold px-2 py-1 rounded hover:bg-zinc-800">+</button>
+        <button onClick={onNewWindow} className={headerClassNames.newWindowButton}>+</button>
         {children}
         <UserMenu />
       </div>

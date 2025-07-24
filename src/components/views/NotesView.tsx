@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { notesViewClassNames } from '../../styles/classNames';
 
 interface NotesViewProps { value?: string; onChange?: (value: string) => void; }
 
 const NotesView: React.FC<NotesViewProps> = ({ value = '', onChange }) => {
-  console.log('[NotesView] value prop:', value);
   return (
-    <div className="w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2">
+    <div className={notesViewClassNames.container}>
       <textarea
-        className="flex-1 bg-zinc-800 text-zinc-200 p-2 rounded resize-none outline-none border-2 border-zinc-700 focus:border-zinc-700 focus:outline-none"
+        className={notesViewClassNames.textarea}
         value={value}
         style={{ minHeight: 0 }}
         onClick={() => console.log('[NotesView] textarea clicked')}

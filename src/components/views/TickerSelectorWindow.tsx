@@ -1,4 +1,5 @@
 import React from 'react';
+import { tickerSelectorWindowClassNames } from '../../styles/classNames';
 
 const POPULAR_TICKERS = [
   'AAPL', 'AMZN', 'MSFT', 'GOOG', 'NVDA', 'TSLA', 'META', 'NFLX', 'AMD', 'INTC',
@@ -11,16 +12,17 @@ const POPULAR_TICKERS = [
 interface TickerSelectorWindowProps { onSelect: (ticker: string) => void; onClose: () => void; }
 
 const TickerSelectorWindow: React.FC<TickerSelectorWindowProps> = ({ onSelect, onClose }) => {
+
   return (
     <div
-      className="min-w-[140px] max-w-[180px] max-h-64 bg-zinc-900 border border-zinc-700 flex flex-col text-xs select-none"
+      className={tickerSelectorWindowClassNames.container}
       style={{ boxShadow: 'none', borderRadius: 0 }}
     >
-      <div className="overflow-y-auto" style={{ maxHeight: '180px' }}>
+      <div className={tickerSelectorWindowClassNames.list} style={{ maxHeight: '180px' }}>
         {POPULAR_TICKERS.map(ticker => (
           <button
             key={ticker}
-            className="block w-full text-left px-3 py-1 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-xs"
+            className={tickerSelectorWindowClassNames.button}
             style={{ borderRadius: 0 }}
             onClick={() => onSelect(ticker)}
           >

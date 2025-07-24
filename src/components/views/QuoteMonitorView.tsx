@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { quoteMonitorViewClassNames } from '../../styles/classNames';
 import TickerSelectorWindow from './TickerSelectorWindow';
 import { useQuoteMonitorStore } from '../../stores/quoteMonitorStore';
 
@@ -166,12 +167,12 @@ export default function QuoteMonitorView() {
   }, [showTickerSelector]);
 
   return (
-    <div className="w-full h-full bg-zinc-900 text-zinc-200 font-mono text-xs p-2 overflow-auto relative">
-      <div className="mb-2 flex items-center justify-between">
+    <div className={quoteMonitorViewClassNames.container}>
+      <div className={quoteMonitorViewClassNames.headerRow}>
         <div className="flex items-center gap-2">
-          <span className="bg-green-900 text-green-300 px-2 py-0.5 rounded text-xs ml-2">Main</span>
+          <span className={quoteMonitorViewClassNames.mainLabel}>Main</span>
         </div>
-        <div className="flex items-center gap-1 relative" style={{ minWidth: 0 }}>
+        <div className={quoteMonitorViewClassNames.tickerInputRow} style={{ minWidth: 0 }}>
           <input
             ref={inputRef}
             type="text"
@@ -179,17 +180,17 @@ export default function QuoteMonitorView() {
             onChange={e => setInputTicker(e.target.value)}
             onFocus={() => setShowTickerSelector(true)}
             onClick={() => setShowTickerSelector(true)}
-            className="bg-zinc-800 text-zinc-200 px-2 py-0.5 rounded text-xs border border-zinc-700 focus:outline-none w-24"
+            className={quoteMonitorViewClassNames.tickerInput}
             maxLength={8}
             style={{ minWidth: 0 }}
             autoComplete="off"
           />
           <button
             type="submit"
-            className="bg-green-700 text-xs px-2 py-0.5 rounded text-green-100 hover:bg-green-600"
+            className={quoteMonitorViewClassNames.addButton}
           >Add</button>
           {showTickerSelector && (
-            <div className="absolute left-0 top-full z-50 mt-1" ref={selectorRef}>
+            <div className={quoteMonitorViewClassNames.tickerSelector} ref={selectorRef}>
               <TickerSelectorWindow
                 onSelect={ticker => {
                   setInputTicker(ticker);
@@ -202,36 +203,36 @@ export default function QuoteMonitorView() {
           )}
         </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="w-full border-separate border-spacing-y-0.5">
+      <div className={quoteMonitorViewClassNames.tableWrapper}>
+        <table className={quoteMonitorViewClassNames.table}>
           <thead>
-            <tr className="text-zinc-400 bg-zinc-800">
-              <th className="px-2 py-1 text-left cursor-pointer select-none"
+            <tr className={quoteMonitorViewClassNames.theadRow}>
+              <th className={quoteMonitorViewClassNames.thTicker}
                   onClick={() => { setSortKey('ticker'); setSortAsc(sortKey === 'ticker' ? !sortAsc : true); }}>
                 Ticker
                 {sortKey === 'ticker' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
-              <th className="px-2 py-1 text-right cursor-pointer select-none"
+              <th className={quoteMonitorViewClassNames.thBase}
                   onClick={() => { setSortKey('last'); setSortAsc(sortKey === 'last' ? !sortAsc : true); }}>
                 Last
                 {sortKey === 'last' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
-              <th className="px-2 py-1 text-right cursor-pointer select-none"
+              <th className={quoteMonitorViewClassNames.thBase}
                   onClick={() => { setSortKey('chg'); setSortAsc(sortKey === 'chg' ? !sortAsc : true); }}>
                 Chg %
                 {sortKey === 'chg' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
-              <th className="px-2 py-1 text-right cursor-pointer select-none"
+              <th className={quoteMonitorViewClassNames.thBase}
                   onClick={() => { setSortKey('volume'); setSortAsc(sortKey === 'volume' ? !sortAsc : true); }}>
                 Volume
                 {sortKey === 'volume' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
-              <th className="px-2 py-1 text-right cursor-pointer select-none"
+              <th className={quoteMonitorViewClassNames.thBase}
                   onClick={() => { setSortKey('latency'); setSortAsc(sortKey === 'latency' ? !sortAsc : true); }}>
                 Latency
                 {sortKey === 'latency' && (sortAsc ? <span className="ml-1">▲</span> : <span className="ml-1">▼</span>)}
               </th>
-              <th className="px-2 py-1 text-right"></th>
+              <th className={quoteMonitorViewClassNames.thBase}></th>
             </tr>
           </thead>
           <tbody>
@@ -239,18 +240,24 @@ export default function QuoteMonitorView() {
               const q = quotes[ticker] || { ticker, last: 0, chg: 0, volume: '', latency: '', prev: 0 };
               const flash = flashCells[ticker] || { last: false, chg: false, volume: false };
               return (
-                <tr key={ticker} className="odd:bg-zinc-900 even:bg-zinc-800">
-                  <td className="px-2 py-1 font-bold text-zinc-100">{ticker}</td>
-                  <td className={`px-2 py-1 text-right transition-colors duration-150 ${flash.last ? 'bg-yellow-400/30' : ''}`}>{q.last !== 0 ? q.last : '-'}</td>
-                  <td className={`px-2 py-1 text-right font-bold transition-colors duration-150 ${getChgColor(q.chg)} ${flash.chg ? 'bg-yellow-400/30' : ''}`}>
+                <tr key={ticker} className={"odd:bg-zinc-900 even:bg-zinc-800"}>
+                  <td className={quoteMonitorViewClassNames.tdTicker}>{ticker}</td>
+                  <td className={
+                    quoteMonitorViewClassNames.tdBase + (flash.last ? ' bg-yellow-400/30' : '')
+                  }>{q.last !== 0 ? q.last : '-'}</td>
+                  <td className={
+                    quoteMonitorViewClassNames.tdChg + ' ' + getChgColor(q.chg) + (flash.chg ? ' bg-yellow-400/30' : '')
+                  }>
                     {typeof q.chg === 'number' && !isNaN(q.chg) ? (q.chg > 0 ? '+' : '') + q.chg.toFixed(2) : ''}
                   </td>
-                  <td className={`px-2 py-1 text-right transition-colors duration-150 ${flash.volume ? 'bg-yellow-400/30' : ''}`}>{q.volume || '-'}</td>
-                  <td className="px-2 py-1 text-right text-green-300">{q.latency || '-'}</td>
-                  <td className="px-2 py-1 text-right">
+                  <td className={
+                    quoteMonitorViewClassNames.tdBase + (flash.volume ? ' bg-yellow-400/30' : '')
+                  }>{q.volume || '-'}</td>
+                  <td className={quoteMonitorViewClassNames.tdLatency}>{q.latency || '-'}</td>
+                  <td className={quoteMonitorViewClassNames.tdBase}>
                     {tickers.length > 1 && (
                       <button
-                        className="text-red-400 hover:text-red-600 text-xs px-1"
+                        className={quoteMonitorViewClassNames.removeButton}
                         title="Remove"
                         onClick={() => { setTickers(tickers.filter(t => t !== ticker)); }}
                       >✕</button>

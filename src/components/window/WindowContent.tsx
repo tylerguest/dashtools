@@ -1,9 +1,11 @@
+
 import React from 'react';
 import StockChartView from '../views/StockChartView';
 import QuoteMonitorView from '../views/QuoteMonitorView';
 import ChatbotView from '../views/ChatbotView';
 import NotesGridView from '../views/NotesGridView';
 import { WindowContent as WindowContentType } from '../../types/window';
+import { windowContentClassNames } from '../../styles/classNames';
 
 interface WindowContentProps { content: WindowContentType; notes?: string; onNotesChange?: (notes: string) => void; user?: any; }
 
@@ -15,9 +17,10 @@ const viewMap: Record<Exclude<WindowContentType, null>, React.FC<any>> = {
 };
 
 const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesChange, user }) => {
+
   if (content == null) {
     return (
-      <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
+      <div className={windowContentClassNames.emptyState}>
         Select a view from the dropdown menu
       </div>
     );
@@ -31,7 +34,7 @@ const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesCh
   }
 
   return (
-    <div className="h-full flex items-center justify-center text-zinc-500 text-sm">
+    <div className={windowContentClassNames.emptyState}>
       Select a view from the dropdown menu
     </div>
   );

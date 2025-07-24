@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { chatbotViewClassNames } from '../../styles/classNames';
 
 interface Message { sender: 'user' | 'bot'; text: string; }
 
@@ -27,6 +28,7 @@ export default function ChatbotView() {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -49,23 +51,40 @@ export default function ChatbotView() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2">
-      <div className="flex-1 overflow-y-auto rounded bg-zinc-800 p-2 mb-2">
+    <div className={chatbotViewClassNames.container}>
+      <div className={chatbotViewClassNames.chatArea}>
         {messages.map((msg, i) => (
-          <div key={i} className={`mb-2 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[70%] px-3 py-2 rounded-lg ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-zinc-700 text-zinc-200'}`}>{msg.text}</div>
+          <div
+            key={i}
+            className={
+              chatbotViewClassNames.messageRowBase +
+              (msg.sender === 'user'
+                ? ' ' + chatbotViewClassNames.userMessageRow
+                : ' ' + chatbotViewClassNames.botMessageRow)
+            }
+          >
+            <div
+              className={
+                chatbotViewClassNames.messageBubbleBase +
+                (msg.sender === 'user'
+                  ? ' ' + chatbotViewClassNames.userMessageBubble
+                  : ' ' + chatbotViewClassNames.botMessageBubble)
+              }
+            >
+              {msg.text}
+            </div>
           </div>
         ))}
         {loadingMsg && (
-          <div className="mb-2 flex justify-start">
-            <div className="max-w-[70%] px-3 py-2 rounded-lg bg-zinc-700 text-zinc-400 italic animate-pulse">Thinking…</div>
+          <div className={chatbotViewClassNames.loadingRow}>
+            <div className={chatbotViewClassNames.loadingBubble}>Thinking…</div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
-      <div className="flex gap-2">
+      <div className={chatbotViewClassNames.inputRow}>
         <input
-          className="flex-1 rounded bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500"
+          className={chatbotViewClassNames.input}
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
@@ -73,7 +92,7 @@ export default function ChatbotView() {
           placeholder="Type your message..."
         />
         <button
-          className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded font-bold"
+          className={chatbotViewClassNames.sendButton}
           onClick={handleSend}
         >
           Send

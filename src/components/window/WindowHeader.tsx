@@ -1,4 +1,7 @@
+
 import React from 'react';
+import clsx from 'clsx';
+import { windowHeaderClassNames } from '../../styles/classNames';
 
 interface WindowHeaderProps {
   title: string;
@@ -57,12 +60,13 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
     };
   }, [isDropdownOpen, setIsDropdownOpen]);
 
+
   return (
-    <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative">
+    <div className={windowHeaderClassNames.header}>
       <div className="relative flex items-center">
         <button
           onClick={e => { e.stopPropagation(); setIsDropdownOpen(!isDropdownOpen); }}
-          className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur"
+          className={windowHeaderClassNames.menuButton}
           aria-label="Open window menu"
           tabIndex={0}
         >
@@ -76,21 +80,21 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
         {isDropdownOpen && (
           <div
             ref={dropdownRef}
-            className="absolute top-8 left-0 min-w-[170px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
+            className={windowHeaderClassNames.dropdown}
             tabIndex={-1}
             role="menu"
           >
             {menuData.map(category => (
               <div
                 key={category.label}
-                className="relative group"
+                className={windowHeaderClassNames.menuCategory}
                 onMouseEnter={() => setSubmenuOpen(category.label)}
                 onMouseLeave={() => setSubmenuOpen(null)}
                 onFocus={() => setSubmenuOpen(category.label)}
                 onBlur={() => setSubmenuOpen(null)}
               >
                 <button
-                  className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white flex justify-between items-center"
+                  className={windowHeaderClassNames.menuCategoryButton}
                   tabIndex={0}
                   aria-haspopup={category.children ? 'menu' : undefined}
                   aria-expanded={submenuOpen === category.label}
@@ -102,13 +106,13 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
                 </button>
                 {category.children && submenuOpen === category.label && (
                   <div
-                    className="absolute left-full top-0 min-w-[150px] max-w-[200px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn"
+                    className={windowHeaderClassNames.submenu}
                     role="menu"
                   >
                     {category.children.map(item => (
                       <button
                         key={item.key}
-                        className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white"
+                        className={windowHeaderClassNames.submenuButton}
                         onClick={e => { e.stopPropagation(); onContentChange && onContentChange(item.key); setIsDropdownOpen(false); setSubmenuOpen(null); }}
                         tabIndex={0}
                         role="menuitem"
@@ -123,16 +127,16 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
           </div>
         )}
       </div>
-    <div className="flex-1 flex justify-center items-center select-none">
-      <span className="text-zinc-200 text-base font-bold">{title}</span>
+      <div className={windowHeaderClassNames.titleContainer}>
+        <span className={windowHeaderClassNames.title}>{title}</span>
+      </div>
+      <button
+        onClick={e => { e.stopPropagation(); onClose(); }}
+        className={windowHeaderClassNames.closeButton}
+      >
+        ×
+      </button>
     </div>
-    <button
-      onClick={e => { e.stopPropagation(); onClose(); }}
-      className="w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 text-xs font-bold"
-    >
-      ×
-    </button>
-  </div>
   );
 };
 

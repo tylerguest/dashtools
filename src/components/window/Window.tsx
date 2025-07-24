@@ -6,6 +6,7 @@ import { WindowContent as WindowContentType } from '../../types/window';
 import WindowHeader from './WindowHeader';
 import WindowContent from './WindowContent';
 import WindowResizer from './WindowResizer';
+import { windowClassNames } from '../../styles/classNames';
 import { useWindowDragResize } from './useWindowDragResize';
 
 interface WindowProps {
@@ -80,10 +81,10 @@ const Window: React.FC<WindowProps> = ({ id, workspaceBounds, user, zIndex }) =>
   return (
     <div
       data-window-id={id}
-      className="absolute bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col"
+      className={windowClassNames.window}
       style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight, zIndex: zIndex || 10, willChange: 'transform', }}
     >
-      <div className="cursor-move" onMouseDown={handleDragMouseDown}>
+      <div className={windowClassNames.header} onMouseDown={handleDragMouseDown}>
         <WindowHeader
           title={
             content === 'stockchart' ? 'Stock Chart'
@@ -98,7 +99,7 @@ const Window: React.FC<WindowProps> = ({ id, workspaceBounds, user, zIndex }) =>
           onClose={() => removeWindow(id)}
         />
       </div>
-      <div className="flex-1 p-1 overflow-auto">
+      <div className={windowClassNames.content}>
         <WindowContent
           content={content as WindowContentType}
           notes={notes}

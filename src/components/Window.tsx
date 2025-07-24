@@ -1,9 +1,9 @@
-
 import React, { useState } from 'react';
 import WindowHeader from './window/WindowHeader';
 import WindowContent from './window/WindowContent';
 import WindowResizer from './window/WindowResizer';
 import { useWindowDragResize } from './window/useWindowDragResize';
+import { windowClassNames } from '../styles/classNames';
 
 interface WindowProps {
   id: number; x: number; y: number; width: number; height: number; title: string;
@@ -31,7 +31,7 @@ export default function Window({
   return (
     <div
       data-window-id={id}
-      className="absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl cursor-move flex flex-col"
+      className={windowClassNames.window}
       style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight }}
       onMouseDown={e => onMouseDown(e, id)}
     >
@@ -47,12 +47,12 @@ export default function Window({
         onContentChange={option => onContentChange && onContentChange(id, option as any)}
         onClose={() => onClose(id)}
       />
-      <div className="flex-1 p-1 overflow-auto">
-      <WindowContent
-        content={content as any}
-        notes={notes}
-        onNotesChange={onNotesChange ? (val: string) => onNotesChange(id, val) : undefined}
-      />
+      <div className={windowClassNames.content}>
+        <WindowContent
+          content={content as any}
+          notes={notes}
+          onNotesChange={onNotesChange ? (val: string) => onNotesChange(id, val) : undefined}
+        />
       </div>
       <WindowResizer onResizeMouseDown={handleResizeMouseDown} />
     </div>

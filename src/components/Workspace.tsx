@@ -5,6 +5,7 @@ import WorkspaceSidebar from './WorkspaceSidebar';
 import Window from './window/Window';
 import { useWindowStore } from '../stores/windowStore';
 import type { WindowContent, WindowData } from '../types/window';
+import { workspaceClassNames } from '../styles/classNames';
 
 interface WorkspaceProps {
   user?: any;
@@ -52,11 +53,11 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
   };
 
   return (
-    <div className="flex h-full w-full bg-zinc-800">
+    <div className={workspaceClassNames.container}>
       <WorkspaceSidebar width={sidebarWidth} onWidthChange={setSidebarWidth} />
       <div
         ref={setWorkspaceRef}
-        className="flex-1 h-full relative overflow-hidden"
+        className={workspaceClassNames.workspaceArea}
         style={{ minWidth: 0 }}
       >
         {windows.map(window => (

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { userMenuClassNames } from '../styles/classNames';
 
 export default function UserMenu() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -69,10 +70,10 @@ export default function UserMenu() {
   };
 
   return (
-    <div className="relative">
+    <div className={userMenuClassNames.container}>
       <button
         ref={buttonRef}
-        className="w-9 h-9 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200"
+        className={userMenuClassNames.menuButton}
         onClick={() => setDropdownOpen((v) => !v)}
         aria-label="User menu"
       >
@@ -84,47 +85,47 @@ export default function UserMenu() {
       {dropdownOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 mt-2 min-w-[160px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl p-2 z-[9999] transition-all"
+          className={userMenuClassNames.dropdown}
         >
           {!user ? (
-            <form onSubmit={mode === "login" ? handleLogin : handleSignup} className="flex flex-col gap-2">
-              <label className="text-zinc-200 text-sm">Email</label>
+            <form onSubmit={mode === "login" ? handleLogin : handleSignup} className={userMenuClassNames.form}>
+              <label className={userMenuClassNames.label}>Email</label>
               <input
-                className="bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500 text-zinc-200"
+                className={userMenuClassNames.input}
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 autoComplete="username"
               />
-              <label className="text-zinc-200 text-sm">Password</label>
+              <label className={userMenuClassNames.label}>Password</label>
               <input
-                className="bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500 text-zinc-200"
+                className={userMenuClassNames.input}
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 autoComplete="current-password"
               />
-              {error && <div className="text-red-400 text-xs">{error}</div>}
+              {error && <div className={userMenuClassNames.error}>{error}</div>}
               <button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-bold mt-2"
+                className={userMenuClassNames.submitButton}
                 disabled={loading}
               >
                 {loading ? (mode === "login" ? "Signing in..." : "Signing up...") : (mode === "login" ? "Sign In" : "Sign Up")}
               </button>
               <button
                 type="button"
-                className="text-xs text-blue-400 mt-1 underline"
+                className={userMenuClassNames.switchButton}
                 onClick={() => setMode(mode === "login" ? "signup" : "login")}
               >
                 {mode === "login" ? "Need an account? Sign up" : "Already have an account? Sign in"}
               </button>
             </form>
           ) : (
-            <div className="flex flex-col gap-2 items-center py-2">
-              <div className="text-zinc-100 font-semibold text-xs mb-2 break-all text-center">{user.email}</div>
+            <div className={userMenuClassNames.userInfo}>
+              <div className={userMenuClassNames.userEmail}>{user.email}</div>
               <button
-                className="w-full py-2 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all"
+                className={userMenuClassNames.signOutButton}
                 onClick={handleLogout}
               >
                 Sign Out
