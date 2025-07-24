@@ -7,6 +7,8 @@ import { createClient, saveCustomView, fetchCustomViews, deleteCustomView, fetch
 } from '@/utils/supabase/client';
 import type { WindowData } from '../types/window';
 import { getWindowLayout } from '@/lib/windowUtils';
+import { useWindowStore } from '../stores/windowStore';
+import type { WindowContent } from '../types/window';
 
 type CustomView = { id: string; name: string; layout: WindowData[]; };
 
@@ -22,6 +24,7 @@ export default function Home() {
   const resizingRef = useRef(false);
   const [nextId, setNextId] = useState<number>(5);
   const [hydrated, setHydrated] = useState(false);
+  const addWindow = useWindowStore(state => state.addWindow);
   useEffect(() => { windowsRef.current = windows; }, [windows]);
 
   useEffect(() => {
@@ -119,17 +122,16 @@ export default function Home() {
     const maxY = Math.max(margin, browserHeight - availableHeight - margin - 120);
     const x = Math.floor(Math.random() * (maxX - margin + 1)) + margin;
     const y = Math.floor(Math.random() * (maxY - margin + 1)) + margin;
-    const newWindow: WindowData = {
-      id: nextId, x, y,
-      width: windowWidth,
-      height: availableHeight,
-      title: `Window${nextId}`,
-      content: 'quotemonitor',
-      notes: ''
-    };
-    setWindowsAndBase((prev: WindowData[]) => [...prev, newWindow]);
-    setNextId(prev => prev + 1);
-  }, [nextId, setWindowsAndBase]);
+  const newWindow = {
+    x, y,
+    width: windowWidth,
+    height: availableHeight,
+    title: `Window`,
+    content: 'quotemonitor' as WindowContent,
+    notes: ''
+  };
+  addWindow(newWindow);
+  }, [addWindow]);
 
   const handleSaveView = useCallback(async (name: string, layout: WindowData[]) => {
     if (!user) return;
