@@ -184,7 +184,6 @@ export default function QuoteMonitorView() {
             onChange={e => setInputTicker(e.target.value)}
             onFocus={() => setShowTickerSelector(true)}
             onClick={() => setShowTickerSelector(true)}
-            placeholder="Add ticker..."
             className="bg-zinc-800 text-zinc-200 px-2 py-0.5 rounded text-xs border border-zinc-700 focus:outline-none w-24"
             maxLength={8}
             style={{ minWidth: 0 }}
