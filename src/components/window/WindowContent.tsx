@@ -8,8 +8,10 @@ import { WindowContent as WindowContentType } from '../../types/window';
 interface WindowContentProps { content: WindowContentType; notes?: string; onNotesChange?: (notes: string) => void; user?: any; }
 
 const viewMap: Record<Exclude<WindowContentType, null>, React.FC<any>> = {
-  stockchart: StockChartView, quotemonitor: QuoteMonitorView,
-  chatbot: ChatbotView, notes: NotesGridView,
+  stockchart: StockChartView, 
+  quotemonitor: QuoteMonitorView,
+  chatbot: ChatbotView, 
+  notes: NotesGridView,
 };
 
 const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesChange, user }) => {
