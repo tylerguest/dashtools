@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { userMenuClassNames } from '../styles/classNames';
+import { userMenuClassNames, buttonClassNames } from '../styles/classNames';
 
 export default function UserMenu() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -73,9 +73,10 @@ export default function UserMenu() {
     <div className={userMenuClassNames.container}>
       <button
         ref={buttonRef}
-        className={userMenuClassNames.menuButton}
+        className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
         onClick={() => setDropdownOpen((v) => !v)}
         aria-label="User menu"
+        type="button"
       >
         <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <circle cx="12" cy="8" r="4" />
@@ -108,14 +109,14 @@ export default function UserMenu() {
               {error && <div className={userMenuClassNames.error}>{error}</div>}
               <button
                 type="submit"
-                className={userMenuClassNames.submitButton}
+                className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.md} w-full`}
                 disabled={loading}
               >
                 {loading ? (mode === "login" ? "Signing in..." : "Signing up...") : (mode === "login" ? "Sign In" : "Sign Up")}
               </button>
               <button
                 type="button"
-                className={userMenuClassNames.switchButton}
+                className={`${buttonClassNames.base} ${buttonClassNames.ghost} ${buttonClassNames.sizes.sm} underline`}
                 onClick={() => setMode(mode === "login" ? "signup" : "login")}
               >
                 {mode === "login" ? "Need an account? Sign up" : "Already have an account? Sign in"}
@@ -125,8 +126,9 @@ export default function UserMenu() {
             <div className={userMenuClassNames.userInfo}>
               <div className={userMenuClassNames.userEmail}>{user.email}</div>
               <button
-                className={userMenuClassNames.signOutButton}
+                className={`${buttonClassNames.base} ${buttonClassNames.secondary} ${buttonClassNames.sizes.md} w-full`}
                 onClick={handleLogout}
+                type="button"
               >
                 Sign Out
               </button>

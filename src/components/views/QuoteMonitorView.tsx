@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { quoteMonitorViewClassNames } from '../../styles/classNames';
+import { quoteMonitorViewClassNames, buttonClassNames } from '../../styles/classNames';
 import TickerSelectorWindow from './TickerSelectorWindow';
 import { useQuoteMonitorStore } from '../../stores/quoteMonitorStore';
 
@@ -187,8 +187,10 @@ export default function QuoteMonitorView() {
           />
           <button
             type="submit"
-            className={quoteMonitorViewClassNames.addButton}
-          >Add</button>
+            className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.sm}`}
+          >
+            Add
+          </button>
           {showTickerSelector && (
             <div className={quoteMonitorViewClassNames.tickerSelector} ref={selectorRef}>
               <TickerSelectorWindow

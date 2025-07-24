@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { notesGridViewClassNames } from '../../styles/classNames';
+import { notesGridViewClassNames, buttonClassNames } from '../../styles/classNames';
 import { createClient } from "@/utils/supabase/client";
 
 interface Note { id: string; title: string; content: string; created_at: string; }
@@ -201,10 +201,11 @@ export default function NotesGridView({ user }: { user: any }) {
             <div className={notesGridViewClassNames.notesPaneHeader}>
               <span className={notesGridViewClassNames.notesTitle}>Notes</span>
               <button
-                className={notesGridViewClassNames.hideNotesButton}
+                className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
                 title="Hide notes pane"
                 onClick={() => setShowNotesPane(false)}
                 aria-label="Hide notes pane"
+                type="button"
                 style={{ minWidth: 24, minHeight: 24 }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -232,9 +233,10 @@ export default function NotesGridView({ user }: { user: any }) {
                       <div className={notesGridViewClassNames.noteContent}>{note.content.length > 60 ? note.content.slice(0, 60) + "…" : note.content}</div>
                     </div>
                     <button
-                      className={notesGridViewClassNames.deleteButton}
+                      className={`${buttonClassNames.base} ${buttonClassNames.danger} ${buttonClassNames.sizes.xs} ml-2`}
                       onClick={e => { e.stopPropagation(); setPendingDeleteId(note.id); }}
                       title="Delete note"
+                      type="button"
                     >
                       ×
                     </button>

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import clsx from 'clsx';
-import { windowHeaderClassNames } from '../../styles/classNames';
+import { windowHeaderClassNames, buttonClassNames } from '../../styles/classNames';
 
 interface WindowHeaderProps {
   title: string;
@@ -66,9 +66,10 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
       <div className="relative flex items-center">
         <button
           onClick={e => { e.stopPropagation(); setIsDropdownOpen(!isDropdownOpen); }}
-          className={windowHeaderClassNames.menuButton}
+          className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
           aria-label="Open window menu"
           tabIndex={0}
+          type="button"
         >
           {/* Modern hamburger icon */}
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -94,10 +95,11 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
                 onBlur={() => setSubmenuOpen(null)}
               >
                 <button
-                  className={windowHeaderClassNames.menuCategoryButton}
+                  className={`${buttonClassNames.base} ${buttonClassNames.ghost} ${buttonClassNames.sizes.md} w-full flex justify-between items-center`}
                   tabIndex={0}
                   aria-haspopup={category.children ? 'menu' : undefined}
                   aria-expanded={submenuOpen === category.label}
+                  type="button"
                 >
                   <span>{category.label}</span>
                   {category.children && (
@@ -112,10 +114,11 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
                     {category.children.map(item => (
                       <button
                         key={item.key}
-                        className={windowHeaderClassNames.submenuButton}
+                        className={`${buttonClassNames.base} ${buttonClassNames.ghost} ${buttonClassNames.sizes.sm} w-full text-left`}
                         onClick={e => { e.stopPropagation(); onContentChange && onContentChange(item.key); setIsDropdownOpen(false); setSubmenuOpen(null); }}
                         tabIndex={0}
                         role="menuitem"
+                        type="button"
                       >
                         {item.label}
                       </button>
@@ -132,7 +135,9 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
       </div>
       <button
         onClick={e => { e.stopPropagation(); onClose(); }}
-        className={windowHeaderClassNames.closeButton}
+        className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
+        aria-label="Close window"
+        type="button"
       >
         ×
       </button>

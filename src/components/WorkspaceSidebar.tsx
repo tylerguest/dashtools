@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { workspaceSidebarClassNames } from '../styles/classNames';
+import { workspaceSidebarClassNames, buttonClassNames } from '../styles/classNames';
 
 interface WorkspaceSidebarProps {
   width?: number;
@@ -62,10 +62,11 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ width: controlledWi
     return (
       <div className="flex items-start">
         <button
-          className={workspaceSidebarClassNames.showButton}
+          className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
           onClick={() => setShow(true)}
           title="Show left pane"
           aria-label="Show left pane"
+          type="button"
           style={{ minWidth: 24, minHeight: 24 }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -99,10 +100,11 @@ const WorkspaceSidebar: React.FC<WorkspaceSidebarProps> = ({ width: controlledWi
       />
       {/* Hide button */}
       <button
-        className={workspaceSidebarClassNames.hideButton}
+        className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
         onClick={() => setShow(false)}
         title="Hide left pane"
         aria-label="Hide left pane"
+        type="button"
         style={{ minWidth: 24, minHeight: 24 }}
       >
         &lt;

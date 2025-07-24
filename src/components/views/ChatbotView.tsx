@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { chatbotViewClassNames } from '../../styles/classNames';
+import { chatbotViewClassNames, buttonClassNames } from '../../styles/classNames';
 
 interface Message { sender: 'user' | 'bot'; text: string; }
 
@@ -92,8 +92,9 @@ export default function ChatbotView() {
           placeholder="Type your message..."
         />
         <button
-          className={chatbotViewClassNames.sendButton}
+          className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.md}`}
           onClick={handleSend}
+          type="button"
         >
           Send
         </button>

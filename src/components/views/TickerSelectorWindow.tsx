@@ -1,5 +1,5 @@
 import React from 'react';
-import { tickerSelectorWindowClassNames } from '../../styles/classNames';
+import { tickerSelectorWindowClassNames, buttonClassNames } from '../../styles/classNames';
 
 const POPULAR_TICKERS = [
   'AAPL', 'AMZN', 'MSFT', 'GOOG', 'NVDA', 'TSLA', 'META', 'NFLX', 'AMD', 'INTC',
@@ -22,9 +22,10 @@ const TickerSelectorWindow: React.FC<TickerSelectorWindowProps> = ({ onSelect, o
         {POPULAR_TICKERS.map(ticker => (
           <button
             key={ticker}
-            className={tickerSelectorWindowClassNames.button}
+            className={`${buttonClassNames.base} ${buttonClassNames.ghost} ${buttonClassNames.sizes.sm} w-full text-left`}
             style={{ borderRadius: 0 }}
             onClick={() => onSelect(ticker)}
+            type="button"
           >
             {ticker}
           </button>

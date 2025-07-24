@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useCustomViewsStore } from '../stores/customViewsStore';
-import { customViewsMenuClassNames } from '../styles/classNames';
+import { customViewsMenuClassNames, buttonClassNames } from '../styles/classNames';
 
 interface CustomViewsMenuProps {
   views: Array<{ id: string; name: string; layout: any }>;
@@ -53,9 +53,10 @@ export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, curre
     <div className={customViewsMenuClassNames.container}>
       <button
         ref={buttonRef}
-        className={customViewsMenuClassNames.menuButton}
+        className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
         onClick={() => setShowInput(v => !v)}
         aria-label="Custom views menu"
+        type="button"
       >
         V
       </button>
@@ -74,7 +75,7 @@ export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, curre
               onChange={e => setViewName(e.target.value)}
             />
             <button
-              className={customViewsMenuClassNames.saveButton}
+              className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.sm} w-full`}
               onClick={() => {
                 if (viewName.trim()) {
                   addCustomView({ id: Date.now().toString(), name: viewName.trim(), layout: currentLayout });
@@ -82,6 +83,7 @@ export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, curre
                   setShowInput(false);
                 }
               }}
+              type="button"
             >
               Save View
             </button>
@@ -94,16 +96,18 @@ export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, curre
                 className={customViewsMenuClassNames.viewRow}
               >
                 <button
-                  className={customViewsMenuClassNames.viewButton}
+                  className={`${buttonClassNames.base} ${buttonClassNames.ghost} ${buttonClassNames.sizes.sm} flex-1 truncate text-left`}
                   onClick={() => { /* handle load view logic here */ setShowInput(false); }}
                   title={view.name}
+                  type="button"
                 >
                   {view.name}
                 </button>
                 <button
-                  className={customViewsMenuClassNames.deleteButton}
+                  className={`${buttonClassNames.base} ${buttonClassNames.danger} ${buttonClassNames.sizes.xs} ml-1`}
                   onClick={() => removeCustomView(view.id)}
                   title="Delete view"
+                  type="button"
                 >
                   ×
                 </button>
