@@ -169,7 +169,7 @@ export default function Home() {
 
   if (!hydrated) return null;
   return (
-    <div className="min-h-screen bg-gray-950 flex flex-col">
+    <div className="min-h-screen h-full bg-gray-950 flex flex-col">
       <Header onNewWindow={addNewWindow}>
         <CustomViewsMenu
           views={customViews}
@@ -179,7 +179,7 @@ export default function Home() {
           currentLayout={windows}
         />
       </Header>
-      <main className="flex-1 flex">
+      <main className="flex-1 flex h-full">
         <Workspace
           windows={windows}
           setWindows={setWindowsAndBase}

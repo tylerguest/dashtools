@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useCustomViewsStore } from '../stores/customViewsStore';
 
-export default function CustomViewsMenu({ currentLayout }: { currentLayout: any }) {
+interface CustomViewsMenuProps {
+  views: Array<{ id: string; name: string; layout: any }>;
+  onSave: (name: string, layout: any) => Promise<void>;
+  onLoad: (view: any) => void;
+  onDelete: (id: string) => Promise<void>;
+  currentLayout: any;
+}
+
+export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, currentLayout }: CustomViewsMenuProps) {
   const [showInput, setShowInput] = useState(false);
   const [viewName, setViewName] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
