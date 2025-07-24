@@ -7,6 +7,7 @@ interface WindowStore {
   nextId: number;
   addWindow: (window: Omit<WindowData, 'id'>) => number;
   updateWindow: (id: number, data: Partial<WindowData>) => void;
+  updateWindows: (ids: number[], data: Partial<WindowData>) => void;
   removeWindow: (id: number) => void;
   bringToFront: (id: number) => void;
   setZOrder: (zOrder: number[]) => void;
@@ -29,12 +30,23 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
     return id;
   },
 
+
   updateWindow: (id, data) => set(state => ({
     windowsById: {
       ...state.windowsById,
       [id]: { ...state.windowsById[id], ...data },
     },
   })),
+
+  updateWindows: (ids, data) => set(state => {
+    const updated: Record<number, WindowData> = { ...state.windowsById };
+    ids.forEach(id => {
+      if (updated[id]) {
+        updated[id] = { ...updated[id], ...data };
+      }
+    });
+    return { windowsById: updated };
+  }),
 
   removeWindow: (id) => set(state => {
     const { [id]: _, ...rest } = state.windowsById;
