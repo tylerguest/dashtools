@@ -39,7 +39,7 @@ export default function NotesGridView({ user }: { user: any }) {
   const [newContent, setNewContent] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [showNotesPane, setShowNotesPane] = useState(true);
-  const [notesPaneWidth, setNotesPaneWidth] = useState(260); // px, default width
+  const [notesPaneWidth, setNotesPaneWidth] = useState(260); 
   const supabase = createClient();
 
   useEffect(() => {
@@ -192,8 +192,8 @@ export default function NotesGridView({ user }: { user: any }) {
               width: Math.max(minNotesPaneWidth, Math.min(notesPaneWidth, maxNotesPaneWidth)),
               minWidth: minNotesPaneWidth,
               maxWidth: maxNotesPaneWidth,
-              transition: 'none', // disables unwanted transitions
-              userSelect: 'none', // disables text selection while resizing
+              transition: 'none', 
+              userSelect: 'none', 
             }}
           >
           <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800">
