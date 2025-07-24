@@ -1,14 +1,8 @@
 export type WindowContent = 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
 
 export interface WindowData {
-  id: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  title: string;
-  content?: WindowContent;
-  notes?: string;
+  id: number; x: number; y: number; width: number; height: number; 
+  title: string; content?: WindowContent; notes?: string;
 }
 
 export interface WindowProps extends WindowData {

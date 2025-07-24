@@ -15,14 +15,7 @@ function getChgColor(chg: number) {
   return 'text-zinc-200';
 }
 
-interface Quote {
-  ticker: string;
-  last: number;
-  chg: number;
-  volume: string;
-  latency: string;
-  prev?: number;
-}
+interface Quote { ticker: string; last: number; chg: number; volume: string; latency: string; prev?: number; }
 
 type SortKey = 'ticker' | 'last' | 'chg' | 'volume' | 'latency';
 export default function QuoteMonitorView() {
@@ -35,12 +28,7 @@ export default function QuoteMonitorView() {
   const selectorRef = React.useRef<HTMLDivElement>(null);
   const [quotes, setQuotes] = useState<Record<string, Quote>>(() =>
     Object.fromEntries(DEFAULT_TICKERS.map(ticker => [ticker, {
-      ticker,
-      last: 0,
-      chg: 0,
-      volume: '',
-      latency: '',
-      prev: 0
+      ticker, last: 0, chg: 0, volume: '', latency: '', prev: 0
     }]))
   );
   const [flashCells, setFlashCells] = useState<Record<string, { last: boolean; chg: boolean; volume: boolean }>>(() =>
@@ -49,19 +37,14 @@ export default function QuoteMonitorView() {
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-
     if (wsRef.current) {
       try {
         wsRef.current.close();
       } catch (e) {}
       wsRef.current = null;
     }
-
     const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
-    if (!apiKey) {
-      return;
-    }
-
+    if (!apiKey) { return; }
     (async () => {
       const results = await Promise.all(tickers.map(ticker => fetchQuote(ticker, apiKey)));
       setQuotes(prevQuotes => {
@@ -86,9 +69,7 @@ export default function QuoteMonitorView() {
     const ws = new WebSocket(`wss://ws.finnhub.io?token=${apiKey}`);
     wsRef.current = ws;
     ws.onopen = () => {
-      tickers.forEach(ticker => {
-        ws.send(JSON.stringify({ type: 'subscribe', symbol: ticker }));
-      });
+      tickers.forEach(ticker => { ws.send(JSON.stringify({ type: 'subscribe', symbol: ticker })); });
     };
     ws.onmessage = (event) => {
       const msg = JSON.parse(event.data);
@@ -105,11 +86,7 @@ export default function QuoteMonitorView() {
             const lastChanged = last !== updated[ticker]?.last;
             const chgChanged = chg !== updated[ticker]?.chg;
             const volumeChanged = volume !== updated[ticker]?.volume;
-            newFlashCells[ticker] = {
-              last: lastChanged,
-              chg: chgChanged,
-              volume: volumeChanged
-            };
+            newFlashCells[ticker] = { last: lastChanged, chg: chgChanged, volume: volumeChanged };
             updated[ticker] = {
               ...updated[ticker],
               last,
@@ -134,10 +111,7 @@ export default function QuoteMonitorView() {
             if (newFlashCells[ticker].last || newFlashCells[ticker].chg || newFlashCells[ticker].volume) {
               clearTimeout((window as any)[`__flashTimeout_${ticker}`]);
               (window as any)[`__flashTimeout_${ticker}`] = setTimeout(() => {
-                setFlashCells(prev => ({
-                  ...prev,
-                  [ticker]: { last: false, chg: false, volume: false }
-                }));
+                setFlashCells(prev => ({ ...prev, [ticker]: { last: false, chg: false, volume: false } }));
               }, 200);
             }
           });
@@ -149,13 +123,9 @@ export default function QuoteMonitorView() {
     ws.onclose = () => {};
     return () => {
       tickers.forEach(ticker => {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send(JSON.stringify({ type: 'unsubscribe', symbol: ticker }));
-        }
+        if (ws && ws.readyState === WebSocket.OPEN) { ws.send(JSON.stringify({ type: 'unsubscribe', symbol: ticker })); }
       });
-      if (ws && ws.readyState !== WebSocket.CLOSED && ws.readyState !== WebSocket.CLOSING) {
-        ws.close();
-      }
+      if (ws && ws.readyState !== WebSocket.CLOSED && ws.readyState !== WebSocket.CLOSING) { ws.close(); }
     };
   }, [tickers]);
 
@@ -193,9 +163,7 @@ export default function QuoteMonitorView() {
       if (
         (input && input.contains(e.target as Node)) ||
         (selector && selector.contains(e.target as Node))
-      ) {
-        return;
-      }
+      ) { return; }
       setShowTickerSelector(false);
     }
     document.addEventListener('mousedown', handleMouseDown);
@@ -281,9 +249,7 @@ export default function QuoteMonitorView() {
                   <td className="px-2 py-1 font-bold text-zinc-100">{ticker}</td>
                   <td className={`px-2 py-1 text-right transition-colors duration-150 ${flash.last ? 'bg-yellow-400/30' : ''}`}>{q.last !== 0 ? q.last : '-'}</td>
                   <td className={`px-2 py-1 text-right font-bold transition-colors duration-150 ${getChgColor(q.chg)} ${flash.chg ? 'bg-yellow-400/30' : ''}`}>
-                    {typeof q.chg === 'number' && !isNaN(q.chg)
-                      ? (q.chg > 0 ? '+' : '') + q.chg.toFixed(2)
-                      : ''}
+                    {typeof q.chg === 'number' && !isNaN(q.chg) ? (q.chg > 0 ? '+' : '') + q.chg.toFixed(2) : ''}
                   </td>
                   <td className={`px-2 py-1 text-right transition-colors duration-150 ${flash.volume ? 'bg-yellow-400/30' : ''}`}>{q.volume || '-'}</td>
                   <td className="px-2 py-1 text-right text-green-300">{q.latency || '-'}</td>
@@ -292,9 +258,7 @@ export default function QuoteMonitorView() {
                       <button
                         className="text-red-400 hover:text-red-600 text-xs px-1"
                         title="Remove"
-                        onClick={() => {
-                          setTickers(prev => prev.filter(t => t !== ticker));
-                        }}
+                        onClick={() => { setTickers(prev => prev.filter(t => t !== ticker)); }}
                       >✕</button>
                     )}
                   </td>

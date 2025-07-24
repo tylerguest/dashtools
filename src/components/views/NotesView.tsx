@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-interface NotesViewProps {
-  value?: string;
-  onChange?: (value: string) => void;
-}
+interface NotesViewProps { value?: string; onChange?: (value: string) => void; }
 
 const NotesView: React.FC<NotesViewProps> = ({ value = '', onChange }) => {
   console.log('[NotesView] value prop:', value);

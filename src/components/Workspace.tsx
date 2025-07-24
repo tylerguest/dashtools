@@ -5,11 +5,7 @@ import Window from './window/Window';
 import { ZOrderProvider, useZOrder } from './window/ZOrderContext';
 
 interface WindowData {id:number;x:number;y:number;width:number;height:number;title:string;content?:'stockchart'|'quotemonitor'|'chatbot'|'notes'|null;notes?:string;}
-interface WorkspaceProps {
-  windows: WindowData[];
-  setWindows: React.Dispatch<React.SetStateAction<WindowData[]>>;
-  user?: any;
-}
+interface WorkspaceProps { windows: WindowData[]; setWindows: React.Dispatch<React.SetStateAction<WindowData[]>>; user?: any; }
 
 function WorkspaceInner({windows,setWindows,user}:WorkspaceProps) {
   const [workspaceRef,setWorkspaceRef]=useState<HTMLDivElement|null>(null);

@@ -24,10 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         'Authorization': `Bearer ${process.env.HUGGINGFACE_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model,
-        messages,
-      }),
+      body: JSON.stringify({ model, messages, }),
     });
     if (!hfRes.ok) {
       const err = await hfRes.text();

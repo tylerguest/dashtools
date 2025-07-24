@@ -8,10 +8,7 @@ const POPULAR_TICKERS = [
   'DOCU', 'DDOG', 'F', 'GM', 'GE', 'HON', 'MMM', 'BA', 'CAT', 'GS', 'MS',
 ];
 
-interface TickerSelectorWindowProps {
-  onSelect: (ticker: string) => void;
-  onClose: () => void;
-}
+interface TickerSelectorWindowProps { onSelect: (ticker: string) => void; onClose: () => void; }
 
 const TickerSelectorWindow: React.FC<TickerSelectorWindowProps> = ({ onSelect, onClose }) => {
   return (

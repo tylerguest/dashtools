@@ -7,6 +7,7 @@ import type { WindowData } from '@/types/window';
  * @param windowCount - Number of windows to display (default: 4)
  * @returns Array of WindowData objects
  */
+
 export function getWindowLayout(
   browserWidth: number = 320 * 4 + 24 * (4 + 1),
   browserHeight: number = 900 + 40,

@@ -5,18 +5,11 @@ import ChatbotView from '../views/ChatbotView';
 import NotesGridView from '../views/NotesGridView';
 import { WindowContent as WindowContentType } from '../../types/window';
 
-interface WindowContentProps {
-  content: WindowContentType;
-  notes?: string;
-  onNotesChange?: (notes: string) => void;
-  user?: any;
-}
+interface WindowContentProps { content: WindowContentType; notes?: string; onNotesChange?: (notes: string) => void; user?: any; }
 
 const viewMap: Record<Exclude<WindowContentType, null>, React.FC<any>> = {
-  stockchart: StockChartView,
-  quotemonitor: QuoteMonitorView,
-  chatbot: ChatbotView,
-  notes: NotesGridView,
+  stockchart: StockChartView, quotemonitor: QuoteMonitorView,
+  chatbot: ChatbotView, notes: NotesGridView,
 };
 
 const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesChange, user }) => {
@@ -31,9 +24,7 @@ const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesCh
   const ViewComponent = viewMap[content];
 
   if (ViewComponent) {
-    if (content === 'notes') {
-      return <NotesGridView user={user} />;
-    }
+    if (content === 'notes') { return <NotesGridView user={user} />; }
     return <ViewComponent />;
   }
 

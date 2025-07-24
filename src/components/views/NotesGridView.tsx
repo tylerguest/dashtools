@@ -3,17 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-}
+interface Note { id: string; title: string; content: string; created_at: string; }
 
 export default function NotesGridView({ user }: { user: any }) {
   const minNotesPaneWidth = 180;
   const maxNotesPaneWidth = 400;
-
   const handleResizerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation(); 
@@ -49,22 +43,15 @@ export default function NotesGridView({ user }: { user: any }) {
   const supabase = createClient();
 
   useEffect(() => {
-    if (!user) {
-      setNotes([]);
-      setLoading(false);
-      return;
-    }
+    if (!user) { setNotes([]); setLoading(false); return; }
     setLoading(true);
     supabase
       .from("notes")
       .select("id, title, content, created_at")
       .order("created_at", { ascending: false })
       .then(({ data, error }) => {
-        if (error) {
-          setNotes([]);
-        } else {
-          setNotes(data || []);
-        }
+        if (error) { setNotes([]); } 
+        else { setNotes(data || []); }
         setLoading(false);
       });
   }, [user, supabase]);
@@ -193,6 +180,7 @@ export default function NotesGridView({ user }: { user: any }) {
       setPendingDeleteId(null);
     }
   };
+
   return (
     <div className="h-full w-full flex bg-zinc-800">
       {/* Only show left column if not editing or adding */}
@@ -357,7 +345,6 @@ export default function NotesGridView({ user }: { user: any }) {
           </div>
         )}
       </div>
-      {/* Custom Delete Confirmation Modal */}
       {pendingDeleteId && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-8 min-w-[340px] max-w-[90vw] flex flex-col items-center animate-fadeIn">

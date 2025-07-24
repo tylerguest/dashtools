@@ -14,13 +14,7 @@ const Window: React.FC<WindowProps & { user?: any; zIndex?: number }> = ({
 }) => {
   const { bringToFront } = useZOrder();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const {
-    dragRect,
-    handleResizeMouseDown,
-  } = useWindowDragResize({
-    x, y, width, height, workspaceBounds, otherWindows, onResize, id
-  });
-
+  const { dragRect, handleResizeMouseDown, } = useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id });
   const renderX = dragRect ? dragRect.x : x;
   const renderY = dragRect ? dragRect.y : y;
   const renderWidth = dragRect ? dragRect.width : width;
@@ -30,14 +24,7 @@ const Window: React.FC<WindowProps & { user?: any; zIndex?: number }> = ({
     <div
       data-window-id={id}
       className="absolute bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col"
-      style={{
-        left: renderX,
-        top: renderY,
-        width: renderWidth,
-        height: renderHeight,
-        zIndex: zIndex || 10,
-        willChange: 'transform',
-      }}
+      style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight, zIndex: zIndex || 10, willChange: 'transform', }}
       onMouseDown={e => {
         const tag = (e.target as HTMLElement).tagName.toLowerCase();
         if (["input", "textarea", "select", "button"].includes(tag)) return;

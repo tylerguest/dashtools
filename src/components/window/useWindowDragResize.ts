@@ -1,20 +1,9 @@
 import { useRef, useState } from 'react';
 import { clamp } from '../../lib/windowUtils';
 
-export function useWindowDragResize({
-  x,
-  y,
-  width,
-  height,
-  workspaceBounds,
-  otherWindows,
-  onResize,
-  id,
-}: {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+export function useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id,
+}: { 
+  x: number; y: number; width: number; height: number;
   workspaceBounds?: { width: number; height: number } | null;
   otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
@@ -61,9 +50,7 @@ export function useWindowDragResize({
           if (direction.includes('e')) {
             const rightEdge = newX + newWidth;
             const otherLeft = otherWindow.x;
-            if (Math.abs(rightEdge - otherLeft) < snapThreshold) {
-              newWidth = otherLeft - newX;
-            }
+            if (Math.abs(rightEdge - otherLeft) < snapThreshold) { newWidth = otherLeft - newX; }
           }
         }
       }
@@ -76,26 +63,14 @@ export function useWindowDragResize({
       document.body.style.userSelect = '';
       setDragActive(false);
       const rect = dragRectRef.current;
-      if (rect) {
-        setDragRect(null);
-        dragRectRef.current = null;
-        onResize(id, rect.x, rect.y, rect.width, rect.height);
-      } else {
-        setDragRect(null);
-        dragRectRef.current = null;
-      }
+      if (rect) { setDragRect(null); dragRectRef.current = null; onResize(id, rect.x, rect.y, rect.width, rect.height); } 
+      else { setDragRect(null); dragRectRef.current = null; }
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  return {
-    dragRect,
-    dragActive,
-    handleResizeMouseDown,
-    setDragRect,
-  };
+  return { dragRect, dragActive, handleResizeMouseDown, setDragRect, };
 }

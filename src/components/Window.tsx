@@ -6,15 +6,9 @@ import WindowResizer from './window/WindowResizer';
 import { useWindowDragResize } from './window/useWindowDragResize';
 
 interface WindowProps {
-  id: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  title: string;
+  id: number; x: number; y: number; width: number; height: number; title: string;
   content?: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
-  notes?: string;
-  workspaceBounds?: { width: number; height: number } | null;
+  notes?: string; workspaceBounds?: { width: number; height: number } | null;
   otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
   onMouseDown: (e: React.MouseEvent, id: number) => void;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
@@ -28,13 +22,7 @@ export default function Window({
   onMouseDown, onResize, onClose, onContentChange, onNotesChange
 }: WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const {
-    dragRect,
-    handleResizeMouseDown,
-  } = useWindowDragResize({
-    x, y, width, height, workspaceBounds, otherWindows, onResize, id
-  });
-
+  const { dragRect, handleResizeMouseDown, } = useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id });
   const renderX = dragRect ? dragRect.x : x;
   const renderY = dragRect ? dragRect.y : y;
   const renderWidth = dragRect ? dragRect.width : width;

@@ -23,9 +23,7 @@ export default function UserMenu() {
         !dropdownRef.current.contains(e.target as Node) &&
         buttonRef.current &&
         !buttonRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
+      ) { setDropdownOpen(false); }
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);

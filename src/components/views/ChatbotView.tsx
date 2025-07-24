@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-interface Message {
-  sender: 'user' | 'bot';
-  text: string;
-}
+interface Message { sender: 'user' | 'bot'; text: string; }
 
 const initialMessages: Message[] = [
   { sender: 'bot', text: 'Hello! I am your AI assistant. How can I help you today?' },

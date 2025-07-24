@@ -8,11 +8,7 @@ import { createClient, saveCustomView, fetchCustomViews, deleteCustomView, fetch
 import type { WindowData } from '../types/window';
 import { getWindowLayout } from '@/lib/windowUtils';
 
-type CustomView = {
-  id: string;
-  name: string;
-  layout: WindowData[];
-};
+type CustomView = { id: string; name: string; layout: WindowData[]; };
 
 const DEFAULT_WINDOW_COUNT = 4;
 
@@ -21,14 +17,12 @@ export default function Home() {
   const [customViews, setCustomViews] = useState<CustomView[]>([]);
   const [windows, setWindows] = useState<WindowData[]>(() => getWindowLayout());
   const windowsRef = useRef<WindowData[]>([]);
-  useEffect(() => {
-    windowsRef.current = windows;
-  }, [windows]);
   const baseLayoutRef = useRef<WindowData[] | null>(null);
   const baseSizeRef = useRef<{ width: number; height: number } | null>(null);
   const resizingRef = useRef(false);
   const [nextId, setNextId] = useState<number>(5);
   const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { windowsRef.current = windows; }, [windows]);
 
   useEffect(() => {
     setHydrated(true);
@@ -69,14 +63,13 @@ export default function Home() {
       };
     }
   }, []);
+
   const setWindowsAndBase = useCallback(
     (updater: React.SetStateAction<WindowData[]>) => {
       setWindows(prev => {
         const next = typeof updater === 'function' ? updater(prev) : updater;
         baseLayoutRef.current = next.map((w: WindowData) => ({ ...w }));
-        if (typeof window !== 'undefined') {
-          baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight };
-        }
+        if (typeof window !== 'undefined') { baseSizeRef.current = { width: window.innerWidth, height: window.innerHeight }; }
         return next;
       });
     },
@@ -110,9 +103,7 @@ export default function Home() {
           setNextId(defaultLayout.reduce((max: number, w: any) => Math.max(max, w.id), 0) + 1);
           await upsertUserWindowLayout(user.id, defaultLayout);
         }
-      } else {
-        setWindowsAndBase(getWindowLayout(window.innerWidth, window.innerHeight));
-      }
+      } else { setWindowsAndBase(getWindowLayout(window.innerWidth, window.innerHeight)); }
     };
     fetchUserAndViewsAndLayout();
   }, []);
@@ -129,9 +120,7 @@ export default function Home() {
     const x = Math.floor(Math.random() * (maxX - margin + 1)) + margin;
     const y = Math.floor(Math.random() * (maxY - margin + 1)) + margin;
     const newWindow: WindowData = {
-      id: nextId,
-      x,
-      y,
+      id: nextId, x, y,
       width: windowWidth,
       height: availableHeight,
       title: `Window${nextId}`,

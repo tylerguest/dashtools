@@ -1,8 +1,6 @@
 import React from 'react';
 
-interface WindowResizerProps {
-  onResizeMouseDown: (e: React.MouseEvent, direction: string) => void;
-}
+interface WindowResizerProps { onResizeMouseDown: (e: React.MouseEvent, direction: string) => void; }
 
 const WindowResizer: React.FC<WindowResizerProps> = ({ onResizeMouseDown }) => (
   <>

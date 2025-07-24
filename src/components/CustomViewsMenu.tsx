@@ -7,11 +7,7 @@ interface CustomView {
 }
 
 export default function CustomViewsMenu({
-  views,
-  onSave,
-  onLoad,
-  onDelete,
-  currentLayout
+  views, onSave, onLoad, onDelete, currentLayout
 }: {
   views: CustomView[];
   onSave: (name: string, layout: any) => void;
@@ -33,9 +29,7 @@ export default function CustomViewsMenu({
         !dropdownRef.current.contains(e.target as Node) &&
         buttonRef.current &&
         !buttonRef.current.contains(e.target as Node)
-      ) {
-        setShowInput(false);
-      }
+      ) { setShowInput(false); }
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -80,11 +74,7 @@ export default function CustomViewsMenu({
             <button
               className="w-full py-1 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all mb-1"
               onClick={() => {
-                if (viewName.trim()) {
-                  onSave(viewName.trim(), currentLayout);
-                  setViewName("");
-                  setShowInput(false);
-                }
+                if (viewName.trim()) { onSave(viewName.trim(), currentLayout); setViewName(""); setShowInput(false); }
               }}
             >
               Save View

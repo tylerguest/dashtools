@@ -31,17 +31,13 @@ export function ZOrderProvider({ children }: { children: ReactNode }) {
   }); 
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem("windowZOrder", JSON.stringify(zOrder));
-    }
+    if (typeof window !== "undefined") { window.localStorage.setItem("windowZOrder", JSON.stringify(zOrder)); }
   }, [zOrder]);
 
   const setInitialOrder = useCallback((ids: string[]) => {
     setZOrder(prev => {
       let newOrder = [...prev];
-      ids.forEach(id => {
-        if (!newOrder.includes(id)) newOrder.push(id);
-      });
+      ids.forEach(id => { if (!newOrder.includes(id)) newOrder.push(id); });
       newOrder = newOrder.filter(id => ids.includes(id));
       return newOrder;
     });

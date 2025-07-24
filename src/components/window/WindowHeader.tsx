@@ -61,10 +61,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
     <div className="p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative">
       <div className="relative flex items-center">
         <button
-          onClick={e => {
-            e.stopPropagation();
-            setIsDropdownOpen(!isDropdownOpen);
-          }}
+          onClick={e => { e.stopPropagation(); setIsDropdownOpen(!isDropdownOpen); }}
           className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur"
           aria-label="Open window menu"
           tabIndex={0}
@@ -112,12 +109,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
                       <button
                         key={item.key}
                         className="block w-full text-left px-3 py-2 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-sm transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onContentChange && onContentChange(item.key);
-                          setIsDropdownOpen(false);
-                          setSubmenuOpen(null);
-                        }}
+                        onClick={e => { e.stopPropagation(); onContentChange && onContentChange(item.key); setIsDropdownOpen(false); setSubmenuOpen(null); }}
                         tabIndex={0}
                         role="menuitem"
                       >
@@ -135,10 +127,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
       <span className="text-zinc-200 text-base font-bold">{title}</span>
     </div>
     <button
-      onClick={e => {
-        e.stopPropagation();
-        onClose();
-      }}
+      onClick={e => { e.stopPropagation(); onClose(); }}
       className="w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 text-xs font-bold"
     >
       ×

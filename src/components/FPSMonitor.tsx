@@ -14,9 +14,7 @@ export default function FPSMonitor() {
       const now = performance.now();
       if (now - lastTime.current >= 1000) {
         fps.current = frameCount.current;
-        if (spanRef.current) {
-          spanRef.current.textContent = fps.current + ' FPS';
-        }
+        if (spanRef.current) { spanRef.current.textContent = fps.current + ' FPS'; }
         frameCount.current = 0;
         lastTime.current = now;
       }
