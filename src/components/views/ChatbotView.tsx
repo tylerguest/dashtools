@@ -95,8 +95,12 @@ export default function ChatbotView() {
           className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.md}`}
           onClick={handleSend}
           type="button"
+          aria-label="Send"
         >
-          Send
+          {/* Paper plane send icon (inline SVG) */}
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
         </button>
       </div>
     </div>

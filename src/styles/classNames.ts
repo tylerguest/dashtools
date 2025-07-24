@@ -79,17 +79,17 @@ export const buttonClassNames = {
 };
 export const chatbotViewClassNames = {
   container: 'w-full h-full flex flex-col bg-zinc-900 text-zinc-200 font-mono text-sm p-2',
-  chatArea: 'flex-1 overflow-y-auto rounded bg-zinc-800 p-2 mb-2',
+  chatArea: 'flex-1 overflow-y-auto bg-zinc-800 p-2 mb-2',
   messageRowBase: 'mb-2 flex',
   userMessageRow: 'justify-end',
   botMessageRow: 'justify-start',
-  messageBubbleBase: 'max-w-[70%] px-3 py-2 rounded-lg',
+  messageBubbleBase: 'max-w-[70%] px-3 py-2',
   userMessageBubble: 'bg-blue-600 text-white',
   botMessageBubble: 'bg-zinc-700 text-zinc-200',
   loadingRow: 'mb-2 flex justify-start',
-  loadingBubble: 'max-w-[70%] px-3 py-2 rounded-lg bg-zinc-700 text-zinc-400 italic animate-pulse',
-  inputRow: 'flex gap-2',
-  input: 'flex-1 rounded bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500',
+  loadingBubble: 'max-w-[70%] px-3 py-2 bg-zinc-700 text-zinc-400 italic animate-pulse',
+  inputRow: 'flex gap-2 items-center',
+  input: 'flex-1 bg-zinc-800 px-3 py-2 outline-none border border-zinc-700 focus:border-blue-500',
 };
 export const notesGridViewClassNames = {
   container: "h-full w-full flex bg-zinc-800",
