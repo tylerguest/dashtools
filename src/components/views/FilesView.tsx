@@ -74,7 +74,6 @@ export default function FilesView() {
           onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}
         >
           {viewMode === 'list' ? (
-            // Grid icon
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <rect x="3" y="3" width="7" height="7" rx="1"/>
               <rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -82,7 +81,6 @@ export default function FilesView() {
               <rect x="3" y="14" width="7" height="7" rx="1"/>
             </svg>
           ) : (
-            // List icon
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <rect x="4" y="6" width="16" height="2" rx="1"/>
               <rect x="4" y="11" width="16" height="2" rx="1"/>
