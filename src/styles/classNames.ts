@@ -3,10 +3,11 @@ export const filesViewClassNames = {
   toolbar: "flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-900/95 gap-2",
   list: "flex-1 overflow-y-auto p-4 flex flex-col gap-2",
   empty: "text-zinc-500 text-center py-8",
-  rowBase: "group flex items-center px-4 py-3 border border-zinc-800 bg-zinc-900/80 cursor-pointer transition-all shadow hover:bg-zinc-800/60 hover:border-zinc-700",
+  rowBase: "group flex items-center px-3 py-2 border-b border-zinc-700 bg-transparent cursor-pointer transition-all hover:bg-zinc-800",
   icon: "mr-3 text-2xl",
   name: "flex-1 font-medium text-zinc-100 truncate text-base",
   type: "text-zinc-400 text-xs ml-2",
+  gridItem: "aspect-square w-full max-w-[120px] flex flex-col items-center justify-center bg-zinc-900 border border-zinc-700 cursor-pointer transition-all hover:bg-zinc-800 p-3",
 };
 export const buttonClassNames = {
   base: [
