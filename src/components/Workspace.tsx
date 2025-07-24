@@ -35,14 +35,19 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
       const rect = workspaceRef.getBoundingClientRect();
       if (rect.width > 0 && rect.height > 0) {
         didInit.current = true;
-        let w = rect.width, h = rect.height;
-        const winW = Math.max(300, w / 2 - 24);
-        const winH = Math.max(200, h / 2 - 24);
+        const w = rect.width;
+        const h = rect.height;
+        const sidebarWidth = Math.max(300, Math.floor(w * 0.18));
+        const rightWidth = Math.max(320, Math.floor(w * 0.22));
+        const centerWidth = w - sidebarWidth - rightWidth;
+        const topHeight = Math.floor(h * 0.55);
+        const bottomHeight = h - topHeight;
         const windows = [
-          { x: 12, y: 12, width: winW, height: winH, title: 'Stock Chart', content: 'stockchart' as WindowContent, notes: '' },
-          { x: winW + 24, y: 12, width: winW, height: winH, title: 'Quote Monitor', content: 'quotemonitor' as WindowContent, notes: '' },
-          { x: 12, y: winH + 24, width: winW, height: winH, title: 'Chatbot', content: 'chatbot' as WindowContent, notes: '' },
-          { x: winW + 24, y: winH + 24, width: winW, height: winH, title: 'Notes', content: 'notes' as WindowContent, notes: 'Welcome!' },
+          { x: 0, y: 0, width: sidebarWidth, height: h, title: 'Files', content: 'files' as WindowContent, notes: '' },
+          { x: sidebarWidth, y: 0, width: centerWidth, height: topHeight, title: 'Stock Chart', content: 'stockchart' as WindowContent, notes: '' },
+          { x: sidebarWidth + centerWidth, y: 0, width: rightWidth, height: topHeight, title: 'Quote Monitor', content: 'quotemonitor' as WindowContent, notes: '' },
+          { x: sidebarWidth, y: topHeight, width: centerWidth, height: bottomHeight, title: 'Chatbot', content: 'chatbot' as WindowContent, notes: '' },
+          { x: sidebarWidth + centerWidth, y: topHeight, width: rightWidth, height: bottomHeight, title: 'Notes', content: 'notes' as WindowContent, notes: 'Welcome!' },
         ];
         windows.forEach(win => {
           addWindow(win);

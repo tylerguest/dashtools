@@ -7,13 +7,13 @@ import { windowClassNames } from '../styles/classNames';
 
 interface WindowProps {
   id: number; x: number; y: number; width: number; height: number; title: string;
-  content?: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
+  content?: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files' | null;
   notes?: string; workspaceBounds?: { width: number; height: number } | null;
   otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
   onMouseDown: (e: React.MouseEvent, id: number) => void;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
   onClose: (id: number) => void;
-  onContentChange?: (id: number, content: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes') => void;
+  onContentChange?: (id: number, content: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files') => void;
   onNotesChange?: (id: number, notes: string) => void;
 }
 
@@ -36,12 +36,14 @@ export default function Window({
       onMouseDown={e => onMouseDown(e, id)}
     >
       <WindowHeader
-        title={
-          content === 'stockchart' ? 'Stock Chart'
-            : content === 'quotemonitor' ? 'Quote Monitor'
-              : content === 'chatbot' ? 'Chatbot'
-                : title
-        }
+        title={(() => {
+          if (content === 'files') return 'Files';
+          if (content === 'stockchart') return 'Stock Chart';
+          if (content === 'quotemonitor') return 'Quote Monitor';
+          if (content === 'chatbot') return 'Chatbot';
+          if (content && typeof content === 'string') return content.charAt(0).toUpperCase() + content.slice(1);
+          return title;
+        })()}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
         onContentChange={option => onContentChange && onContentChange(id, option as any)}

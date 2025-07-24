@@ -1,3 +1,13 @@
+export const filesViewClassNames = {
+  container: "h-full w-full flex flex-col bg-zinc-800",
+  toolbar: "flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-900/95 gap-2",
+  list: "flex-1 overflow-y-auto p-4 flex flex-col gap-2",
+  empty: "text-zinc-500 text-center py-8",
+  rowBase: "group flex items-center px-4 py-3 border border-zinc-800 bg-zinc-900/80 rounded-lg cursor-pointer transition-all shadow hover:bg-zinc-800/60 hover:border-zinc-700",
+  icon: "mr-3 text-2xl",
+  name: "flex-1 font-medium text-zinc-100 truncate text-base",
+  type: "text-zinc-400 text-xs ml-2",
+};
 export const buttonClassNames = {
   base: [
     'inline-flex items-center justify-center font-medium',
@@ -208,10 +218,9 @@ export const userMenuClassNames = {
 export const windowClassNames = {
   window: 'absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col',
   header: 'cursor-move',
-  content: 'flex-1 p-1 overflow-auto',
+  content: 'flex-1 p-1 overflow-auto h-full w-full',
 };
 export const workspaceClassNames = {
   container: 'flex h-full w-full bg-zinc-800',
   workspaceArea: 'flex-1 h-full relative overflow-hidden',
 };
-// Sidebar removed: workspaceSidebarClassNames deleted

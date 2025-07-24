@@ -31,6 +31,12 @@ const menuData = [
       { key: 'chatbot', label: 'Chatbot' },
     ],
   },
+  {
+    label: 'Files',
+    children: [
+      { key: 'files', label: 'Files' },
+    ],
+  },
 ];
 
 const WindowHeader: React.FC<WindowHeaderProps> = ({

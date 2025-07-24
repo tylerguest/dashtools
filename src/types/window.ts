@@ -1,4 +1,4 @@
-export type WindowContent = 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | null;
+export type WindowContent = 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files' | null;
 
 export interface WindowData {
   id: number; x: number; y: number; width: number; height: number; 

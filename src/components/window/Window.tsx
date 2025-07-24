@@ -165,7 +165,21 @@ const Window: React.FC<WindowProps> = ({
           }
           isDropdownOpen={isDropdownOpen}
           setIsDropdownOpen={setIsDropdownOpen}
-          onContentChange={(option: string) => updateWindow(id, { content: option as WindowContentType })}
+          onContentChange={(option: string) => {
+            if (option === 'files') {
+              updateWindow(id, { content: option as WindowContentType, title: 'Files' });
+            } else if (option === 'stockchart') {
+              updateWindow(id, { content: option as WindowContentType, title: 'Stock Chart' });
+            } else if (option === 'quotemonitor') {
+              updateWindow(id, { content: option as WindowContentType, title: 'Quote Monitor' });
+            } else if (option === 'chatbot') {
+              updateWindow(id, { content: option as WindowContentType, title: 'Chatbot' });
+            } else if (option === 'notes') {
+              updateWindow(id, { content: option as WindowContentType, title: 'Notes' });
+            } else {
+              updateWindow(id, { content: option as WindowContentType });
+            }
+          }}
           onClose={() => removeWindow(id)}
         />
       </div>
