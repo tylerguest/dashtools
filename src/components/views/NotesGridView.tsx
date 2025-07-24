@@ -348,7 +348,7 @@ export default function NotesGridView({ user }: { user: any }) {
                 onClick={handleAddNote}
                 title="Add new note"
               >
-                + New Note
+              +
               </button>
             </div>
           </div>

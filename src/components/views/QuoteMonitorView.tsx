@@ -169,9 +169,7 @@ export default function QuoteMonitorView() {
   return (
     <div className={quoteMonitorViewClassNames.container}>
       <div className={quoteMonitorViewClassNames.headerRow}>
-        <div className="flex items-center gap-2">
-          <span className={quoteMonitorViewClassNames.mainLabel}>Main</span>
-        </div>
+        <div className="flex-1" />
         <div className={quoteMonitorViewClassNames.tickerInputRow} style={{ minWidth: 0 }}>
           <input
             ref={inputRef}
@@ -180,16 +178,16 @@ export default function QuoteMonitorView() {
             onChange={e => setInputTicker(e.target.value)}
             onFocus={() => setShowTickerSelector(true)}
             onClick={() => setShowTickerSelector(true)}
-            className={quoteMonitorViewClassNames.tickerInput}
+            className={quoteMonitorViewClassNames.tickerInput + ' h-8 rounded-none mr-1'}
             maxLength={8}
-            style={{ minWidth: 0 }}
+            style={{ minWidth: 0, height: 32 }}
             autoComplete="off"
           />
           <button
             type="submit"
             className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.sm}`}
           >
-            Add
+            +
           </button>
           {showTickerSelector && (
             <div className={quoteMonitorViewClassNames.tickerSelector} ref={selectorRef}>
