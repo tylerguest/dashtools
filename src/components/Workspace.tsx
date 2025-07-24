@@ -145,8 +145,8 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
               top: selectionRect.top,
               width: selectionRect.width,
               height: selectionRect.height,
-              background: 'rgba(200, 200, 200, 0.10)', // light grey, low opacity
-              border: '1.5px solid #aaa', // soft grey border
+              background: 'rgba(200, 200, 200, 0.10)',
+              border: '1.5px solid #aaa', 
               pointerEvents: 'none',
               zIndex: 9999
             }}
