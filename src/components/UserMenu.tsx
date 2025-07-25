@@ -78,7 +78,7 @@ export default function UserMenu() {
         aria-label="User menu"
         type="button"
       >
-        <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <svg  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
           <circle cx="12" cy="8" r="4" />
           <path d="M4 20c0-4 8-4 8-4s8 0 8 4" />
         </svg>

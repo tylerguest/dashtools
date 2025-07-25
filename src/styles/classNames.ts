@@ -11,16 +11,15 @@ export const filesViewClassNames = {
 };
 export const buttonClassNames = {
   base: [
-    'inline-flex items-center justify-center font-medium',
+    'inline-flex justify-center font-medium',
     'transition-all duration-150',
     'focus:outline-none focus:ring-1 focus:ring-zinc-600',
     'disabled:opacity-50 disabled:pointer-events-none',
     'leading-none',
-    'border border-zinc-700',
     'bg-zinc-800 text-zinc-300',
     'rounded-none',
     'shadow-none',
-    'w-[32px] h-[32px]',
+    'w-[26px] h-[26px]',
     'text-base',
     'select-none',
     'active:bg-zinc-700',
@@ -196,15 +195,15 @@ export const customViewsMenuClassNames = {
   deleteButton: 'ml-1 text-red-500 opacity-70 hover:opacity-100 text-sm font-bold px-0.5 transition-all',
 };
 export const headerClassNames = {
-  header: 'bg-zinc-900 border-b border-zinc-700 px-4 py-3 flex justify-between items-center',
-  left: 'flex items-center gap-6',
-  title: 'text-zinc-200 text-lg font-black',
-  right: 'flex items-center gap-4',
-  newWindowButton: 'text-zinc-200 text-xl font-bold px-2 py-1 rounded hover:bg-zinc-800',
+  header: 'bg-zinc-900 border-b border-zinc-700 px-3 py-1 flex justify-between items-center',
+  left: 'flex items-center gap-4',
+  title: 'text-zinc-200 text-base font-black',
+  right: 'flex items-center gap-1',
+  newWindowButton: 'text-zinc-200 text-xs font-bold w-8 h-8 p-0 rounded hover:bg-zinc-800 flex items-center justify-center',
 };
 export const userMenuClassNames = {
   container: 'relative',
-  menuButton: 'w-9 h-9 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200',
+  menuButton: 'w-6.5 h-6.5 flex items-center justify-center bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200',
   dropdown: 'absolute right-0 mt-2 min-w-[160px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl p-2 z-[9999] transition-all',
   form: 'flex flex-col gap-2',
   label: 'text-zinc-200 text-sm',
