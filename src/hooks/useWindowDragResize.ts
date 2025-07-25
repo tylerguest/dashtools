@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { clamp } from '../../lib/windowUtils';
+import { clamp } from '../lib/windowUtils';
 
 export function useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id,
 }: { 

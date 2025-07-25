@@ -6,7 +6,7 @@ import WindowHeader from './WindowHeader';
 import WindowContent from './WindowContent';
 import WindowResizer from './WindowResizer';
 import { windowClassNames } from '../../styles/classNames';
-import { useWindowDragResize } from './useWindowDragResize';
+import { useWindowDragResize } from '../../hooks/useWindowDragResize';
 import { useEffect } from 'react';
 
 interface WindowProps {
