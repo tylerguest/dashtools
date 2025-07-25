@@ -45,16 +45,18 @@ export default function Window({
   return (
     <div
       data-window-id={id}
-      className={windowClassNames.window + (isSelected ? ' border-blue-500 ring-2 ring-blue-400' : '')}
+      className={windowClassNames.window}
       style={{
         left: renderX,
         top: renderY,
         width: renderWidth,
         height: renderHeight,
-        boxShadow: isSelected ? '0 0 0 2px #3b82f6, 0 0 8px #60a5fa' : undefined,
       }}
       onMouseDown={e => onMouseDown(e, id)}
     >
+      {isSelected && (
+        <div className={windowClassNames.windowSelectedHighlight} />
+      )}
       <WindowHeader
         title={(() => {
           if (content === 'files') return 'Files';

@@ -11,6 +11,7 @@ interface WindowHeaderProps {
   onClose: () => void;
   onDragMouseDown?: (e: React.MouseEvent) => void;
   onSelect?: (e: React.MouseEvent) => void;
+  // isSelected?: boolean;
 }
 
 function MenuButton({ onClick, isOpen }: { onClick: (e: React.MouseEvent) => void; isOpen: boolean }) {

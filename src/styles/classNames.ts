@@ -186,7 +186,7 @@ export const windowContentClassNames = {
   emptyState: 'h-full flex items-center justify-center text-zinc-500 text-sm',
 };
 export const windowHeaderClassNames = {
-  header: 'p-2 bg-zinc-900 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative',
+  header: 'p-2 bg-zinc-900/60 border-b border-zinc-700 text-zinc-200 font-normal text-sm flex justify-between items-center relative',
   menuButton: 'w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur',
   dropdown: 'absolute top-8 left-0 min-w-[170px] max-w-[220px] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn',
   menuCategory: 'relative group',
@@ -242,6 +242,7 @@ export const userMenuClassNames = {
 };
 export const windowClassNames = {
   window: 'absolute z-50 bg-zinc-800 border border-zinc-700 rounded-none shadow-2xl flex flex-col',
+  windowSelectedHighlight: 'pointer-events-none box-border absolute top-0 left-0 w-full h-full border-[3px] border-[#6b7280] shadow-[0_0_8px_#6b7280] z-[100]',
   header: 'cursor-move',
   content: 'flex-1 p-1 overflow-auto h-full w-full',
 };
