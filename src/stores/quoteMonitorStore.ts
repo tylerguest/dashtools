@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export interface Quote { ticker: string; last: number; chg: number; volume: string; latency: string; prev?: number; }
 export type SortKey = 'ticker' | 'last' | 'chg' | 'volume' | 'latency';
 
-interface QuoteMonitorStore {
+export interface QuoteMonitorStore {
   tickers: string[];
   setTickers: (tickers: string[]) => void;
   sortKey: SortKey;
