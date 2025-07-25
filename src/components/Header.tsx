@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import ReactMemo from 'react';
 import UserMenu from './UserMenu';
 import FPSMonitor from './FPSMonitor';
 import { headerClassNames, buttonClassNames } from '../styles/classNames';
@@ -10,7 +11,7 @@ interface HeaderProps {
   children?: React.ReactNode;
 }
 
-export default function Header({ onNewWindow, children }: HeaderProps) {
+function Header({ onNewWindow, children }: HeaderProps) {
   return (
     <header className={headerClassNames.header}>
       <div className={headerClassNames.left}>
@@ -32,3 +33,5 @@ export default function Header({ onNewWindow, children }: HeaderProps) {
     </header>
   );
 }
+
+export default React.memo(Header);

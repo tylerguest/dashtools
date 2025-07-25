@@ -20,13 +20,7 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
   const [selectionStart, setSelectionStart] = useState<{x: number, y: number} | null>(null);
   const [selectionRect, setSelectionRect] = useState<{left: number, top: number, width: number, height: number} | null>(null);
   const zOrder = useWindowStore(state => state.zOrder);
-  const windowsById = useWindowStore(state => state.windowsById);
   const addWindow = useWindowStore(state => state.addWindow);
-  const updateWindow = useWindowStore(state => state.updateWindow);
-  const windows = useMemo(
-    () => zOrder.map(id => windowsById[id]).filter(Boolean),
-    [zOrder, windowsById]
-  );
   const [groupDragRects, setGroupDragRects] = useState<Record<number, { x: number, y: number, width: number, height: number }> | null>(null);
   const didInit = useRef(false);
 
@@ -94,22 +88,27 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
     setSelectionStart(null);
     if (selectionRect && workspaceRef) {
       const rect = workspaceRef.getBoundingClientRect();
-      const selected = windows.filter(win => {
-        const winLeft = win.x;
-        const winTop = win.y;
-        const winRight = win.x + win.width;
-        const winBottom = win.y + win.height;
-        const selLeft = selectionRect.left;
-        const selTop = selectionRect.top;
-        const selRight = selectionRect.left + selectionRect.width;
-        const selBottom = selectionRect.top + selectionRect.height;
-        return (
-          winRight > selLeft &&
-          winLeft < selRight &&
-          winBottom > selTop &&
-          winTop < selBottom
-        );
-      });
+      // Only fetch window data for IDs in zOrder
+      const getWindowById = (id: number) => useWindowStore.getState().windowsById[id];
+      const selected = zOrder
+        .map(getWindowById)
+        .filter(Boolean)
+        .filter(win => {
+          const winLeft = win.x;
+          const winTop = win.y;
+          const winRight = win.x + win.width;
+          const winBottom = win.y + win.height;
+          const selLeft = selectionRect.left;
+          const selTop = selectionRect.top;
+          const selRight = selectionRect.left + selectionRect.width;
+          const selBottom = selectionRect.top + selectionRect.height;
+          return (
+            winRight > selLeft &&
+            winLeft < selRight &&
+            winBottom > selTop &&
+            winTop < selBottom
+          );
+        });
       setSelectedWindowIds(selected.map(w => w.id));
     }
   };
@@ -124,21 +123,22 @@ export default function Workspace({ user, windows: propWindows, setWindows }: Wo
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
       >
-        {windows.map(window => (
-          <div key={window.id} style={isSelecting ? { userSelect: 'none' } : undefined}>
+        {/* Render all windows normally */}
+        {zOrder.map(id => (
+          <div key={id}>
             <Window
-              id={window.id}
+              id={id}
               workspaceBounds={workspaceRef ? {
                 width: workspaceRef.getBoundingClientRect().width,
                 height: workspaceRef.getBoundingClientRect().height
               } : null}
               user={user}
-              zIndex={getZIndex(window.id)}
-              isSelected={selectedWindowIds.includes(window.id)}
+              zIndex={getZIndex(id)}
+              isSelected={selectedWindowIds.includes(id)}
               selectedWindowIds={selectedWindowIds}
               groupDragRects={groupDragRects}
               setGroupDragRects={setGroupDragRects}
-              allWindowsCount={windows.length}
+              allWindowsCount={zOrder.length}
             />
           </div>
         ))}

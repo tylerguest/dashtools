@@ -10,7 +10,7 @@ interface CustomViewsMenuProps {
   currentLayout: any;
 }
 
-export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, currentLayout }: CustomViewsMenuProps) {
+function CustomViewsMenu({ views, onSave, onLoad, onDelete, currentLayout }: CustomViewsMenuProps) {
   const [showInput, setShowInput] = useState(false);
   const [viewName, setViewName] = useState("");
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -119,3 +119,5 @@ export default function CustomViewsMenu({ views, onSave, onLoad, onDelete, curre
     </div>
   );
 }
+
+export default React.memo(CustomViewsMenu);

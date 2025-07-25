@@ -181,12 +181,8 @@ export default function Home() {
           currentLayout={windows}
         />
       </Header>
-      <main className="flex-1 flex h-full">
-        <Workspace
-          windows={windows}
-          setWindows={setWindowsAndBase}
-          user={user}
-        />
+      <main className="flex-1 flex h-full items-center justify-center text-zinc-400">
+        <Workspace user={user} windows={windows} setWindows={setWindows} />
       </main>
     </div>
   );

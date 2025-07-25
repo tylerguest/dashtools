@@ -34,29 +34,24 @@ const Window: React.FC<WindowProps> = ({
   allWindowsCount
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const windowData = useWindowStore((state: any) => state.getWindow(id));
+  const windowData = useWindowStore((state: any) => state.windowsById[id]);
   const updateWindow = useWindowStore((state: any) => state.updateWindow);
-  const updateWindows = useWindowStore((state: any) => state.updateWindows);
   const removeWindow = useWindowStore((state: any) => state.removeWindow);
   const bringToFront = useWindowStore((state: any) => state.bringToFront);
-  const zOrder = useWindowStore((state: any) => state.zOrder);
-  const windowsById = useWindowStore((state: any) => state.windowsById);
-  const allWindows = React.useMemo(
-    () => zOrder.map((id: number) => windowsById[id]).filter(Boolean),
-    [zOrder, windowsById]
-  );
+  // For group drag/resize, fetch windowsById on demand
+  const getWindowById = (winId: number) => useWindowStore.getState().windowsById[winId];
   if (!windowData) return null;
   const { x, y, width, height, title, content, notes } = windowData;
   const multiSelected = selectedWindowIds && selectedWindowIds.length > 1;
   const handleGroupResize = (id: number, newX: number, newY: number, newWidth: number, newHeight: number) => {
     if (multiSelected && selectedWindowIds && setGroupDragRects) {
-      const base = windowsById[id];
+      const base = getWindowById(id);
       const dx = newX - base.x;
       const dy = newY - base.y;
       const dWidth = newWidth - base.width;
       const dHeight = newHeight - base.height;
       const updates: { id: number; x: number; y: number; width: number; height: number }[] = selectedWindowIds.map(selId => {
-        const win = windowsById[selId];
+        const win = getWindowById(selId);
         return {
           id: selId,
           x: win.x + dx,
@@ -72,23 +67,28 @@ const Window: React.FC<WindowProps> = ({
     }
   };
 
+  // Compute allWindows on demand for drag/resize logic
+  const getAllWindows = () => {
+    const state = useWindowStore.getState();
+    return state.zOrder.map((id: number) => state.windowsById[id]).filter(Boolean);
+  };
   const { dragRect, handleResizeMouseDown, setDragRect } = useWindowDragResize({
     x, y, width, height, workspaceBounds,
-    otherWindows: allWindows,
+    otherWindows: getAllWindows(),
     onResize: handleGroupResize,
     id
   });
 
   useEffect(() => {
     if (multiSelected && dragRect && setGroupDragRects && selectedWindowIds) {
-      const base = windowsById[id];
+      const base = getWindowById(id);
       const dx = dragRect.x - base.x;
       const dy = dragRect.y - base.y;
       const dWidth = dragRect.width - base.width;
       const dHeight = dragRect.height - base.height;
       const rects: Record<number, { x: number, y: number, width: number, height: number }> = {};
       selectedWindowIds.forEach(selId => {
-        const win = windowsById[selId];
+        const win = getWindowById(selId);
         rects[selId] = {
           x: win.x + dx,
           y: win.y + dy,
@@ -100,7 +100,7 @@ const Window: React.FC<WindowProps> = ({
     } else if (!dragRect && setGroupDragRects) {
       setGroupDragRects(null);
     }
-  }, [multiSelected, dragRect, id, selectedWindowIds, windowsById, setGroupDragRects]);
+  }, [multiSelected, dragRect, id, selectedWindowIds, setGroupDragRects]);
 
   const renderRect = multiSelected && groupDragRects && groupDragRects[id] ? groupDragRects[id] : dragRect;
   const renderX = renderRect ? renderRect.x : x;
@@ -117,7 +117,7 @@ const Window: React.FC<WindowProps> = ({
     const startY = e.clientY;
     const selectedIds = isSelected && selectedWindowIds && selectedWindowIds.length > 1 ? selectedWindowIds : [id];
     const initialPositions = selectedIds.map(selId => {
-      const win = windowsById[selId];
+      const win = getWindowById(selId);
       return { id: selId, x: win.x, y: win.y, width: win.width, height: win.height };
     });
     document.body.style.userSelect = 'none';
@@ -196,4 +196,4 @@ const Window: React.FC<WindowProps> = ({
   );
 };
 
-export default Window;
+export default React.memo(Window);

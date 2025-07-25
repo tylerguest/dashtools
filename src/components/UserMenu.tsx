@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { userMenuClassNames, buttonClassNames } from '../styles/classNames';
 
-export default function UserMenu() {
+function UserMenu() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -139,3 +139,5 @@ export default function UserMenu() {
     </div>
   );
 }
+
+export default React.memo(UserMenu);
