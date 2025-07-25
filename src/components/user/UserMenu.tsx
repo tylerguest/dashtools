@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { userMenuClassNames, buttonClassNames } from '../styles/classNames';
-import { useSupabaseAuth } from '../hooks/useSupabaseAuth';
-import { useClickAway } from '../hooks/useClickAway';
+import { userMenuClassNames, buttonClassNames } from '../../styles/classNames';
+import { useSupabaseAuth } from '../../hooks/useSupabaseAuth';
+import { useClickAway } from '../../hooks/useClickAway';
 import { UserDropdown } from './UserDropdown';
 
 

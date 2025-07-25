@@ -1,86 +1,71 @@
-import { useState } from 'react';
+import { useRef, useState, useCallback } from "react";
 
-export interface SelectionRect {
+interface Rect {
   left: number;
   top: number;
   width: number;
   height: number;
 }
 
-export interface UseSelectionBoxProps<T> {
+interface UseSelectionBoxProps<T> {
   getItems: () => T[];
-  getItemRect: (item: T) => SelectionRect;
+  getItemRect: (item: T) => Rect;
   onSelect: (selected: T[]) => void;
 }
 
-export function useSelectionBox<T = any>({
+export function useSelectionBox<T>({
   getItems,
   getItemRect,
   onSelect,
 }: UseSelectionBoxProps<T>) {
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [selectionStart, setSelectionStart] = useState<{ x: number; y: number } | null>(null);
-  const [selectionRect, setSelectionRect] = useState<SelectionRect | null>(null);
+  const [selecting, setSelecting] = useState(false);
+  const [rect, setRect] = useState<Rect | null>(null);
+  const startPoint = useRef<{ x: number; y: number } | null>(null);
 
-  const handleMouseDown = (
-    e: React.MouseEvent<HTMLDivElement>,
-    workspaceRef: HTMLDivElement | null
-  ) => {
-    if (e.button !== 0 || e.target !== workspaceRef) return;
-    if (!workspaceRef) return;
-    const rect = workspaceRef.getBoundingClientRect();
-    setIsSelecting(true);
-    setSelectionStart({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-    setSelectionRect(null);
-    onSelect([]); 
-  };
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+    setSelecting(true);
+    const { clientX, clientY } = e;
+    startPoint.current = { x: clientX, y: clientY };
+    setRect({ left: clientX, top: clientY, width: 0, height: 0 });
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+  }, []);
 
-  const handleMouseMove = (
-    e: React.MouseEvent<HTMLDivElement>,
-    workspaceRef: HTMLDivElement | null
-  ) => {
-    if (!isSelecting || !selectionStart || !workspaceRef) return;
-    const rect = workspaceRef.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const left = Math.min(selectionStart.x, x);
-    const top = Math.min(selectionStart.y, y);
-    const width = Math.abs(selectionStart.x - x);
-    const height = Math.abs(selectionStart.y - y);
-    setSelectionRect({ left, top, width, height });
-  };
+  const onMouseMove = useCallback((e: MouseEvent) => {
+    if (!startPoint.current) return;
+    const { x, y } = startPoint.current;
+    const left = Math.min(x, e.clientX);
+    const top = Math.min(y, e.clientY);
+    const width = Math.abs(e.clientX - x);
+    const height = Math.abs(e.clientY - y);
+    setRect({ left, top, width, height });
+  }, []);
 
-  const handleMouseUp = (workspaceRef: HTMLDivElement | null) => {
-    if (!isSelecting || !selectionRect || !workspaceRef) {
-      setIsSelecting(false);
-      setSelectionStart(null);
-      setSelectionRect(null);
-      return;
+  const onMouseUp = useCallback(() => {
+    setSelecting(false);
+    if (rect) {
+      const items = getItems();
+      const selected = items.filter((item) => {
+        const itemRect = getItemRect(item);
+        return (
+          itemRect.left < rect.left + rect.width &&
+          itemRect.left + itemRect.width > rect.left &&
+          itemRect.top < rect.top + rect.height &&
+          itemRect.top + itemRect.height > rect.top
+        );
+      });
+      onSelect(selected);
     }
-    const selected = getItems().filter(item => {
-      const win = getItemRect(item);
-      const sel = selectionRect;
-      return (
-        win.left + win.width > sel.left &&
-        win.left < sel.left + sel.width &&
-        win.top + win.height > sel.top &&
-        win.top < sel.top + sel.height
-      );
-    });
-    onSelect(selected);
-    setIsSelecting(false);
-    setSelectionStart(null);
-    setSelectionRect(null);
-  };
+    setRect(null);
+    startPoint.current = null;
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", onMouseUp);
+  }, [rect, getItems, getItemRect, onSelect, onMouseMove]);
 
   return {
-    isSelecting,
-    selectionRect,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
+    selecting,
+    rect,
+    onMouseDown,
   };
 }

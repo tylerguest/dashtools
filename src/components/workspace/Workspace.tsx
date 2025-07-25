@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useLayoutEffect } from 'react';
-import { useWindowStore } from '../stores/windowStore';
-import type { WindowContent, WindowData } from '../types/window';
-import { workspaceClassNames } from '../styles/classNames';
-import { useInitialWorkspaceLayout } from '../hooks/useInitialWorkspaceLayout';
-import { useZIndex } from '../hooks/useZIndex';
-import { useWorkspaceSelectionBox } from '../hooks/useWorkspaceSelectionBox';
+import { useWindowStore } from '../../stores/windowStore';
+import type { WindowContent, WindowData } from '../../types/window';
+import { workspaceClassNames } from '../../styles/classNames';
+import { useInitialWorkspaceLayout } from '../../hooks/useInitialWorkspaceLayout';
+import { useZIndex } from '../../hooks/useZIndex';
+import { useWorkspaceSelectionBox } from '../../hooks/useWorkspaceSelectionBox';
 import { WorkspaceWindows } from './WorkspaceWindows';
 import { SelectionRectangle } from './SelectionRectangle';
 
@@ -24,18 +24,19 @@ export default function Workspace({ user }: WorkspaceProps) {
   const [groupDragRects, setGroupDragRects] = useState<Record<number, { x: number, y: number, width: number, height: number }> | null>(null);
   const didInit = useRef(false);
   const getZIndex = useZIndex(zOrder);
-  const { isSelecting, selectionRect, handleMouseDown, handleMouseMove, handleMouseUp } =
-  useWorkspaceSelectionBox(setSelectedWindowIds);
+  const { selecting, rect, onMouseDown } = useWorkspaceSelectionBox(setSelectedWindowIds);
   useInitialWorkspaceLayout({ zOrder, addWindow, workspaceRef });
   return (
     <div className={workspaceClassNames.container}>
       <div
         ref={setWorkspaceRef}
         className={workspaceClassNames.workspaceArea}
-        style={{ minWidth: 0, position: 'relative', userSelect: isSelecting ? 'none' : undefined }}
-        onMouseDown={e => handleMouseDown(e, workspaceRef)}
-        onMouseMove={e => handleMouseMove(e, workspaceRef)}
-        onMouseUp={() => handleMouseUp(workspaceRef)}
+        style={{ minWidth: 0, position: 'relative', userSelect: selecting ? 'none' : undefined }}
+        onMouseDown={e => {
+          if (e.target === e.currentTarget) {
+            onMouseDown(e);
+          }
+        }}
       >
         <WorkspaceWindows
           zOrder={zOrder}
@@ -46,8 +47,8 @@ export default function Workspace({ user }: WorkspaceProps) {
           groupDragRects={groupDragRects}
           setGroupDragRects={setGroupDragRects}
         />
-        {isSelecting && selectionRect && (
-          <SelectionRectangle selectionRect={selectionRect} />
+        {selecting && rect && (
+          <SelectionRectangle selectionRect={rect} />
         )}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { customViewsMenuClassNames, buttonClassNames } from '../styles/classNames';
+import { customViewsMenuClassNames, buttonClassNames } from '../../styles/classNames';
 
 export function CustomViewsDropdown({
   customViews,

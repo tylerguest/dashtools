@@ -1,5 +1,5 @@
 import React from "react";
-import { userMenuClassNames, buttonClassNames } from '../styles/classNames';
+import { userMenuClassNames, buttonClassNames } from '../../styles/classNames';
 
 export function UserDropdown({
   user, mode, setMode, email, setEmail, password, setPassword, error, loading, handleLogin, handleSignup, handleLogout,

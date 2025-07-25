@@ -1,5 +1,5 @@
 import React from 'react';
-import Window from './window/Window';
+import Window from '../window/Window';
 
 export function WorkspaceWindows({
   zOrder,

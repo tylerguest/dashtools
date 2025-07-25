@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import WindowHeader from './window/WindowHeader';
-import WindowContent from './window/WindowContent';
-import WindowResizer from './window/WindowResizer';
-import { useWindowDragResize } from '../hooks/useWindowDragResize';
-import { windowClassNames } from '../styles/classNames';
+import WindowHeader from '../window/WindowHeader';
+import WindowContent from '../window/WindowContent';
+import WindowResizer from '../window/WindowResizer';
+import { useWindowDragResize } from '../../hooks/useWindowDragResize';
+import { windowClassNames } from '../../styles/classNames';
 
 interface WindowProps {
   id: number; x: number; y: number; width: number; height: number; title: string;

@@ -2,9 +2,9 @@
 
 import React from 'react';
 import ReactMemo from 'react';
-import UserMenu from './UserMenu';
+import UserMenu from '../user/UserMenu';
 import FPSMonitor from './FPSMonitor';
-import { headerClassNames, buttonClassNames } from '../styles/classNames';
+import { headerClassNames, buttonClassNames } from '../../styles/classNames';
 
 interface HeaderProps {
   onNewWindow: () => void;

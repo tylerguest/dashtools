@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
-import { useCustomViewsStore } from '../stores/customViewsStore';
-import { customViewsMenuClassNames, buttonClassNames } from '../styles/classNames';
-import { useClickAway } from '../hooks/useClickAway';
-import { useDropdownAlignRight } from '../hooks/useDropdownAlignRight';
+import { useCustomViewsStore } from '../../stores/customViewsStore';
+import { customViewsMenuClassNames, buttonClassNames } from '../../styles/classNames';
+import { useClickAway } from '../../hooks/useClickAway';
+import { useDropdownAlignRight } from '../../hooks/useDropdownAlignRight';
 import { CustomViewsDropdown } from './CustomViewsDropdown';
 
 interface CustomViewsMenuProps {

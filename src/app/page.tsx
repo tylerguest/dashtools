@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useCallback, useEffect } from 'react';
-import Header from '../components/Header';
-import Workspace from '../components/Workspace';
-import CustomViewsMenu from '../components/CustomViewsMenu';
+import Header from '../components/common/Header';
+import Workspace from '../components/workspace/Workspace';
+import CustomViewsMenu from '../components/workspace/CustomViewsMenu';
 import { getWindowLayout } from '@/lib/windowUtils';
 import { useWindowStore } from '../stores/windowStore';
 import { useCustomViews } from '../hooks/useCustomViews';
