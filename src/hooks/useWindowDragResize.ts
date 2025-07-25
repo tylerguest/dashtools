@@ -57,6 +57,7 @@ export function useWindowDragResize({ x, y, width, height, workspaceBounds, othe
       const rect = { x: newX, y: newY, width: newWidth, height: newHeight };
       setDragRect(rect);
       dragRectRef.current = rect;
+      onResize(id, newX, newY, newWidth, newHeight);
     };
 
     const handleMouseUp = () => {

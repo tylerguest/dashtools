@@ -46,11 +46,31 @@ export function WorkspaceWindows({
               user={user}
               zIndex={getZIndex(id)}
               isSelected={selectedWindowIds.includes(id)}
+              selectedWindowIds={selectedWindowIds}
               groupDragRects={groupDragRects}
               setGroupDragRects={setGroupDragRects}
               allWindowsCount={zOrder.length}
               onMouseDown={(e, id) => bringToFront(id)}
-              onResize={(id, x, y, width, height) => updateWindow(id, { x, y, width, height })}
+              onResize={(id, x, y, width, height) => {
+                if (selectedWindowIds.includes(id) && selectedWindowIds.length > 1) {
+                  const dx = x - win.x;
+                  const dy = y - win.y;
+                  const dw = width - win.width;
+                  const dh = height - win.height;
+                  selectedWindowIds.forEach(selId => {
+                    const selWin = windowsById[selId];
+                    if (!selWin) return;
+                    updateWindow(selId, {
+                      x: selWin.x + dx,
+                      y: selWin.y + dy,
+                      width: Math.max(50, selWin.width + dw),
+                      height: Math.max(50, selWin.height + dh),
+                    });
+                  });
+                } else {
+                  updateWindow(id, { x, y, width, height });
+                }
+              }}
               onClose={id => removeWindow(id)}
             />
           </div>

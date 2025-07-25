@@ -27,12 +27,13 @@ interface WindowProps {
   groupDragRects?: any;
   setGroupDragRects?: any;
   allWindowsCount?: number;
+  selectedWindowIds?: number[];
 }
 
 export default function Window({
   id, x, y, width, height, title, content, notes, workspaceBounds, otherWindows,
   onMouseDown, onResize, onClose, onContentChange, onNotesChange,
-  user, isSelected, zIndex, groupDragRects, setGroupDragRects, allWindowsCount
+  user, isSelected, zIndex, groupDragRects, setGroupDragRects, allWindowsCount, selectedWindowIds
 }: WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { dragRect, handleResizeMouseDown, } = useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id });
@@ -44,8 +45,14 @@ export default function Window({
   return (
     <div
       data-window-id={id}
-      className={windowClassNames.window}
-      style={{ left: renderX, top: renderY, width: renderWidth, height: renderHeight }}
+      className={windowClassNames.window + (isSelected ? ' border-blue-500 ring-2 ring-blue-400' : '')}
+      style={{
+        left: renderX,
+        top: renderY,
+        width: renderWidth,
+        height: renderHeight,
+        boxShadow: isSelected ? '0 0 0 2px #3b82f6, 0 0 8px #60a5fa' : undefined,
+      }}
       onMouseDown={e => onMouseDown(e, id)}
     >
       <WindowHeader

@@ -6,10 +6,12 @@ export function useWorkspaceSelectionBox(
   setSelectedWindowIds: (ids: number[]) => void,
   workspaceRef: RefObject<HTMLDivElement | null>
 ) {
-  const zOrder = useWindowStore(state => state.zOrder);
-
   return useSelectionBox<number>({
-    getItems: () => zOrder,
+    getItems: () => {
+      const state = useWindowStore.getState();
+      console.log('[SelectionBox] useWindowStore.getState():', state);
+      return state.zOrder;
+    },
     getItemRect: (id) => {
       const win = useWindowStore.getState().windowsById[id];
       if (!win) return { left: 0, top: 0, width: 0, height: 0 };
@@ -21,16 +23,18 @@ export function useWorkspaceSelectionBox(
           width: win.width,
           height: win.height,
         };
-        // Debug log
-        console.log('Window', id, 'rect', rect, 'workspace bounds', bounds);
+        console.log('[SelectionBox] Window', id, 'rect', rect, 'workspace bounds', bounds);
         return rect;
       }
       const rect = { left: win.x, top: win.y, width: win.width, height: win.height };
-      console.log('Window', id, 'rect (no workspaceRef)', rect);
+      console.log('[SelectionBox] Window', id, 'rect (no workspaceRef)', rect);
       return rect;
     },
     onSelect: (ids) => {
-      console.log('Selected window IDs:', ids);
+      if (typeof window !== 'undefined' && window.__selectionBoxRect) {
+        console.log('[SelectionBox] Final selection rect:', window.__selectionBoxRect);
+      }
+      console.log('[SelectionBox] Selected window IDs:', ids);
       setSelectedWindowIds(ids);
     },
   });
