@@ -36,7 +36,7 @@ export default function Window({
   user, isSelected, zIndex, groupDragRects, setGroupDragRects, allWindowsCount, selectedWindowIds
 }: WindowProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { dragRect, handleResizeMouseDown, } = useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id });
+  const { dragRect, handleResizeMouseDown, handleDragMouseDown } = useWindowDragResize({ x, y, width, height, workspaceBounds, otherWindows, onResize, id });
   const renderX = dragRect ? dragRect.x : x;
   const renderY = dragRect ? dragRect.y : y;
   const renderWidth = dragRect ? dragRect.width : width;
@@ -68,6 +68,7 @@ export default function Window({
         setIsDropdownOpen={setIsDropdownOpen}
         onContentChange={option => onContentChange && onContentChange(id, option as any)}
         onClose={() => onClose(id)}
+        onDragMouseDown={handleDragMouseDown}
       />
       <div className={windowClassNames.content}>
         <WindowContent

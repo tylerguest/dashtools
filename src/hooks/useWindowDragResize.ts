@@ -73,5 +73,44 @@ export function useWindowDragResize({ x, y, width, height, workspaceBounds, othe
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  return { dragRect, dragActive, handleResizeMouseDown, setDragRect, };
+  const handleDragMouseDown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setDragActive(true);
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWindowX = x;
+    const startWindowY = y;
+    document.body.style.userSelect = 'none';
+
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+      let newX = clamp(startWindowX + (e.clientX - startX), 0, workspaceBounds ? workspaceBounds.width - width : Infinity);
+      let newY = clamp(startWindowY + (e.clientY - startY), 0, workspaceBounds ? workspaceBounds.height - height : Infinity);
+      const rect = { x: newX, y: newY, width, height };
+      setDragRect(rect);
+      dragRectRef.current = rect;
+      onResize(id, newX, newY, width, height);
+    };
+
+    const handleMouseUp = () => {
+      document.body.style.userSelect = '';
+      setDragActive(false);
+      const rect = dragRectRef.current;
+      if (rect) {
+        setDragRect(null);
+        dragRectRef.current = null;
+        onResize(id, rect.x, rect.y, rect.width, rect.height);
+      } else {
+        setDragRect(null);
+        dragRectRef.current = null;
+      }
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  return { dragRect, dragActive, handleResizeMouseDown, handleDragMouseDown, setDragRect };
 }
