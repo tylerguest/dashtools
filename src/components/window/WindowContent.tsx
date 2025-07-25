@@ -1,11 +1,11 @@
 
 import React from 'react';
-import StockChartView from '../views/StockChartView';
-import QuoteMonitorView from '../views/QuoteMonitorView';
-import ChatbotView from '../views/ChatbotView';
-import NotesGridView from '../views/NotesGridView';
+import StockChartView from '../views/StockChart/StockChartView';
+import QuoteMonitorView from '../views/QuoteMonitor/QuoteMonitorView';
+import ChatbotView from '../views/Chatbot/ChatbotView';
+import NotesGridView from '../views/Notes/NotesGridView';
 import { WindowContent as WindowContentType } from '../../types/window';
-import FilesView from '../views/FilesView';
+import FilesView from '../views/Files/FilesView';
 import { windowContentClassNames } from '../../styles/classNames';
 
 interface WindowContentProps { content: WindowContentType; notes?: string; onNotesChange?: (notes: string) => void; user?: any; }

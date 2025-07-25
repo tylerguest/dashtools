@@ -1,6 +1,6 @@
 import React from 'react';
-import { chatbotViewClassNames } from '../../styles/classNames';
-import { useChatbot } from '../../hooks/useChatbot';
+import { chatbotViewClassNames } from '../../../styles/classNames';
+import { useChatbot } from '../../../hooks/useChatbot';
 import ChatMessages from './ChatMessages';
 import ChatInput from './ChatInput';
 

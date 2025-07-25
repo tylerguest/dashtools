@@ -1,6 +1,6 @@
 import React from 'react';
-import { quoteMonitorViewClassNames } from '../../styles/classNames';
-import { Quote, SortKey } from '../../stores/quoteMonitorStore';
+import { quoteMonitorViewClassNames } from '../../../styles/classNames';
+import { Quote, SortKey } from '../../../stores/quoteMonitorStore';
 
 interface QuoteTableProps {
   displayedTickers: string[];

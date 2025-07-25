@@ -1,5 +1,5 @@
 import React from "react";
-import { notesGridViewClassNames, buttonClassNames } from '../../styles/classNames';
+import { notesGridViewClassNames, buttonClassNames } from '../../../styles/classNames';
 
 interface Note {
   id: string;

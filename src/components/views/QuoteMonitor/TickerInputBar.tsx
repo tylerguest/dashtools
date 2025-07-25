@@ -1,5 +1,5 @@
 import React, { RefObject } from 'react';
-import { quoteMonitorViewClassNames, buttonClassNames } from '../../styles/classNames';
+import { quoteMonitorViewClassNames, buttonClassNames } from '../../../styles/classNames';
 import TickerSelectorWindow from './TickerSelectorWindow';
 
 interface TickerInputBarProps {

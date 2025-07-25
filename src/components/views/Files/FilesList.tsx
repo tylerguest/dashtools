@@ -1,6 +1,6 @@
 import React from 'react';
-import { filesViewClassNames } from '../../styles/classNames';
-import { FileItem } from '../../hooks/useFilesView';
+import { filesViewClassNames } from '../../../styles/classNames';
+import { FileItem } from '../../../hooks/useFilesView';
 
 interface FilesListProps {
   files: FileItem[];

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { stockChartViewClassNames } from '../../styles/classNames';
+import { stockChartViewClassNames } from '../../../styles/classNames';
 
 
 export default function StockChartView() {

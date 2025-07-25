@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
-import { quoteMonitorViewClassNames } from '../../styles/classNames';
-import { useQuoteMonitorStore } from '../../stores/quoteMonitorStore';
-import { useQuoteMonitorData } from '../../hooks/useQuoteMonitorData';
-import { useSortedTickers } from '../../hooks/useSortedTickers';
+import { quoteMonitorViewClassNames } from '../../../styles/classNames';
+import { useQuoteMonitorStore } from '../../../stores/quoteMonitorStore';
+import { useQuoteMonitorData } from '../../../hooks/useQuoteMonitorData';
+import { useSortedTickers } from '../../../hooks/useSortedTickers';
 import { TickerInputBar } from './TickerInputBar';
 import { QuoteTable } from './QuoteTable';
 

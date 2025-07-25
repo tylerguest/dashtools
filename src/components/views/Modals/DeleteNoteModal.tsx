@@ -1,5 +1,5 @@
 import React from "react";
-import { notesGridViewClassNames } from '../../styles/classNames';
+import { notesGridViewClassNames } from '../../../styles/classNames';
 
 interface DeleteNoteModalProps {
   onCancel: () => void;

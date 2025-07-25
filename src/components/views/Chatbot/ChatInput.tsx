@@ -1,5 +1,5 @@
 import React from 'react';
-import { chatbotViewClassNames, buttonClassNames } from '../../styles/classNames';
+import { chatbotViewClassNames, buttonClassNames } from '../../../styles/classNames';
 
 interface ChatInputProps {
   input: string;

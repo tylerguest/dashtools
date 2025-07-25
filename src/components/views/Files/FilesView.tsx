@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { filesViewClassNames } from '../../styles/classNames';
-import { useFilesView } from '../../hooks/useFilesView';
+import { filesViewClassNames } from '../../../styles/classNames';
+import { useFilesView } from '../../../hooks/useFilesView';
 import FilesToolbar from './FilesToolbar';
 import FilesList from './FilesList';
 

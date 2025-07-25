@@ -2,12 +2,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { notesGridViewClassNames } from '../../styles/classNames';
+import { notesGridViewClassNames } from '../../../styles/classNames';
 import { createClient } from "@/utils/supabase/client";
 import { NotesPane } from "./NotesPane";
 import { NoteForm } from "./NoteForm";
 import { NotesRightPaneDefault } from "./NotesRightPaneDefault";
-import { DeleteNoteModal } from "./DeleteNoteModal";
+import { DeleteNoteModal } from "../Modals/DeleteNoteModal";
 
 
 import { useNotesGridView } from "@/hooks/useNotesGridView";

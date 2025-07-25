@@ -1,5 +1,5 @@
 import React from 'react';
-import { buttonClassNames } from '../../styles/classNames';
+import { buttonClassNames } from '../../../styles/classNames';
 
 interface FilesToolbarProps {
   viewMode: 'list' | 'grid';

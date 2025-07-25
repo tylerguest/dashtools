@@ -1,5 +1,5 @@
 import React from 'react';
-import { tickerSelectorWindowClassNames, buttonClassNames } from '../../styles/classNames';
+import { tickerSelectorWindowClassNames, buttonClassNames } from '../../../styles/classNames';
 
 const POPULAR_TICKERS = [
   'AAPL', 'AMZN', 'MSFT', 'GOOG', 'NVDA', 'TSLA', 'META', 'NFLX', 'AMD', 'INTC',

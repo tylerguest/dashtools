@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { notesViewClassNames } from '../../styles/classNames';
+import { notesViewClassNames } from '../../../styles/classNames';
 
 interface NotesViewProps { value?: string; onChange?: (value: string) => void; }
 
