@@ -45,6 +45,7 @@ export default function Workspace({ user }: WorkspaceProps) {
           user={user}
           getZIndex={getZIndex}
           selectedWindowIds={selectedWindowIds}
+          setSelectedWindowIds={setSelectedWindowIds}
           groupDragRects={groupDragRects}
           setGroupDragRects={setGroupDragRects}
         />

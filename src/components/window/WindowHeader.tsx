@@ -10,6 +10,7 @@ interface WindowHeaderProps {
   onContentChange?: (content: string) => void;
   onClose: () => void;
   onDragMouseDown?: (e: React.MouseEvent) => void;
+  onSelect?: (e: React.MouseEvent) => void;
 }
 
 function MenuButton({ onClick, isOpen }: { onClick: (e: React.MouseEvent) => void; isOpen: boolean }) {
@@ -38,9 +39,25 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
   onContentChange,
   onClose,
   onDragMouseDown,
+  onSelect,
 }) => {
+  const handleClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('button') ||
+      target.closest('svg') ||
+      target.closest('[role="menu"]')
+    ) {
+      return;
+    }
+    if (onSelect) onSelect(e);
+  };
   return (
-    <div className={windowHeaderClassNames.header} onMouseDown={onDragMouseDown}>
+    <div
+      className={windowHeaderClassNames.header}
+      onMouseDown={onDragMouseDown}
+      onClick={handleClick}
+    >
       <div className="relative flex items-center">
         <MenuButton
           onClick={e => { e.stopPropagation(); setIsDropdownOpen(!isDropdownOpen); }}

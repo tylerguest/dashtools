@@ -69,6 +69,7 @@ export default function Window({
         onContentChange={option => onContentChange && onContentChange(id, option as any)}
         onClose={() => onClose(id)}
         onDragMouseDown={handleDragMouseDown}
+        onSelect={e => onMouseDown(e, id)}
       />
       <div className={windowClassNames.content}>
         <WindowContent

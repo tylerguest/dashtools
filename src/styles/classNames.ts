@@ -241,7 +241,7 @@ export const userMenuClassNames = {
   signOutButton: 'w-full py-2 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-semibold text-xs shadow-sm transition-all',
 };
 export const windowClassNames = {
-  window: 'absolute z-50 bg-zinc-800 border border-zinc-700 rounded-sm shadow-2xl flex flex-col',
+  window: 'absolute z-50 bg-zinc-800 border border-zinc-700 rounded-none shadow-2xl flex flex-col',
   header: 'cursor-move',
   content: 'flex-1 p-1 overflow-auto h-full w-full',
 };

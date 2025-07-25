@@ -8,6 +8,7 @@ export function WorkspaceWindows({
   user,
   getZIndex,
   selectedWindowIds,
+  setSelectedWindowIds,
   groupDragRects,
   setGroupDragRects,
 }: {
@@ -16,6 +17,7 @@ export function WorkspaceWindows({
   user: any;
   getZIndex: (id: number) => number;
   selectedWindowIds: number[];
+  setSelectedWindowIds: (ids: number[]) => void;
   groupDragRects: any;
   setGroupDragRects: any;
 }) {
@@ -50,7 +52,10 @@ export function WorkspaceWindows({
               groupDragRects={groupDragRects}
               setGroupDragRects={setGroupDragRects}
               allWindowsCount={zOrder.length}
-              onMouseDown={(e, id) => bringToFront(id)}
+              onMouseDown={(e, id) => {
+                setSelectedWindowIds([id]);
+                bringToFront(id);
+              }}
               onResize={(id, x, y, width, height) => {
                 if (selectedWindowIds.includes(id) && selectedWindowIds.length > 1) {
                   const dx = x - win.x;
