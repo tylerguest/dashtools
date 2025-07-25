@@ -1,3 +1,5 @@
+export const rootContainer = "min-h-screen h-full bg-gray-950 flex flex-col";
+export const mainContent = "flex-1 flex h-full items-center justify-center text-zinc-400";
 export const filesViewClassNames = {
   container: "h-full w-full flex flex-col bg-zinc-800",
   toolbar: "flex items-center px-4 py-3 border-b border-zinc-800 bg-zinc-900/95 gap-2",
