@@ -19,7 +19,6 @@ function CustomViewsMenu({ views, onSave, onLoad, onDelete, currentLayout }: Cus
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Cast refs to Element for hook compatibility
   useClickAway(
     [dropdownRef as React.RefObject<Element>, buttonRef as React.RefObject<Element>],
     () => setShowInput(false),

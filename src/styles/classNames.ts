@@ -1,3 +1,26 @@
+export function windowHeaderMenuButton(extra?: string) {
+  return [
+    buttonClassNames.base,
+    buttonClassNames.ghost,
+    buttonClassNames.sizes.md,
+    "w-full flex justify-between items-center",
+    extra,
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
+export function windowHeaderMenuItem(extra?: string) {
+  return [
+    buttonClassNames.base,
+    buttonClassNames.ghost,
+    buttonClassNames.sizes.sm,
+    "w-full text-left",
+    extra,
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
 export const rootContainer = "min-h-screen h-full bg-gray-950 flex flex-col";
 export const mainContent = "flex-1 flex h-full items-center justify-center text-zinc-400";
 export const filesViewClassNames = {
