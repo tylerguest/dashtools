@@ -1,6 +1,6 @@
 import React from 'react';
 import { chatbotViewClassNames } from '../../styles/classNames';
-import { Message } from './useChatbot';
+import { Message } from '../../hooks/useChatbot';
 
 interface ChatMessagesProps {
   messages: Message[];
