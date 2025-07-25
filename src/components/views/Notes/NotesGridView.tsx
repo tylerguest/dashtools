@@ -7,7 +7,7 @@ import { createClient } from "@/utils/supabase/client";
 import { NotesPane } from "./NotesPane";
 import { NoteForm } from "./NoteForm";
 import { NotesRightPaneDefault } from "./NotesRightPaneDefault";
-import { DeleteNoteModal } from "../Modals/DeleteNoteModal";
+import { DeleteNoteModal } from "./DeleteNoteModal";
 
 
 import { useNotesGridView } from "@/hooks/useNotesGridView";
