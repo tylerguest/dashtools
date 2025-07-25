@@ -118,6 +118,7 @@ const Window: React.FC<WindowProps> = ({
         setIsDropdownOpen={setIsDropdownOpen}
         updateWindow={updateWindow}
         removeWindow={removeWindow}
+        onDragMouseDown={handleDragMouseDown}
       />
       <WindowBody
         content={content}

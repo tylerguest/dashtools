@@ -11,6 +11,7 @@ interface WindowHeaderBarProps {
   setIsDropdownOpen: (open: boolean) => void;
   updateWindow: (id: number, data: any) => void;
   removeWindow: (id: number) => void;
+  onDragMouseDown?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const WindowHeaderBar: React.FC<WindowHeaderBarProps> = ({
@@ -21,8 +22,9 @@ const WindowHeaderBar: React.FC<WindowHeaderBarProps> = ({
   setIsDropdownOpen,
   updateWindow,
   removeWindow,
+  onDragMouseDown,
 }) => (
-  <div className={windowClassNames.header}>
+  <div className={windowClassNames.header} onMouseDown={onDragMouseDown}>
     <WindowHeader
       title={title}
       isDropdownOpen={isDropdownOpen}
