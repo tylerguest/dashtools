@@ -17,30 +17,31 @@ interface WorkspaceProps {
 }
 
 export default function Workspace({ user }: WorkspaceProps) {
-  const [workspaceRef, setWorkspaceRef] = useState<HTMLDivElement | null>(null);
+  const workspaceRef = useRef<HTMLDivElement | null>(null);
   const [selectedWindowIds, setSelectedWindowIds] = useState<number[]>([]);
   const zOrder = useWindowStore(state => state.zOrder);
   const addWindow = useWindowStore(state => state.addWindow);
   const [groupDragRects, setGroupDragRects] = useState<Record<number, { x: number, y: number, width: number, height: number }> | null>(null);
   const didInit = useRef(false);
   const getZIndex = useZIndex(zOrder);
-  const { selecting, rect, onMouseDown } = useWorkspaceSelectionBox(setSelectedWindowIds);
-  useInitialWorkspaceLayout({ zOrder, addWindow, workspaceRef });
+  const { selecting, rect, onMouseDown } = useWorkspaceSelectionBox(setSelectedWindowIds, workspaceRef);
+  useInitialWorkspaceLayout({ zOrder, addWindow, workspaceRef: workspaceRef.current });
   return (
     <div className={workspaceClassNames.container}>
       <div
-        ref={setWorkspaceRef}
+        ref={workspaceRef}
         className={workspaceClassNames.workspaceArea}
         style={{ minWidth: 0, position: 'relative', userSelect: selecting ? 'none' : undefined }}
         onMouseDown={e => {
           if (e.target === e.currentTarget) {
+            console.log('Workspace onMouseDown fired. workspaceRef:', workspaceRef);
             onMouseDown(e);
           }
         }}
       >
         <WorkspaceWindows
           zOrder={zOrder}
-          workspaceRef={workspaceRef}
+          workspaceRef={workspaceRef.current}
           user={user}
           getZIndex={getZIndex}
           selectedWindowIds={selectedWindowIds}
