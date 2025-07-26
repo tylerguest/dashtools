@@ -22,7 +22,7 @@ const FilesToolbar: React.FC<FilesToolbarProps> = ({
 }) => (
   <div className="flex items-center gap-2 p-2 border-b border-zinc-800 bg-zinc-900">
     <button
-      className={buttonClassNames.base}
+      className={`${buttonClassNames.base} items-center`}
       title="New Folder"
       aria-label="New Folder"
       onClick={() => alert('Create Folder (not implemented)')}
