@@ -47,7 +47,7 @@ export function CustomViewsDropdown({
           >
             <button
               className={`${buttonClassNames.base} ${buttonClassNames.ghost} ${buttonClassNames.sizes.sm} flex-1 truncate text-left`}
-              onClick={() => { /* handle load view logic here */ setShowInput(false); }}
+              onClick={() => { setShowInput(false); }}
               title={view.name}
               type="button"
             >

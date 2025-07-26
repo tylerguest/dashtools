@@ -32,12 +32,12 @@ export function TickerInputBar({
         onClick={() => setShowTickerSelector(true)}
         className={quoteMonitorViewClassNames.tickerInput + ' h-8 rounded-none mr-1'}
         maxLength={8}
-        style={{ minWidth: 0, height: 32 }}
+        style={{ minWidth: 0, height: 24 }}
         autoComplete="off"
       />
       <button
         type="submit"
-        className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.sm}`}
+        className={`${buttonClassNames.base} ${buttonClassNames.primary} ${buttonClassNames.sizes.sm} items-center`}
       >
         +
       </button>

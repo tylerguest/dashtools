@@ -159,7 +159,7 @@ export const quoteMonitorViewClassNames = {
   headerRow: 'mb-2 flex items-center justify-between',
   mainLabel: 'bg-green-900 text-green-300 px-2 py-0.5 rounded text-xs ml-2',
   tickerInputRow: 'flex items-center gap-1 relative',
-  tickerInput: 'bg-zinc-800 text-zinc-200 px-2 py-0.5 text-xs border border-zinc-700 focus:outline-none w-24 rounded-none',
+  tickerInput: 'bg-zinc-800 text-zinc-200 px-2 py-0.5 text-xs border border-zinc-700 focus:outline-none w-48 rounded-none',
   addButton: 'bg-green-700 text-xs px-2 py-0.5 rounded text-green-100 hover:bg-green-600',
   tickerSelector: 'absolute left-0 top-full z-50 mt-1',
   tableWrapper: 'overflow-x-auto',
