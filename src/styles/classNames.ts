@@ -141,7 +141,7 @@ export const notesGridViewClassNames = {
   noteTextarea: "flex-1 resize-none bg-zinc-800 border-none outline-none text-white placeholder-zinc-400 text-lg",
   rightPaneDefault: "flex flex-col h-full w-full",
   showNotesButton: "mt-3 ml-3 px-1 py-0 text-zinc-400 hover:text-zinc-200 text-sm border-none bg-transparent transition-all focus:outline-none flex items-center justify-center",
-  addNoteButton: "w-10 h-10 flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-zinc-100 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-zinc-600 shadow-none rounded-none p-0",
+  addNoteButton: "w-6 h-6 flex items-center justify-center bg-zinc-700 hover:bg-zinc-600 text-zinc-100 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 border border-zinc-600 shadow-none rounded-none p-0",
   deleteModalOverlay: "fixed inset-0 flex items-center justify-center z-50 bg-black/60 backdrop-blur-sm",
   deleteModal: "bg-zinc-900 border border-zinc-800 rounded-2xl shadow-2xl p-8 min-w-[340px] max-w-[90vw] flex flex-col items-center animate-fadeIn",
   deleteModalTitle: "text-2xl font-bold text-white mb-2 tracking-tight",
