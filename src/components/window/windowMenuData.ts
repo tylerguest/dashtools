@@ -10,6 +10,7 @@ export const windowMenuData = [
     label: 'Productivity',
     children: [
       { key: 'notes', label: 'Notes' },
+      { key: 'calendar', label: 'Calendar' },
     ],
   },
   {

@@ -7,6 +7,7 @@ import NotesGridView from '../views/Notes/NotesGridView';
 import { WindowContent as WindowContentType } from '../../types/window';
 import FilesView from '../views/Files/FilesView';
 import { windowContentClassNames } from '../../styles/classNames';
+import CalendarView from '../views/Calendar/CalendarView';
 
 interface WindowContentProps { content: WindowContentType; notes?: string; onNotesChange?: (notes: string) => void; user?: any; }
 
@@ -16,6 +17,7 @@ const viewMap: Record<Exclude<WindowContentType, null>, React.FC<any>> = {
   chatbot: ChatbotView, 
   notes: NotesGridView,
   files: FilesView,
+  calendar: CalendarView,
 };
 
 const WindowContent: React.FC<WindowContentProps> = ({ content, notes, onNotesChange, user }) => {

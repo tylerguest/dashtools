@@ -77,6 +77,7 @@ export function WorkspaceWindows({
                 }
               }}
               onClose={id => removeWindow(id)}
+              onContentChange={(id, content) => updateWindow(id, { content })}
             />
           </div>
         );

@@ -12,14 +12,14 @@ interface WindowProps {
   width: number;
   height: number;
   title: string;
-  content?: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files' | null;
+  content?: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files' | 'calendar' | null;
   notes?: string;
   workspaceBounds?: { width: number; height: number } | null;
   otherWindows?: Array<{ id: number; x: number; y: number; width: number; height: number }>;
   onMouseDown: (e: React.MouseEvent, id: number) => void;
   onResize: (id: number, x: number, y: number, width: number, height: number) => void;
   onClose: (id: number) => void;
-  onContentChange?: (id: number, content: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files') => void;
+  onContentChange?: (id: number, content: 'stockchart' | 'quotemonitor' | 'chatbot' | 'notes' | 'files' | 'calendar') => void;
   onNotesChange?: (id: number, notes: string) => void;
   user?: any;
   isSelected?: boolean;
@@ -63,6 +63,7 @@ export default function Window({
           if (content === 'stockchart') return 'Stock Chart';
           if (content === 'quotemonitor') return 'Quote Monitor';
           if (content === 'chatbot') return 'Chatbot';
+          if (content === 'calendar') return 'Calendar';
           if (content && typeof content === 'string') return content.charAt(0).toUpperCase() + content.slice(1);
           return title;
         })()}

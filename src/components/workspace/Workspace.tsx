@@ -34,7 +34,6 @@ export default function Workspace({ user }: WorkspaceProps) {
         style={{ minWidth: 0, position: 'relative', userSelect: selecting ? 'none' : undefined }}
         onMouseDown={e => {
           if (e.target === e.currentTarget) {
-            console.log('Workspace onMouseDown fired. workspaceRef:', workspaceRef);
             onMouseDown(e);
           }
         }}
