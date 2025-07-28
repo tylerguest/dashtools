@@ -6,7 +6,6 @@ import { WindowContent as WindowContentType } from '../../types/window';
 interface WindowHeaderBarProps {
   id: number;
   content: string;
-  title: string;
   isDropdownOpen: boolean;
   setIsDropdownOpen: (open: boolean) => void;
   updateWindow: (id: number, data: any) => void;
@@ -17,7 +16,6 @@ interface WindowHeaderBarProps {
 const WindowHeaderBar: React.FC<WindowHeaderBarProps> = ({
   id,
   content,
-  title,
   isDropdownOpen,
   setIsDropdownOpen,
   updateWindow,
@@ -26,11 +24,10 @@ const WindowHeaderBar: React.FC<WindowHeaderBarProps> = ({
 }) => (
   <div className={windowClassNames.header} onMouseDown={onDragMouseDown}>
     <WindowHeader
-      title={title}
       isDropdownOpen={isDropdownOpen}
       setIsDropdownOpen={setIsDropdownOpen}
       onContentChange={(option: string) => {
-        updateWindow(id, { content: option as WindowContentType, title });
+        updateWindow(id, { content: option as WindowContentType });
       }}
       onClose={() => removeWindow(id)}
     />

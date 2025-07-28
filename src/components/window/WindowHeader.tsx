@@ -4,7 +4,6 @@ import { WindowHeaderMenu } from './WindowHeaderMenu';
 import { windowMenuData } from './windowMenuData';
 
 interface WindowHeaderProps {
-  title: string;
   isDropdownOpen: boolean;
   setIsDropdownOpen: (open: boolean) => void;
   onContentChange?: (content: string) => void;
@@ -33,7 +32,6 @@ function MenuButton({ onClick, isOpen }: { onClick: (e: React.MouseEvent) => voi
 }
 
 const WindowHeader: React.FC<WindowHeaderProps> = ({
-  title,
   isDropdownOpen,
   setIsDropdownOpen,
   onContentChange,
@@ -71,7 +69,7 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
         />
       </div>
       <div className={windowHeaderClassNames.titleContainer}>
-        <span className={windowHeaderClassNames.title}>{title}</span>
+        <span className={windowHeaderClassNames.title}></span>
       </div>
       <button
         onClick={e => { e.stopPropagation(); onClose(); }}
