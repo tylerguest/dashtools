@@ -24,9 +24,9 @@ const CalendarView: React.FC = () => {
           right: 'dayGridMonth, dayGridWeek, dayGridDay'
         }}
         events={[]}
-        dayCellClassNames={date => date.isToday ? calendarViewClassNames.today : ''}
+        dayCellClassNames={date => [calendarViewClassNames.dayCell, date.isToday ? calendarViewClassNames.today : '']}
         eventContent={renderEventContent}
-        height="auto"
+        height="100%"
         aspectRatio={1.5}
       />
     </div>

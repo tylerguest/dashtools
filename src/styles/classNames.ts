@@ -1,8 +1,9 @@
 export const calendarViewClassNames = {
-  container: "bg-zinc-900 text-zinc-200 rounded-lg shadow-lg p-2",
-  event: "bg-blue-700 text-white rounded px-2 py-1",
-  today: "bg-zinc-800 border border-blue-500",
-  header: "text-zinc-100 font-bold",
+  container: "bg-zinc-800 text-zinc-200 rounded-xl shadow-2xl border border-zinc-800 w-full h-full flex flex-col",
+  event: "bg-blue-700 text-white rounded-lg px-3 py-1 shadow-md font-medium",
+  today: "bg-zinc-800 border-2 border-blue-500 text-white",
+  header: "text-zinc-100 font-bold text-base tracking-wide",
+  dayCell: "bg-zinc-900 border border-zinc-800 rounded-md hover:bg-zinc-800 transition-colors duration-150",
 };
 export function windowHeaderMenuButton(extra?: string) {
   return [
