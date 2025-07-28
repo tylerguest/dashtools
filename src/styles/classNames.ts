@@ -1,3 +1,9 @@
+export const calendarViewClassNames = {
+  container: "bg-zinc-900 text-zinc-200 rounded-lg shadow-lg p-2",
+  event: "bg-blue-700 text-white rounded px-2 py-1",
+  today: "bg-zinc-800 border border-blue-500",
+  header: "text-zinc-100 font-bold",
+};
 export function windowHeaderMenuButton(extra?: string) {
   return [
     buttonClassNames.base,
@@ -9,7 +15,6 @@ export function windowHeaderMenuButton(extra?: string) {
     .filter(Boolean)
     .join(" ");
 }
-
 export function windowHeaderMenuItem(extra?: string) {
   return [
     buttonClassNames.base,

@@ -10,6 +10,7 @@ export function useInitialWorkspaceLayout({
   addWindow: (win: any) => void;
   workspaceRef: HTMLDivElement | null;
 }) {
+ 
   const didInit = useRef(false);
 
   useLayoutEffect(() => {
@@ -26,7 +27,7 @@ export function useInitialWorkspaceLayout({
         const bottomHeight = h - topHeight;
         const windows = [
           { x: 0, y: 0, width: sidebarWidth, height: h, title: 'Files', content: 'files' as WindowContent, notes: '' },
-          { x: sidebarWidth, y: 0, width: centerWidth, height: topHeight, title: 'Stock Chart', content: 'stockchart' as WindowContent, notes: '' },
+          { x: sidebarWidth, y: 0, width: centerWidth, height: topHeight, title: 'Calendar', content: 'calendar' as WindowContent, notes: '' },
           { x: sidebarWidth + centerWidth, y: 0, width: rightWidth, height: topHeight, title: 'Quote Monitor', content: 'quotemonitor' as WindowContent, notes: '' },
           { x: sidebarWidth, y: topHeight, width: centerWidth, height: bottomHeight, title: 'Chatbot', content: 'chatbot' as WindowContent, notes: '' },
           { x: sidebarWidth + centerWidth, y: topHeight, width: rightWidth, height: bottomHeight, title: 'Notes', content: 'notes' as WindowContent, notes: 'Welcome!' },
