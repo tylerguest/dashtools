@@ -192,8 +192,8 @@ export const windowContentClassNames = {
   emptyState: 'h-full flex items-center justify-center text-zinc-500 text-sm',
 };
 export const windowHeaderClassNames = {
-  header: 'min-h-[1.75rem] h-7 py-1 px-2 bg-zinc-900/60 border-b border-zinc-700 text-zinc-200 font-normal text-xs flex justify-between items-center relative',
-  menuButton: 'w-6 h-6 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur text-xs mx-1 p-1 ml-2',
+  header: 'min-h-[1.5rem] h-7 py-1 px-2 bg-zinc-900/60 border-b border-zinc-700 text-zinc-200 font-normal text-xs flex justify-between items-center relative',
+  menuButton: 'w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/60 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md bg-zinc-800/80 backdrop-blur text-xs',
   dropdown: 'absolute top-7 left-0 min-w-[8em] max-w-[12em] bg-zinc-900/95 backdrop-blur border border-zinc-700 shadow-xl z-50 py-1 flex flex-col gap-0 animate-fadeIn',
   menuCategory: 'relative group',
   menuCategoryButton: 'block w-full text-left px-3 py-1 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-xs transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white flex justify-between items-center',
@@ -201,7 +201,7 @@ export const windowHeaderClassNames = {
   submenuButton: 'block w-full text-left px-3 py-1 text-zinc-100 hover:bg-zinc-700/60 hover:text-white text-xs transition-all focus:outline-none focus:bg-zinc-700/80 focus:text-white',
   titleContainer: 'flex-1 flex justify-center items-center select-none',
   title: 'text-zinc-200 text-xs font-bold',
-  closeButton: 'w-5 h-5 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 text-xs font-bold mx-1 p-1 mr-2',
+  closeButton: 'w-4 h-4 flex items-center justify-center text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700 text-xs font-bold',
 };
 export const windowResizerClassNames = {
   nw: 'absolute w-2 h-2 hover:bg-zinc-600 top-0 left-0 cursor-nw-resize',
