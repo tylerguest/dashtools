@@ -25,7 +25,7 @@ function Header({ onNewWindow, children }: HeaderProps) {
           aria-label="New window"
           type="button"
         >
-          +
+          W
         </button>
         {children}
         <UserMenu />

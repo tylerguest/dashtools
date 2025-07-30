@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useCustomViewsStore } from '../../stores/customViewsStore';
 import { customViewsMenuClassNames, buttonClassNames } from '../../styles/classNames';
 import { useClickAway } from '../../hooks/useClickAway';
@@ -45,8 +46,22 @@ function CustomViewsMenu({ views, onSave, onLoad, onDelete, currentLayout }: Cus
       >
         V
       </button>
-      {showInput && (
-        <div ref={dropdownRef}>
+      {showInput && typeof window !== 'undefined' && createPortal(
+        <div
+          ref={dropdownRef}
+          style={(() => {
+            if (!buttonRef.current) return { position: 'absolute', top: 40, left: 0, zIndex: 9999 };
+            const rect = buttonRef.current.getBoundingClientRect();
+            return {
+              position: 'absolute',
+              top: rect.bottom - 32,
+              left: dropdownAlignRight ? rect.right - 150 : rect.left,
+              zIndex: 9999,
+              minWidth: 180,
+              maxWidth: 240,
+            };
+          })()}
+        >
           <CustomViewsDropdown
             customViews={customViews}
             viewName={viewName}
@@ -57,7 +72,8 @@ function CustomViewsMenu({ views, onSave, onLoad, onDelete, currentLayout }: Cus
             setShowInput={setShowInput}
             dropdownAlignRight={dropdownAlignRight}
           />
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
