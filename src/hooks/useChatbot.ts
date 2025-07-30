@@ -20,7 +20,11 @@ async function fetchLLMResponse(input: string): Promise<string> {
       return 'Sorry, there was an error contacting the AI.';
     }
     const data = await res.json();
-    return data.response || 'Sorry, no response from the AI.';
+    let response = data.response;
+    if (typeof response !== 'string') {
+      response = JSON.stringify(response);
+    }
+    return response || 'Sorry, no response from the AI.';
   } catch {
     return 'Sorry, there was a network error.';
   }
