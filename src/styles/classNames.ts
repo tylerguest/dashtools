@@ -1,5 +1,5 @@
 export const calendarViewClassNames = {
-  container: "bg-zinc-900 text-zinc-200 border border-zinc-800 w-full h-full flex flex-col",
+  container: "bg-zinc-900 text-zinc-200 border border-zinc-800 w-full h-full flex flex-col box-border p-6",
   header: "text-zinc-100 font-bold text-base tracking-wide",
   event: "bg-blue-700 text-white rounded-lg px-2 py-1 font-medium mt-1",
   today: "bg-zinc-800 border-2 border-blue-500 text-white",

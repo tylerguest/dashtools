@@ -17,7 +17,7 @@ const CalendarView: React.FC = () => {
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
-        themeSystem='bootstrap'
+        themeSystem='standard'
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',
