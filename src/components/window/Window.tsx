@@ -58,15 +58,6 @@ export default function Window({
         <div className={windowClassNames.windowSelectedHighlight} />
       )}
       <WindowHeader
-        title={(() => {
-          if (content === 'files') return 'Files';
-          if (content === 'stockchart') return 'Stock Chart';
-          if (content === 'quotemonitor') return 'Quote Monitor';
-          if (content === 'chatbot') return 'Chatbot';
-          if (content === 'calendar') return 'Calendar';
-          if (content && typeof content === 'string') return content.charAt(0).toUpperCase() + content.slice(1);
-          return title;
-        })()}
         isDropdownOpen={isDropdownOpen}
         setIsDropdownOpen={setIsDropdownOpen}
         onContentChange={option => onContentChange && onContentChange(id, option as any)}
