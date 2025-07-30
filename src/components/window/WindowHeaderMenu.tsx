@@ -50,13 +50,13 @@ export function WindowHeaderMenu({
           onBlur={() => setSubmenuOpen(null)}
         >
           <button
-            className={windowHeaderMenuButton()}
+            className={windowHeaderMenuButton() + ' justify-start'}
             tabIndex={0}
             aria-haspopup={category.children ? 'menu' : undefined}
             aria-expanded={submenuOpen === category.label}
             type="button"
           >
-            <span>{category.label}</span>
+            <span className="block w-full text-left">{category.label}</span>
             {category.children && (
               <svg className="ml-2 w-3 h-3 text-zinc-400 group-hover:text-zinc-200" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
             )}
@@ -69,13 +69,13 @@ export function WindowHeaderMenu({
               {category.children.map(item => (
                 <button
                   key={item.key}
-                  className={windowHeaderMenuItem()}
+                  className={windowHeaderMenuItem() + ' justify-start'}
                   onClick={e => { e.stopPropagation(); onContentChange && onContentChange(item.key); setIsDropdownOpen(false); setSubmenuOpen(null); }}
                   tabIndex={0}
                   role="menuitem"
                   type="button"
                 >
-                  {item.label}
+                  <span className="block w-full text-left">{item.label}</span>
                 </button>
               ))}
             </div>
