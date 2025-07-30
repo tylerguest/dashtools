@@ -68,7 +68,6 @@ const WindowHeader: React.FC<WindowHeaderProps> = ({
           onContentChange={onContentChange}
         />
       </div>
-      {/* Title removed as requested */}
       <button
         onClick={e => { e.stopPropagation(); onClose(); }}
         className={`${buttonClassNames.base} ${buttonClassNames.icon}`}
