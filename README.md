@@ -1,16 +1,16 @@
 
 <div align="center" style="width: 100%; margin: auto;">
-  <img src="./images/dashtoolslogo.png" alt="Dashtools Logo" width="50%" />
-  <p style="text-align: left; font-size: 1.1em; margin-left: 32rem; margin-top: 1.5em; margin-bottom: 1.5em;">
+  <img src="./images/dashtoolslogo.png" alt="Dashtools Logo" width="100%" />
+  <p style="text-align: left; font-size: 1.1em; margin-top: 1.5em; margin-bottom: 1.5em;">
   personal dashboard for the web. might become an os, might become something else.<br><br>
   have a feature request? open a pr!<br>
   want to contribute? pick an issue here:<a href="https://docs.google.com/spreadsheets/d/1XUoftVHcUJMHeDANr0ILYpizxWe7MGualURjd7_FDlM/edit?usp=sharing>"> bounty link</a> <br> 
   want to test it out? click here: <a href="https://dashtools.vercel.app/">demo link</a>
   </p>
-  <img src="./images/dashtools.png" alt="Dashboard Screenshot" width="50%" />
+  <img src="./images/dashtools.png" alt="Dashboard Screenshot" width="1000%" />
 </div>
 
-<div align="left" style="width: 50%; margin: 2em auto 0 auto;">
+<div align="left" style="width: 100%; margin: 2em auto 0 auto;">
 
 ## Getting Started
 
