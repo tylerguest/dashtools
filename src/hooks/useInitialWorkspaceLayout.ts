@@ -22,11 +22,11 @@ export function useInitialWorkspaceLayout({
         const sidebarWidth = Math.max(300, Math.floor(w * 0.18));
         const rightWidth = Math.max(320, Math.floor(w * 0.22));
         const centerWidth = w - sidebarWidth - rightWidth - GAP * 2;
-        const leftHeight = h;
         const topHeight = Math.floor(h * 0.55) - GAP / 2;
+        const leftHeight = topHeight;
         const bottomHeight = h - topHeight - GAP;
         const windows = [
-          { x: GAP, y: GAP, width: sidebarWidth, height: leftHeight, title: 'Files', content: 'files' as WindowContent, notes: '' },
+          { x: GAP, y: GAP, width: sidebarWidth, height: topHeight, title: 'Files', content: 'files' as WindowContent, notes: '' },
           { x: GAP + sidebarWidth + GAP, y: GAP, width: centerWidth, height: topHeight, title: 'Calendar', content: 'calendar' as WindowContent, notes: '' },
           { x: GAP + sidebarWidth + GAP + centerWidth + GAP, y: GAP, width: rightWidth, height: topHeight, title: 'Stock Chart', content: 'stockchart' as WindowContent, notes: '' },
           { x: GAP, y: GAP + topHeight + GAP, width: sidebarWidth, height: bottomHeight, title: 'Notes', content: 'notes' as WindowContent, notes: 'Welcome!' },
