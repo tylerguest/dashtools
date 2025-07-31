@@ -22,14 +22,16 @@ export function useInitialWorkspaceLayout({
         const sidebarWidth = Math.max(300, Math.floor(w * 0.18));
         const rightWidth = Math.max(320, Math.floor(w * 0.22));
         const centerWidth = w - sidebarWidth - rightWidth - GAP * 2;
+        const leftHeight = h;
         const topHeight = Math.floor(h * 0.55) - GAP / 2;
         const bottomHeight = h - topHeight - GAP;
         const windows = [
-          { x: GAP, y: GAP, width: sidebarWidth, height: h, title: 'Files', content: 'files' as WindowContent, notes: '' },
+          { x: GAP, y: GAP, width: sidebarWidth, height: leftHeight, title: 'Files', content: 'files' as WindowContent, notes: '' },
           { x: GAP + sidebarWidth + GAP, y: GAP, width: centerWidth, height: topHeight, title: 'Calendar', content: 'calendar' as WindowContent, notes: '' },
-          { x: GAP + sidebarWidth + GAP + centerWidth + GAP, y: GAP, width: rightWidth, height: topHeight, title: 'Quote Monitor', content: 'quotemonitor' as WindowContent, notes: '' },
+          { x: GAP + sidebarWidth + GAP + centerWidth + GAP, y: GAP, width: rightWidth, height: topHeight, title: 'Stock Chart', content: 'stockchart' as WindowContent, notes: '' },
+          { x: GAP, y: GAP + topHeight + GAP, width: sidebarWidth, height: bottomHeight, title: 'Notes', content: 'notes' as WindowContent, notes: 'Welcome!' },
           { x: GAP + sidebarWidth + GAP, y: GAP + topHeight + GAP, width: centerWidth, height: bottomHeight, title: 'Chatbot', content: 'chatbot' as WindowContent, notes: '' },
-          { x: GAP + sidebarWidth + GAP + centerWidth + GAP, y: GAP + topHeight + GAP, width: rightWidth, height: bottomHeight, title: 'Notes', content: 'notes' as WindowContent, notes: 'Welcome!' },
+          { x: GAP + sidebarWidth + GAP + centerWidth + GAP, y: GAP + topHeight + GAP, width: rightWidth, height: bottomHeight, title: 'Quote Monitor', content: 'quotemonitor' as WindowContent, notes: '' },
         ];
         windows.forEach(win => {
           addWindow(win);
